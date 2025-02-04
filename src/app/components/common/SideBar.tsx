@@ -4,25 +4,29 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import HomeNavbar from "../navigation/HomeNavbar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHouse, IconDefinition, faImage, faPhotoVideo } from "@fortawesome/free-solid-svg-icons"; 
+import { faCloud, IconDefinition, faImage, faPhotoVideo } from "@fortawesome/free-solid-svg-icons"; 
 
 type linksObject = {
     name: string,
     img: IconDefinition,
+    ref: string
 }
 
 const mainlinks: linksObject[] = [
     {
-        name: "home",
-        img: faHouse   
+        name: "cloud",
+        img: faCloud,
+        ref: 'cloud/recents'
     },
     {
         name: "photos",
-        img: faImage   
+        img: faImage,
+        ref: 'photos'
     },
     {
         name: "videos",
-        img: faPhotoVideo   
+        img: faPhotoVideo,
+        ref: 'videos'
     }
 ];
 
@@ -44,7 +48,8 @@ const SideBar = ({ title }: sideBarSelectios) => {
                                 text-[12px] text-zinc-300 greyscale
                                 hover:bg-black transition-all duration-100
                                 ${pathName.includes(`/${l.name}`) && 'bg-black'}
-                                `} href={l.name}>
+                                `} href={'/'+l.ref}
+                                >
                             <FontAwesomeIcon
                             className={`w-[30px] h-[30px] greyscale ${pathName.includes(`/${l.name}`) && 'bg-black greyscale'}`}
                             icon={l.img} style={{color: `${pathName.includes(`/${l.name}`) && '#c83c51'}`}}
@@ -54,7 +59,7 @@ const SideBar = ({ title }: sideBarSelectios) => {
                     )
                 })}
             </nav>
-            {title === 'Home' && <HomeNavbar />}
+            {title === 'Cloud' && <HomeNavbar />}
         </div>
     )
 }
