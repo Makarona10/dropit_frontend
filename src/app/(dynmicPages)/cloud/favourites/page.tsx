@@ -1,9 +1,41 @@
+"use client";
 import Header from "@/app/components/common/Header";
-import OrdAndFiltHead from "@/app/components/common/Ord&FiltHead";
+import OrdAndFiltHead, { FT } from "@/app/components/common/Ord&FiltHead";
 import SideBar from "@/app/components/common/SideBar";
 import FileComponent from "@/app/components/files_browsing/FileComponent";
 import { FaStar } from "react-icons/fa";
 import PaginationButtons from "@/app/components/pagination_btns/PaginationComp";
+import { LuAudioLines, LuFileVideo, LuFilterX, LuImages } from "react-icons/lu";
+import { IoDocumentText } from "react-icons/io5";
+import { BiDownArrowAlt, BiUpArrowAlt } from "react-icons/bi";
+
+const filter_array: FT[] = [
+  {
+    name: "Images",
+    ico: LuImages,
+  },
+  {
+    name: "Videos",
+    ico: LuFileVideo,
+  },
+  {
+    name: "Audios",
+    ico: LuAudioLines,
+  },
+  {
+    name: "Others",
+    ico: IoDocumentText,
+  },
+  {
+    name: "All",
+    ico: LuFilterX,
+  },
+];
+
+const order: FT[] = [
+  { name: "Newest", ico: BiUpArrowAlt },
+  { name: "Oldest", ico: BiDownArrowAlt },
+];
 
 const FavouritesPage = () => {
   return (
@@ -12,7 +44,7 @@ const FavouritesPage = () => {
       <div className="flex flex-col w-full">
         <Header />
         <div className="w-full px-8 flex items-center h-14 bg-neutral-800 border-t-[1px] border-t-neutral-700/70">
-          <OrdAndFiltHead />
+          <OrdAndFiltHead order={order} filter={filter_array} />
         </div>
         <div className="flex items-center gap-4 pt-10 pl-10">
           <h1 className="sm:text-2xl text-lg font-bold">Favourites</h1>

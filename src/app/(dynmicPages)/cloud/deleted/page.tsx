@@ -5,7 +5,38 @@ import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import FileComponent from "@/app/components/files_browsing/FileComponent";
 import Folder from "@/app/components/files_browsing/Folder";
-import OrdAndFiltHead from "@/app/components/common/Ord&FiltHead";
+import OrdAndFiltHead, { FT } from "@/app/components/common/Ord&FiltHead";
+import { LuAudioLines, LuFileVideo, LuFilterX, LuImages } from "react-icons/lu";
+import { IoDocumentText } from "react-icons/io5";
+import { BiDownArrowAlt, BiUpArrowAlt } from "react-icons/bi";
+
+const filter_array: FT[] = [
+  {
+    name: "Images",
+    ico: LuImages,
+  },
+  {
+    name: "Videos",
+    ico: LuFileVideo,
+  },
+  {
+    name: "Audios",
+    ico: LuAudioLines,
+  },
+  {
+    name: "Others",
+    ico: IoDocumentText,
+  },
+  {
+    name: "All",
+    ico: LuFilterX,
+  },
+];
+
+const order: FT[] = [
+  { name: "Newest", ico: BiUpArrowAlt },
+  { name: "Oldest", ico: BiDownArrowAlt },
+];
 
 const Deleted = () => {
   return (
@@ -14,7 +45,7 @@ const Deleted = () => {
       <div className="flex flex-col w-full">
         <Header />
         <div className="flex items-center w-full h-14 bg-neutral-800 border-t-neutral-700/70 border-t-[1px] px-8 gap-8">
-          <OrdAndFiltHead />
+          <OrdAndFiltHead filter={filter_array} order={order} />
         </div>
         <div className="flex flex-col flex-wrap p-8 gap-8 w-full">
           <div className="flex gap-3 items-center sm:text-2xl text-lg font-bold">
