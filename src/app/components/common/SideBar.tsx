@@ -13,6 +13,8 @@ import {
   faFolderClosed,
 } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useRef, useState } from "react";
+import PhotosNavBar from "../navigation/PhotosNavBar";
+import VideosNavBar from "../navigation/VideosNavBar";
 
 type linksObject = {
   name: string;
@@ -34,12 +36,12 @@ const mainlinks: linksObject[] = [
   {
     name: "photos",
     img: faImage,
-    ref: "photos",
+    ref: "photos/recents",
   },
   {
     name: "videos",
     img: faPhotoVideo,
-    ref: "videos",
+    ref: "videos/recents",
   },
   {
     name: "folders",
@@ -116,6 +118,8 @@ const SideBar = ({ title }: sideBarSelectios) => {
         ref={barRef}
       >
         {title === "Cloud" && <HomeNavbar />}
+        {title === "Photos" && <PhotosNavBar />}
+        {title === "Videos" && <VideosNavBar />}
       </div>
     </div>
   );

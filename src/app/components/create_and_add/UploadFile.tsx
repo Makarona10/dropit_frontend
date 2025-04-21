@@ -2,11 +2,13 @@ import { useEffect, useRef, useState } from "react";
 import { ArrowUpTrayIcon } from "@heroicons/react/24/outline";
 import { IoIosAt, IoIosWarning } from "react-icons/io";
 import { IoMdCloudUpload } from "react-icons/io";
+import axios from "axios";
 
 const UploadFile = () => {
   const [error, setError] = useState<string>("");
   const [fileName, setFileName] = useState("");
   const upFileRef = useRef<HTMLDivElement>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const id = "upload_file_div";
 
   const permittedExtensions = [
@@ -40,22 +42,62 @@ const UploadFile = () => {
   }, []);
 
   const handleFileChange = (event: any) => {
-    const file = event.target.files[0];
+    const file = event.target.files?.[0];
     if (file) {
       const fileName = file.name;
-      const fileExtension = fileName.split(".").pop().toLowerCase();
+      const fileExtension = fileName.split(".").pop()?.toLowerCase();
 
-      if (permittedExtensions.includes(fileExtension)) {
+      if (fileExtension && permittedExtensions.includes(fileExtension)) {
         setError("");
         setFileName(fileName);
+        setSelectedFile(file);
       } else {
         setFileName("");
+        setSelectedFile(null);
         setError(
           "File type not allowed. Please upload a file with one of the following extensions: " +
             permittedExtensions.join(", "),
         );
         event.target.value = "";
       }
+    }
+  };
+
+  const pushToServer = async () => {
+    if (!selectedFile) {
+      setError("No file selected. Please choose a file first.");
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append("file", selectedFile);
+      formData.append("directory", "lowshit");
+      const response = await axios.post(
+        `http://localhost:3001/file/upload-file/userid`, // URL will be completely handled later
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        },
+      );
+
+      console.log("File uploaded successfully:", response.data);
+      setError("");
+      setFileName("");
+      setSelectedFile(null); // Clear the selected file
+      const element = document.getElementById(id);
+      if (element) {
+        element.style.opacity = "0";
+        element.style.visibility = "hidden";
+      }
+    } catch (error: any) {
+      console.error("Error uploading file:", error);
+      setError(
+        error.response?.data?.message ||
+          "Failed to upload file. Please try again.",
+      );
     }
   };
 
@@ -106,6 +148,7 @@ const UploadFile = () => {
         </div>
         <button
           className={`flex items-center gap-2 mt-2 px-4 w-full p-2 bg-green-600 rounded-md sm:text-base text-xs`}
+          onClick={() => pushToServer()}
         >
           <IoMdCloudUpload className="sm:text-xl text-base" />
           Push to the server
