@@ -1,13 +1,13 @@
 import React, { useEffect, useRef } from "react";
 
-type FType = "video" | "image" | "audio" | "document";
+type FType = "video" | "image" | "audio" | "other";
 
 type DetProps = {
   id: string;
   file_type: FType;
   name: string;
-  resolution: string;
-  duration: string;
+  resolution?: string;
+  duration?: string;
   extension: string;
   uploaded: string;
   size: string;
@@ -51,12 +51,16 @@ const FileDetails = ({
       flex items-center justify-center bg-black bg-opacity-50 z-50   
       transition duration-300 invisible"
       id={id}
+      onClick={(e) => e.stopPropagation()}
     >
       <div className="fixed inset-0 bg-white/10 p-6 shadow-lg overflow-auto"></div>
       <div
         className="flex flex-col sm:w-[450px] bg-black p-6 rounded-lg"
         ref={divRef}
         style={{ zIndex: 2 }}
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
       >
         <div
           className="text-lg text-white/90 pb-3
@@ -72,10 +76,7 @@ const FileDetails = ({
 
           <div className="flex items-cetner">
             <p className="text-sm font-bold">Size:</p>{" "}
-            <p className="ml-1 text-sm">
-              {size}
-              {" MB"}
-            </p>
+            <p className="ml-1 text-sm">{size}</p>
           </div>
           <div className="flex items-cetner">
             <p className="text-sm font-bold">Type:</p>{" "}
@@ -85,10 +86,10 @@ const FileDetails = ({
             <p className="text-sm font-bold">Extension:</p>{" "}
             <p className="ml-1 text-sm">{extension}</p>
           </div>
-          <div className="flex items-cetner">
-            <p className="text-sm font-bold">Owner:</p>{" "}
-            <p className="ml-1 text-sm">{owner}</p>
-          </div>
+          {/* <div className="flex items-cetner"> */}
+          {/*   <p className="text-sm font-bold">Owner:</p>{" "} */}
+          {/*   <p className="ml-1 text-sm">{owner}</p> */}
+          {/* </div> */}
           <div className="flex items-cetner">
             <p className="text-sm font-bold">Uploaded:</p>{" "}
             <p className="ml-1 text-sm">{uploaded}</p>

@@ -1,8 +1,22 @@
 import { LiaTagSolid } from "react-icons/lia";
 import { MdDeleteForever } from "react-icons/md";
+import DeleteTag from "./tags_components/DeleteTag";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
-const Tag = () => {
-  const delete_window_div_id = "delete_tag_div_id";
+type _Props = {
+  id: number;
+  name: string;
+  createdAt: string;
+};
+
+const Tag = ({ id, name, createdAt }: _Props) => {
+  const delete_window_div_id = `delete_${id}`;
+  const router = useRouter();
+
+  // const navigateToTagFiles = async () => {
+  //   return router.push(`/cloud/tags/tfiles/${id}`);
+  // };
 
   return (
     <div
@@ -10,19 +24,29 @@ const Tag = () => {
             duration-100 hover:bg-neutral-900 cursor-pointer select-none"
       title="This is a title"
     >
-      <div className="flex items-center w-full p-4 rounded-t-xl active:bg-neutral-950">
+      <div className={`z-50 duration-300`}>
+        <DeleteTag tag_id={id} />
+      </div>
+      <div
+        className="flex items-center w-full p-4 rounded-t-xl active:bg-neutral-950"
+        onClick={() => {
+          router.push(`tags/tfiles/${id}`);
+        }}
+      >
         <LiaTagSolid style={{ width: "24px", height: "24px" }} />
         <p
           className="flex items-center w-full overflow-hidden text-ellipsis whitespace-nowrap sm:text-[16px] text-sm text-neutral-300
                     font-semibold ml-2 select-none"
         >
-          Gamilovic tag Gamilovic
+          {name}
         </p>
       </div>
       <div className="flex items-center w-full p-3 pl-4 mt-1 border-t-[1px] border-neutral-600">
         <span className="flex w-full relative left-1 gap-[3px] items-center text-sm text-neutral-300/80">
-          <p className="relative bottom-[1px]">6</p>
-          <p>files</p>
+          <p className="relative bottom-[1px]">
+            Created at: {createdAt.toString()}
+          </p>
+          {/* <p>files</p> */}
           <span
             className="absolute right-2 p-[5px] rounded-full hover:bg-neutral-700 active:bg-neutral-600"
             onClick={() => {

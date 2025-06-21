@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { MdOutlineWarning } from "react-icons/md";
+import axios from "axios";
 
 const delBtnsStyle = "p-2 rounded-lg text-sm";
 
@@ -8,8 +9,30 @@ type _Props = {
 };
 
 const DeleteTag = ({ tag_id }: _Props) => {
-  const div_id = "delete_tag_div_id";
+  const div_id = `delete_${tag_id}`;
   const divRef = useRef<HTMLDivElement>(null);
+  const [error, setError] = useState<boolean>(false);
+
+  const deleteTagRequest = async () => {
+    const token = localStorage.getItem("access_token");
+    if (!token) return;
+
+    try {
+      const response = await axios.delete(
+        `${process.env.NEXT_PUBLIC_SERVER_URI}/tag/delete?tagId=${tag_id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      if (response.data.statusCode === 200) {
+        window.location.reload();
+      }
+    } catch (error) {
+      setError(true);
+    }
+  };
 
   const hideDeleteDiv = () => {
     const element = document.getElementById(div_id);
@@ -60,6 +83,7 @@ const DeleteTag = ({ tag_id }: _Props) => {
         <div className="flex flex-row-reverse gap-2 pt-5">
           <button
             className={`${delBtnsStyle} bg-primary-600 active:bg-primary-800`}
+            onClick={() => deleteTagRequest()}
           >
             Confirm
           </button>

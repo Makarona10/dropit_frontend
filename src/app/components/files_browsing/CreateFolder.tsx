@@ -1,13 +1,20 @@
 "use client";
 import axios from "axios";
+import { useParams, useRouter } from "next/navigation";
 import { useRef, useEffect, useState } from "react";
-import { FaTags } from "react-icons/fa6";
+import { FaFolder } from "react-icons/fa";
 
-const AddTag = () => {
-  const id = "add_tag";
+const CreateFolder = () => {
+  const id = "create_folder";
   const divRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const { folderId } = useParams();
   const [name, setName] = useState<string>("");
-  const [error, setError] = useState<string>("");
+  const [msg, setMsg] = useState({
+    error: false,
+    msg: "",
+  });
+  const router = useRouter();
 
   const hideDiv = () => {
     const element = document.getElementById(id);
@@ -23,6 +30,43 @@ const AddTag = () => {
     }
   };
 
+  const createFolderRequest = async () => {
+    setName(inputRef.current?.value || "");
+    if (!name && name === "") {
+      setMsg({ error: true, msg: "Please enter a valid name" });
+    }
+
+    try {
+      const token = localStorage.getItem("access_token");
+      if (!token) {
+        router.push("/user/login");
+      }
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_SERVER_URI}/folder/create`,
+        {
+          name,
+          parentId: folderId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      if (res.data.statusCode === 201) {
+        setMsg({ error: false, msg: "Folder Created successfully" });
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+      }
+    } catch (error: any) {
+      setMsg({
+        error: true,
+        msg: error?.response?.data?.message || "Unexpected error happened",
+      });
+    }
+  };
+
   useEffect(() => {
     window.addEventListener("mousedown", handleOutsideClick);
 
@@ -30,30 +74,6 @@ const AddTag = () => {
       window.removeEventListener("mousedown", handleOutsideClick);
     };
   }, []);
-
-  const addTagSubmit = async () => {
-    if (!name || name.length < 1) {
-      setError("Please Enter a name for your tag");
-      return;
-    }
-
-    setError("");
-    try {
-      const token = localStorage.getItem("access_token");
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_SERVER_URI}/tag/create`,
-        { name },
-        { headers: { Authorization: `Bearer ${token}` } },
-      );
-
-      if (res.data.statusCode === 201) {
-        hideDiv();
-        window.location.reload();
-      }
-    } catch (error: any) {
-      setError("Please enter a valid name");
-    }
-  };
 
   return (
     <div
@@ -69,27 +89,29 @@ const AddTag = () => {
         ref={divRef}
       >
         <div className="flex items-center gap-3 sm:text-lg text-sm font-bold">
-          <h1>Write a name for your tag</h1>
-          <FaTags />
+          <h1>Create a new folder</h1>
+          <FaFolder />
         </div>
 
-        <div className="flex flex-col w-full">
+        <div className="w-full">
           <input
             className="w-full indent-2 p-2 outline-none border-0 ring-offset-none text-neutral-950
                        rounded-lg text-xs sm:text-base"
             type="text"
-            placeholder="Tag name"
-            onChange={(e) => {
-              setName(e.target.value);
-            }}
+            placeholder="Folder name"
+            ref={inputRef}
           />
-          <p className="text-primary-300 text-sm mt-2">{error ? error : ""}</p>
+        </div>
+        <div
+          className={`w-full ${msg.error ? "text-primary-400" : "text-green-600"}`}
+        >
+          {msg.msg}
         </div>
         <div className="flex flex-row-reverse items-center gap-2 sm:text-sm text-xs">
           <button
             className="p-2 bg-green-600 rounded-lg active:bg-green-700"
             onClick={() => {
-              addTagSubmit();
+              createFolderRequest();
             }}
           >
             Confirm
@@ -106,4 +128,4 @@ const AddTag = () => {
   );
 };
 
-export default AddTag;
+export default CreateFolder;

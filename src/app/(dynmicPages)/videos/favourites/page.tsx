@@ -5,17 +5,72 @@ import SideBar from "@/app/components/common/SideBar";
 import FileComponent from "@/app/components/files_browsing/FileComponent";
 import { FaStar } from "react-icons/fa";
 import PaginationButtons from "@/app/components/pagination_btns/PaginationComp";
-import { LuAudioLines, LuFileVideo, LuFilterX, LuImages } from "react-icons/lu";
-import { IoDocumentText } from "react-icons/io5";
 import { BiDownArrowAlt, BiUpArrowAlt } from "react-icons/bi";
 import { video_filter } from "../../utils";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import LoadingSpinner from "@/app/components/common/LoadingSpinner";
+import ListFiles from "@/app/components/files_browsing/ListFiles";
 
 const order: FT[] = [
-  { name: "Newest", ico: BiUpArrowAlt },
-  { name: "Oldest", ico: BiDownArrowAlt },
+  { name: "Asc", ico: BiUpArrowAlt },
+  { name: "Desc", ico: BiDownArrowAlt },
 ];
 
-const FavouritesPhotos = () => {
+const FavouriteVideos = () => {
+  const [videos, setVideos] = useState({
+    loading: true,
+    error: false,
+    videos: [],
+    pages: 0,
+  });
+  const searchParams = useSearchParams();
+  const page = Number(searchParams.get("page")) || 1;
+  const vidsOrder = searchParams.get("o") || "desc";
+  const extension = searchParams.get("f");
+  const router = useRouter();
+
+  useEffect(() => {
+    const token = localStorage.getItem("access_token");
+    if (!token) router.push("/user/login");
+
+    const fetchVideos = async () => {
+      try {
+        const res = await axios.get(
+          `${process.env.NEXT_PUBLIC_SERVER_URI}/file/get-favourite-videos?page=${page || 1}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            params: {
+              order: vidsOrder.toLowerCase(),
+              extension,
+            },
+          },
+        );
+        if (res.data.statusCode === 200) {
+          setVideos({
+            error: false,
+            videos: res.data.data.videos,
+            loading: false,
+            pages: res.data.data.pages,
+          });
+        }
+      } catch (error) {
+        setVideos({
+          ...videos,
+          error: true,
+          videos: [],
+          loading: false,
+          pages: 0,
+        });
+      }
+    };
+
+    fetchVideos();
+  }, [page, vidsOrder, extension]);
+
   return (
     <div className="flex">
       <SideBar title="Videos" />
@@ -32,86 +87,28 @@ const FavouritesPhotos = () => {
             />
           </div>
           <div className="w-full flex sm:flex-row-reverse sm:px-8 items-center">
-            <PaginationButtons total={7} />
+            <PaginationButtons total={videos.pages} />
           </div>
         </div>
         <div className="flex flex-wrap gap-5 p-8 w-full">
-          <FileComponent
-            id={1}
-            fName="Vini Jr."
-            image="https://apostagolos.com/wp-content/uploads/2022/05/vinicius-junior-2-scaled.jpg"
-            size="88"
-            type="image"
-            owner="Mother"
-            uploaded="15/7/2014"
-            extenstion=".PNG"
-            resolution="1446 * 800"
-            favourite={false}
-          />
-          <FileComponent
-            id={2}
-            fName="Vini Jr."
-            image="https://apostagolos.com/wp-content/uploads/2022/05/vinicius-junior-2-scaled.jpg"
-            size="88"
-            type="image"
-            owner="Mother"
-            uploaded="15/7/2014"
-            extenstion=".PNG"
-            resolution="1446 * 800"
-            favourite={false}
-          />
-          <FileComponent
-            id={3}
-            fName="Vini Jr."
-            image="https://apostagolos.com/wp-content/uploads/2022/05/vinicius-junior-2-scaled.jpg"
-            size="88"
-            type="image"
-            owner="Mother"
-            uploaded="15/7/2014"
-            extenstion=".PNG"
-            resolution="1446 * 800"
-            favourite={false}
-          />
-          <FileComponent
-            id={4}
-            fName="Vini Jr."
-            image="https://apostagolos.com/wp-content/uploads/2022/05/vinicius-junior-2-scaled.jpg"
-            size="88"
-            type="image"
-            owner="Mother"
-            uploaded="15/7/2014"
-            extenstion=".PNG"
-            resolution="1446 * 800"
-            favourite={false}
-          />
-          <FileComponent
-            id={5}
-            fName="Vini Jr."
-            image="https://apostagolos.com/wp-content/uploads/2022/05/vinicius-junior-2-scaled.jpg"
-            size="88"
-            type="image"
-            owner="Mother"
-            uploaded="15/7/2014"
-            extenstion=".PNG"
-            resolution="1446 * 800"
-            favourite={false}
-          />
-          <FileComponent
-            id={6}
-            fName="Vini Jr."
-            image="https://apostagolos.com/wp-content/uploads/2022/05/vinicius-junior-2-scaled.jpg"
-            size="88"
-            type="image"
-            owner="Mother"
-            uploaded="15/7/2014"
-            extenstion=".PNG"
-            resolution="1446 * 800"
-            favourite={false}
-          />
+          {videos.loading && <LoadingSpinner />}
+          {!videos.loading && videos.error && (
+            <p className="w-full text-center text-2xl underline">
+              Error happened, try refreshing the page
+            </p>
+          )}
+
+          {!videos.loading && !videos.error && videos.videos.length < 1 && (
+            <p className="w-full text-center text-2xl">No videos found</p>
+          )}
+
+          {!videos.loading && !videos.error && videos.videos.length > 0 && (
+            <ListFiles files={videos.videos} />
+          )}
         </div>
       </div>
     </div>
   );
 };
 
-export default FavouritesPhotos;
+export default FavouriteVideos;

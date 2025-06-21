@@ -15,6 +15,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 import PhotosNavBar from "../navigation/PhotosNavBar";
 import VideosNavBar from "../navigation/VideosNavBar";
+import FoldersNavBar from "../navigation/FoldersNavBar";
 
 type linksObject = {
   name: string;
@@ -46,12 +47,12 @@ const mainlinks: linksObject[] = [
   {
     name: "folders",
     img: faFolderClosed,
-    ref: "folders",
+    ref: "folders/recents",
   },
 ];
 
 type sideBarSelectios = {
-  title: string;
+  title?: string;
 };
 
 const SideBar = ({ title }: sideBarSelectios) => {
@@ -119,6 +120,7 @@ const SideBar = ({ title }: sideBarSelectios) => {
       >
         {title === "Cloud" && <HomeNavbar />}
         {title === "Photos" && <PhotosNavBar />}
+        {title === "Folders" && <FoldersNavBar />}
         {title === "Videos" && <VideosNavBar />}
       </div>
     </div>

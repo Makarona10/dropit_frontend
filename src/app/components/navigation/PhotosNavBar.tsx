@@ -9,13 +9,14 @@ import {
   faStar,
   faClock,
 } from "@fortawesome/free-solid-svg-icons";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
 type linkForming = {
   name: string;
   img: IconDefinition;
   ref: string;
+  num?: number;
 };
 
 const links = [
@@ -23,6 +24,24 @@ const links = [
     name: "Recently uploaded",
     img: faClock,
     ref: "recents",
+  },
+  {
+    name: "Uploaded last week",
+    img: faClock,
+    ref: "uploads",
+    num: 7,
+  },
+  {
+    name: "Uploaded last month",
+    img: faClock,
+    ref: "uploads",
+    num: 30,
+  },
+  {
+    name: "Uploaded last 6 months",
+    img: faClock,
+    ref: "uploads",
+    num: 180,
   },
   {
     name: "Favourite Photos",
@@ -34,90 +53,51 @@ const links = [
     img: faTrash,
     ref: "deleted",
   },
-  {
-    name: "Folders",
-    img: faFolderOpen,
-    ref: "shared-folders",
-  },
-  {
-    name: "Images",
-    img: faImages,
-    ref: "shared-images",
-  },
-  {
-    name: "Videos",
-    img: faFileVideo,
-    ref: "shared-videos",
-  },
 ];
 
 const PhotosNavBar = () => {
   const pathName = usePathname();
+  const searchParams = useSearchParams();
+  const days = searchParams.get("days");
+
   return (
     <div className="flex flex-col h-full w-[230px] bg-neutral-700 text-sm md:text-base">
       <h2 className="sm:text-2xl text-xl m-6">Photos</h2>
       <div className="flex flex-col w-10/12 mx-auto gap-[3px]">
-        {links.slice(0, 3).map((l: linkForming, idx: number) => {
+        {links.map((l: linkForming, idx: number) => {
           return (
             <Link
               key={idx}
               className={`
                             relative flex items-center w-full p-2 pl-7 rounded-xl
                             hover:bg-neutral-800 hover:cursor-pointer opacity-80
-                            ${pathName.includes(`/photos/${l.ref.toLowerCase()}`) && "bg-neutral-800"}
+              ${
+                pathName.includes(`/photos/${l.ref.toLowerCase()}`) &&
+                (days === l?.num?.toString() || (!days && !l?.num))
+                  ? "bg-neutral-800"
+                  : ""
+              }
                             `}
-              href={`${"/photos/" + l.ref}`}
+              href={`/photos/${l.ref}${l?.num ? `?days=${l.num}` : ""}`}
             >
               <FontAwesomeIcon
                 icon={l.img}
                 width={17}
                 height={17}
                 style={{
-                  color: pathName.includes(`/photos/${l.ref.toLowerCase()}`)
-                    ? "#dd2c2c"
-                    : "",
+                  color:
+                    pathName.includes(`/photos/${l.ref.toLowerCase()}`) &&
+                    (days === l?.num?.toString() || (!days && !l?.num))
+                      ? "#dd2c2c"
+                      : "",
                 }}
               />
               <p
-                className={`ml-2 ${pathName.includes(`/cloud/${l.name.toLowerCase()}`) && "opacity-100"}`}
+                className={`ml-2 ${pathName.includes(`/photos/${l.name.toLowerCase()}`) && "opacity-100"}`}
               >
                 {l.name}
               </p>
             </Link>
-          );
-        })}
-      </div>
-      <h5 className="opacity-90 font-[600] tracking-wider text-neutral-300 p-5 text-[10px] md:text-xs">
-        Shared Photos{" "}
-      </h5>
-      <div className="flex flex-col w-10/12 mx-auto gap-[3px]">
-        {links.slice(3, 7).map((l: linkForming, idx: number) => {
-          return (
-            <a
-              key={idx}
-              className={`
-                            relative flex items-center w-full p-2 pl-7 rounded-xl
-                            hover:bg-neutral-800 hover:cursor-pointer
-                            ${pathName.includes(`/home/${l.name}`) && "bg-neutral-800"}
-                            `}
-              href={`${pathName}/${l.ref.toLowerCase()}`}
-            >
-              {/* <Image
-                                    src={l.img}
-                                    alt={`${l.name} photo`}
-                                    className="w-12 h-12 rounded-full object-cover"
-                                    width={48}
-                                    height={48}
-                                /> */}
-              <FontAwesomeIcon
-                icon={l.img}
-                className="opacity-80"
-                width={17}
-                height={17}
-              />
-
-              <p className="ml-2 opacity-80">{l.name}</p>
-            </a>
           );
         })}
       </div>

@@ -1,14 +1,6 @@
 "use client";
 import { TbArrowsSort } from "react-icons/tb";
-import { BiUpArrowAlt, BiDownArrowAlt } from "react-icons/bi";
-import {
-  LuImages,
-  LuFileVideo,
-  LuAudioLines,
-  LuListFilter,
-  LuFilterX,
-} from "react-icons/lu";
-import { IoDocumentText } from "react-icons/io5";
+import { LuListFilter } from "react-icons/lu";
 import {
   Dropdown,
   DropdownTrigger,
@@ -33,19 +25,21 @@ type Prop = {
 type Props = { order: Prop[]; filter: Prop[] };
 
 const OrdAndFiltHead = ({ order, filter }: Props) => {
-  const [selectedSorting, setSelectedSorting] = useState(new Set(["Newest"]));
-  const [selectedFilter, setSelectedFilter] = useState(new Set(["All"]));
+  const [selectedSorting, setSelectedSorting] = useState(null);
+  const [selectedFilter, setSelectedFilter] = useState(null);
   const router = useRouter();
   const pathName = usePathname();
   const searchParams = useSearchParams();
   const sParams = new URLSearchParams(searchParams.toString());
 
   useEffect(() => {
-    const filt: string = selectedFilter?.entries()?.next()?.value[0];
-    const ord: string = selectedSorting?.entries()?.next()?.value[0];
+    const filt: string | null =
+      selectedFilter?.entries()?.next()?.value[0] || null;
+    const ord: string | null =
+      selectedSorting?.entries()?.next()?.value[0] || null;
 
-    sParams.set("f", filt.toString());
-    sParams.set("o", ord.toString());
+    filt && sParams.set("f", filt.toString());
+    ord && sParams.set("o", ord.toString());
     router.push(pathName + "?" + sParams);
   }, [selectedFilter, selectedSorting]);
 

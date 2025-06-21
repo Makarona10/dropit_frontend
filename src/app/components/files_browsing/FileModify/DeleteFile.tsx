@@ -1,14 +1,16 @@
-import { faFolder } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import axios from "axios";
 import { useEffect, useRef, useState } from "react";
+import { FaRegTrashAlt } from "react-icons/fa";
 
 type FileProps = {
   id: string;
+  fileId: number;
 };
 
-const ChangeDirectoryOverlay = ({ id }: FileProps) => {
-  const [path, setPath] = useState<string>(""); // will hold the path of the current folder that is user in
+const DeleteFile = ({ id, fileId }: FileProps) => {
   const divRef = useRef<HTMLDivElement>(null);
+  const [token, setToken] = useState<string>("");
+  const [error, setError] = useState<string>("");
 
   const handleOutsideClick = (event: any) => {
     if (divRef.current && !divRef.current.contains(event.target)) {
@@ -20,7 +22,26 @@ const ChangeDirectoryOverlay = ({ id }: FileProps) => {
     }
   };
 
+  const deleteRequest = async () => {
+    try {
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_SERVER_URI}/bin/move-file-to-bin/${fileId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      window.location.reload();
+    } catch (error: any) {
+      setError(error?.response?.data?.message);
+    }
+  };
+
   useEffect(() => {
+    const tok = localStorage.getItem("access_token") || "";
+    setToken(tok);
     window.addEventListener("mousedown", handleOutsideClick);
 
     return () => {
@@ -34,9 +55,7 @@ const ChangeDirectoryOverlay = ({ id }: FileProps) => {
       flex items-center justify-center bg-black bg-opacity-50 z-50   
       transition duration-300 invisible"
       id={id}
-      onClick={(e) => {
-        e.stopPropagation();
-      }}
+      onClick={(e) => e.stopPropagation()}
     >
       <div className="fixed inset-0 bg-white/10 p-6 shadow-lg overflow-auto"></div>
       <div
@@ -45,34 +64,27 @@ const ChangeDirectoryOverlay = ({ id }: FileProps) => {
         ref={divRef}
       >
         <h1 className="sm:text-xl text-base font-bold pb-3 border-b-[1px] border-neutral-300/30">
-          Change directory
+          Delete the file
         </h1>
-        <div className="flex flex-col">
-          <div className="flex flex-col">
-            <h1 className="sm:text-base text-sm font-bold py-4">Folders</h1>
-            <div className="flex flex-col gap-5 sm:max-h-[500px] max-h-[350px] overflow-auto">
-              <div className="flex items-center gap-3 sm:text-sm text-xs hover:underline cursor-pointer">
-                <FontAwesomeIcon icon={faFolder} />
-                <p>Security materials</p>
-              </div>
-              <div className="flex items-center gap-3 sm:text-sm text-xs hover:underline cursor-pointer">
-                <FontAwesomeIcon icon={faFolder} />
-                <p>Valorant haters</p>
-              </div>
-              <div className="flex items-center gap-3 sm:text-sm text-xs hover:underline cursor-pointer">
-                <FontAwesomeIcon icon={faFolder} />
-                <p>Why always me</p>
-              </div>
-              <div className="flex items-center gap-3 sm:text-sm text-xs hover:underline cursor-pointer">
-                <FontAwesomeIcon icon={faFolder} />
-                <p>Why always me</p>
-              </div>
-            </div>
-          </div>
+        <div className="flex items-center gap-2">
+          <FaRegTrashAlt className="text-md text-primary-500" />
+          <p className="sm:text-base text-sm font-medium py-4">
+            File will be transferred to your bin
+          </p>
         </div>
+        {error && (
+          <div className="text-sm text-primary-600">
+            {error || "Error happened!"}
+          </div>
+        )}
         <div className="flex flex-row-reverse gap-2 sm:text-sm text-xs mt-5">
-          <button className="bg-green-600 active:bg-green-700 p-2 rounded-md">
-            Create a new folder
+          <button
+            className="bg-green-600 active:bg-green-700 p-2 rounded-md"
+            onClick={() => {
+              deleteRequest();
+            }}
+          >
+            Confirm
           </button>
           <button
             className="bg-primary-600 active:bg-primary-700 p-2 rounded-md"
@@ -92,4 +104,4 @@ const ChangeDirectoryOverlay = ({ id }: FileProps) => {
   );
 };
 
-export default ChangeDirectoryOverlay;
+export default DeleteFile;

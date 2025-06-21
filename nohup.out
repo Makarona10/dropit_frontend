@@ -1,0 +1,62 @@
+
+> dropit_front_end@0.1.0 dev
+> next dev --turbopack
+
+   ▲ Next.js 15.1.1 (Turbopack)
+   - Local:        http://localhost:3000
+   - Network:      http://192.168.29.128:3000
+   - Environments: .env
+
+ ✓ Starting...
+ ✓ Ready in 964ms
+ ○ Compiling / ...
+ ✓ Compiled / in 2.9s
+ GET / 200 in 3193ms
+ ○ Compiling /cloud/deleted ...
+ ✓ Compiled /cloud/deleted in 5s
+ GET /cloud/deleted 200 in 5778ms
+ GET /cloud/deleted 200 in 147ms
+ ✓ Compiled /_not-found/page in 270ms
+ GET /cloud/undefined/bin/deleted-files?page=1 404 in 330ms
+ GET /cloud/deleted?o=Newest 200 in 93ms
+ ○ Compiling /cloud/recents ...
+ ✓ Compiled /cloud/recents in 866ms
+ GET /cloud/recents 200 in 902ms
+ ✓ Compiled /videos/recents in 418ms
+ GET /videos/recents 200 in 456ms
+ GET /videos/recents 200 in 213ms
+ GET /videos/recents 200 in 204ms
+ ✓ Compiled /favicon.ico in 297ms
+ ✓ Compiled /photos/recents in 459ms
+ GET /photos/recents 200 in 492ms
+ GET /photos/recents 200 in 152ms
+ GET /photos/recents 200 in 187ms
+ GET /videos/recents 200 in 54ms
+ GET /videos/recents 200 in 106ms
+ GET /videos/recents 200 in 133ms
+ ✓ Compiled /videos/favourites in 411ms
+ GET /videos/favourites 200 in 437ms
+ GET /videos/favourites 200 in 140ms
+ GET /videos/favourites 200 in 164ms
+ GET /videos/recents 200 in 52ms
+ GET /videos/recents 200 in 127ms
+ GET /videos/recents 200 in 69ms
+ GET /videos/favourites 200 in 42ms
+ GET /videos/favourites 200 in 116ms
+ GET /videos/favourites 200 in 127ms
+ GET / 200 in 176ms
+ GET /videos/recents 200 in 137ms
+ GET /videos/recents 200 in 106ms
+ GET /videos/recents 200 in 135ms
+ GET /videos/recents 200 in 108ms
+
+> dropit_front_end@0.1.0 dev
+> next dev --turbopack
+
+   ▲ Next.js 15.1.1 (Turbopack)
+   - Local:        http://localhost:3000
+   - Network:      http://192.168.29.128:3000
+   - Environments: .env
+
+ ✓ Starting...
+ ✓ Ready in 901ms

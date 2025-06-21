@@ -2,12 +2,14 @@
 import Header from "@/app/components/common/Header";
 import OrdAndFiltHead, { FT } from "@/app/components/common/Ord&FiltHead";
 import SideBar from "@/app/components/common/SideBar";
-import FileComponent from "@/app/components/files_browsing/FileComponent";
 import { FaStar } from "react-icons/fa";
 import PaginationButtons from "@/app/components/pagination_btns/PaginationComp";
-import { LuAudioLines, LuFileVideo, LuFilterX, LuImages } from "react-icons/lu";
-import { IoDocumentText } from "react-icons/io5";
 import { BiDownArrowAlt, BiUpArrowAlt } from "react-icons/bi";
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import axios from "axios";
+import LoadingSpinner from "@/app/components/common/LoadingSpinner";
+import ListFiles from "@/app/components/files_browsing/ListFiles";
 
 const filter = [
   {
@@ -23,7 +25,7 @@ const filter = [
     name: "ICO",
   },
   {
-    name: "OTHERS",
+    name: "ANY",
   },
 ];
 
@@ -33,6 +35,58 @@ const order: FT[] = [
 ];
 
 const FavouritesPhotos = () => {
+  const [images, setImages] = useState({
+    loading: true,
+    error: false,
+    images: [],
+    pages: 0,
+  });
+  const searchParams = useSearchParams();
+  const page = Number(searchParams.get("page")) || 1;
+  const imgsOrder = searchParams.get("o") || "desc";
+  const extension = searchParams.get("f");
+  const router = useRouter();
+
+  useEffect(() => {
+    const token = localStorage.getItem("access_token");
+    if (!token) router.push("/user/login");
+
+    const fetchImages = async () => {
+      try {
+        const res = await axios.get(
+          `${process.env.NEXT_PUBLIC_SERVER_URI}/favourite/get-images?page=${page || 1}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            params: {
+              order: imgsOrder.toLowerCase(),
+              extension,
+            },
+          },
+        );
+        if (res.data.statusCode === 200) {
+          setImages({
+            error: false,
+            images: res.data.data.images,
+            loading: false,
+            pages: res.data.data.pages,
+          });
+        }
+      } catch (error) {
+        setImages({
+          ...images,
+          error: true,
+          images: [],
+          loading: false,
+          pages: 0,
+        });
+      }
+    };
+
+    fetchImages();
+  }, [page, imgsOrder, extension]);
+
   return (
     <div className="flex">
       <SideBar title="Photos" />
@@ -45,82 +99,24 @@ const FavouritesPhotos = () => {
           <h1 className="sm:text-2xl text-lg font-bold">Favourite Photos</h1>
           <FaStar style={{ width: "23px", height: "23px", color: "#A81C1C" }} />
           <div className="w-full flex sm:flex-row-reverse sm:px-8 items-center">
-            <PaginationButtons total={7} />
+            <PaginationButtons total={images.pages} />
           </div>
         </div>
         <div className="flex flex-wrap gap-5 p-8 w-full">
-          <FileComponent
-            id={1}
-            fName="Vini Jr."
-            image="https://apostagolos.com/wp-content/uploads/2022/05/vinicius-junior-2-scaled.jpg"
-            size="88"
-            type="image"
-            owner="Mother"
-            uploaded="15/7/2014"
-            extenstion=".PNG"
-            resolution="1446 * 800"
-            favourite={false}
-          />
-          <FileComponent
-            id={2}
-            fName="Vini Jr."
-            image="https://apostagolos.com/wp-content/uploads/2022/05/vinicius-junior-2-scaled.jpg"
-            size="88"
-            type="image"
-            owner="Mother"
-            uploaded="15/7/2014"
-            extenstion=".PNG"
-            resolution="1446 * 800"
-            favourite={false}
-          />
-          <FileComponent
-            id={3}
-            fName="Vini Jr."
-            image="https://apostagolos.com/wp-content/uploads/2022/05/vinicius-junior-2-scaled.jpg"
-            size="88"
-            type="image"
-            owner="Mother"
-            uploaded="15/7/2014"
-            extenstion=".PNG"
-            resolution="1446 * 800"
-            favourite={false}
-          />
-          <FileComponent
-            id={4}
-            fName="Vini Jr."
-            image="https://apostagolos.com/wp-content/uploads/2022/05/vinicius-junior-2-scaled.jpg"
-            size="88"
-            type="image"
-            owner="Mother"
-            uploaded="15/7/2014"
-            extenstion=".PNG"
-            resolution="1446 * 800"
-            favourite={false}
-          />
-          <FileComponent
-            id={5}
-            fName="Vini Jr."
-            image="https://apostagolos.com/wp-content/uploads/2022/05/vinicius-junior-2-scaled.jpg"
-            size="88"
-            type="image"
-            owner="Mother"
-            uploaded="15/7/2014"
-            extenstion=".PNG"
-            resolution="1446 * 800"
-            favourite={false}
-          />
-          <FileComponent
-            id={6}
-            fName="Vini Jr."
-            image="https://apostagolos.com/wp-content/uploads/2022/05/vinicius-junior-2-scaled.jpg"
-            size="88"
-            type="image"
-            owner="Mother"
-            uploaded="15/7/2014"
-            extenstion=".PNG"
-            resolution="1446 * 800"
-            favourite={false}
-          />
+          {images.loading && <LoadingSpinner />}
+          {!images.loading && images.error && (
+            <p className="w-full text-center text-2xl underline">
+              Error happened, try refreshing the page
+            </p>
+          )}
+
+          {!images.loading && !images.error && images.images.length < 1 && (
+            <p className="w-full text-center text-2xl">No images found</p>
+          )}
+
+          {!images.loading && !images.error && images.images.length > 0 && (
+            <ListFiles files={images.images} />
+          )}
         </div>
       </div>
     </div>

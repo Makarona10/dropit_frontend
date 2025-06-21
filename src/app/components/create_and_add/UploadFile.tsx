@@ -3,6 +3,7 @@ import { ArrowUpTrayIcon } from "@heroicons/react/24/outline";
 import { IoIosAt, IoIosWarning } from "react-icons/io";
 import { IoMdCloudUpload } from "react-icons/io";
 import axios from "axios";
+import { useParams } from "next/navigation";
 
 const UploadFile = () => {
   const [error, setError] = useState<string>("");
@@ -10,6 +11,7 @@ const UploadFile = () => {
   const upFileRef = useRef<HTMLDivElement>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const id = "upload_file_div";
+  const { folderId } = useParams();
 
   const permittedExtensions = [
     "jpg",
@@ -21,6 +23,10 @@ const UploadFile = () => {
     "mp4",
     "wav",
     "txt",
+    "doc",
+    "docx",
+    "rar",
+    "zip",
   ];
 
   useEffect(() => {
@@ -63,7 +69,8 @@ const UploadFile = () => {
     }
   };
 
-  const pushToServer = async () => {
+  const pushToServer = async (parentId: number | null) => {
+    const token = localStorage.getItem("access_token");
     if (!selectedFile) {
       setError("No file selected. Please choose a file first.");
       return;
@@ -72,28 +79,25 @@ const UploadFile = () => {
     try {
       const formData = new FormData();
       formData.append("file", selectedFile);
-      formData.append("directory", "lowshit");
       const response = await axios.post(
-        `http://localhost:3001/file/upload-file/userid`, // URL will be completely handled later
+        `${process.env.NEXT_PUBLIC_SERVER_URI}/file/upload-file?parentId=${parentId}`,
         formData,
         {
           headers: {
+            Authorization: `Bearer ${token}`,
             "Content-Type": "multipart/form-data",
           },
         },
       );
-
-      console.log("File uploaded successfully:", response.data);
       setError("");
       setFileName("");
-      setSelectedFile(null); // Clear the selected file
+      setSelectedFile(null);
       const element = document.getElementById(id);
       if (element) {
         element.style.opacity = "0";
         element.style.visibility = "hidden";
       }
     } catch (error: any) {
-      console.error("Error uploading file:", error);
       setError(
         error.response?.data?.message ||
           "Failed to upload file. Please try again.",
@@ -148,7 +152,7 @@ const UploadFile = () => {
         </div>
         <button
           className={`flex items-center gap-2 mt-2 px-4 w-full p-2 bg-green-600 rounded-md sm:text-base text-xs`}
-          onClick={() => pushToServer()}
+          onClick={() => pushToServer(Number(folderId) || null)}
         >
           <IoMdCloudUpload className="sm:text-xl text-base" />
           Push to the server

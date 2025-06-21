@@ -12,6 +12,6 @@ export const video_filter = [
     name: "MKV",
   },
   {
-    name: "OTHERS",
+    name: "ANY",
   },
 ];
