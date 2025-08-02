@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { faFacebook, faGoogle } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useRouter } from "next/navigation";
 
 const inputStyle =
   "sm:text-lg p-2 rounded-sm text-sm mt-1 w-full bg-neutral-200/10 outline-0 border-b-2 border-transparent focus:border-b-primary-400";
@@ -17,6 +18,7 @@ const RegisterPage = () => {
   });
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const router = useRouter();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -63,6 +65,7 @@ const RegisterPage = () => {
 
       if (response.ok) {
         setSuccess(data.message || "User created successfully");
+        router.push("/user/login");
       } else {
         setError(data.message || "Registration failed");
       }
@@ -163,7 +166,9 @@ const RegisterPage = () => {
               </button>
               <div className="flex items-center justify-center gap-1">
                 <div className="w-full flex gap-4 cursor-pointer p-2 justify-center items-center bg-white rounded-sm">
-                  <p className="text-md text-black/80">Register with Google</p>
+                  <p className="sm:text-sm text-xs text-black/80 line-clamp-1">
+                    Register with Google
+                  </p>
                   <FontAwesomeIcon
                     width={18}
                     height={18}
@@ -172,7 +177,7 @@ const RegisterPage = () => {
                   />
                 </div>
                 <div className="w-full flex gap-4 cursor-pointer p-2 justify-center items-center bg-[#3b5998] rounded-sm">
-                  <p className="text-md text-white/80">
+                  <p className="sm:text-sm text-xs text-white/80 line-clamp-1">
                     Register with Facebook
                   </p>
                   <FontAwesomeIcon

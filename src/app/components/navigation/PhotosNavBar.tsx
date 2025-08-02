@@ -25,24 +25,24 @@ const links = [
     img: faClock,
     ref: "recents",
   },
-  {
-    name: "Uploaded last week",
-    img: faClock,
-    ref: "uploads",
-    num: 7,
-  },
-  {
-    name: "Uploaded last month",
-    img: faClock,
-    ref: "uploads",
-    num: 30,
-  },
-  {
-    name: "Uploaded last 6 months",
-    img: faClock,
-    ref: "uploads",
-    num: 180,
-  },
+  // {
+  //   name: "Uploaded last week",
+  //   img: faClock,
+  //   ref: "uploads",
+  //   num: 7,
+  // },
+  // {
+  //   name: "Uploaded last month",
+  //   img: faClock,
+  //   ref: "uploads",
+  //   num: 30,
+  // },
+  // {
+  //   name: "Uploaded last 6 months",
+  //   img: faClock,
+  //   ref: "uploads",
+  //   num: 180,
+  // },
   {
     name: "Favourite Photos",
     img: faStar,

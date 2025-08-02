@@ -3,43 +3,29 @@ import Header from "@/app/components/common/Header";
 import SideBar from "@/app/components/common/SideBar";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import OrdAndFiltHead, { FT } from "@/app/components/common/Ord&FiltHead";
-import { LuAudioLines, LuFileVideo, LuFilterX, LuImages } from "react-icons/lu";
-import { IoDocumentText } from "react-icons/io5";
-import { BiDownArrowAlt, BiUpArrowAlt } from "react-icons/bi";
 import ListFiles from "@/app/components/files_browsing/ListFiles";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter, useSearchParams } from "next/navigation";
 import LoadingSpinner from "@/app/components/common/LoadingSpinner";
 import PaginationButtons from "@/app/components/pagination_btns/PaginationComp";
+import HeadBtnsBar from "@/app/components/common/HeadBtnsBar";
+import { MdDeleteForever } from "react-icons/md";
+import CleanBin from "@/app/components/files_browsing/binOptions/CleanBin";
 
-const filter_array: FT[] = [
+const btns = [
   {
-    name: "Image",
-    ico: LuImages,
+    name: "Clean bin",
+    ico: MdDeleteForever,
+    color: "#c83c51",
+    action: () => {
+      const element = document.getElementById("clean_bin_div");
+      if (element) {
+        element.style.visibility = "visible";
+        element.style.opacity = "100";
+      }
+    },
   },
-  {
-    name: "Video",
-    ico: LuFileVideo,
-  },
-  {
-    name: "Audio",
-    ico: LuAudioLines,
-  },
-  {
-    name: "Other",
-    ico: IoDocumentText,
-  },
-  {
-    name: "All",
-    ico: LuFilterX,
-  },
-];
-
-const order: FT[] = [
-  { name: "Asc", ico: BiUpArrowAlt },
-  { name: "Desc", ico: BiDownArrowAlt },
 ];
 
 const Deleted = () => {
@@ -51,7 +37,7 @@ const Deleted = () => {
   });
   const router = useRouter();
   const searchParams = useSearchParams();
-  const page = searchParams.get("page");
+  const page = searchParams.get("page") || 1;
 
   useEffect(() => {
     const fetchDeletedFiles = async () => {
@@ -83,15 +69,18 @@ const Deleted = () => {
     };
 
     fetchDeletedFiles();
-  }, []);
+  }, [page]);
 
   return (
     <div className="flex h-full w-full ">
+      <div className="z-20">
+        <CleanBin />
+      </div>
       <SideBar title="Cloud" />
       <div className="flex flex-col w-full">
         <Header />
-        <div className="flex items-center w-full h-14 bg-neutral-800 border-t-neutral-700/70 border-t-[1px] px-8 gap-8">
-          <OrdAndFiltHead filter={filter_array} order={order} />
+        <div className="flex items-center w-full h-16 bg-neutral-800 border-t-neutral-700/70 border-t-[1px] px-2 gap-8">
+          <HeadBtnsBar buttons={btns} />
         </div>
         <div className="flex flex-col flex-wrap p-8 gap-8 w-full">
           <div className="flex gap-3 items-center sm:text-2xl text-lg font-bold">

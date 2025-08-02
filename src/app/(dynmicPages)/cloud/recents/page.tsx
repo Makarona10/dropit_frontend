@@ -8,7 +8,6 @@ import { _File, _Folder } from "@/app/types";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { FaSort } from "react-icons/fa";
 import { MdWatchLater, MdFileUpload, MdCreateNewFolder } from "react-icons/md";
 import LoadingSpinner from "@/app/components/common/LoadingSpinner";
 import ListFiles from "@/app/components/files_browsing/ListFiles";
@@ -26,7 +25,7 @@ const createFolderId = "create_folder";
 
 const btns = [
   {
-    name: "Upload file",
+    name: "Upload files",
     ico: MdFileUpload,
     color: "#4AA927",
     action: () => {
@@ -49,18 +48,18 @@ const btns = [
       }
     },
   },
-  {
-    name: "Sort by name",
-    ico: FaSort,
-    color: "#D2D2D2",
-    action: () => {},
-  },
-  {
-    name: "Sort by files",
-    ico: FaSort,
-    color: "#D2D2D2",
-    action: () => {},
-  },
+  // {
+  //   name: "Sort by name",
+  //   ico: FaSort,
+  //   color: "#D2D2D2",
+  //   action: () => {},
+  // },
+  // {
+  //   name: "Sort by files",
+  //   ico: FaSort,
+  //   color: "#D2D2D2",
+  //   action: () => {},
+  // },
 ];
 
 const RecentsPage = () => {
@@ -80,6 +79,7 @@ const RecentsPage = () => {
     const fetchFiles = async () => {
       try {
         const token = localStorage.getItem("access_token");
+        // if (!token) return router.push("/user/login");
         const res = await axios.get(
           `${process.env.NEXT_PUBLIC_SERVER_URI}/file/recently-uploaded`,
           {
@@ -91,8 +91,10 @@ const RecentsPage = () => {
 
         setFiles({ ...files, loading: false, data: res.data.data.files });
         setFolders({ ...folders, loading: false, data: res.data.data.folders });
-        if (!token) return router.push("/user/login");
-      } catch (error) {
+      } catch (error: any) {
+        if (error.response.status === 401) {
+          router.push("/user/login");
+        }
         setFiles({ error: true, loading: false, data: [] });
         setFolders({ error: true, loading: false, data: [] });
       }
@@ -123,31 +125,6 @@ const RecentsPage = () => {
 
         <div className="flex gap-3 sm:p-8 p-5 flex-wrap">
           {!files.error && !files.loading && files.data.length > 0 && (
-            // files.data.map((f: _File) => {
-            //   const duration = f.duration
-            //     ? formatDuration(f.duration)
-            //     : undefined;
-            //   return (
-            //     <div key={f.id}>
-            //       <FileComponent
-            //         id={f.id}
-            //         image={
-            //           "https://www.kingfut.com/wp-content/uploads/2020/11/Zizo-1-scaled.jpg"
-            //         }
-            //         fName={f.name}
-            //         favourite={true}
-            //         type={f.type}
-            //         resolution={f.resolution}
-            //         uploaded={f.createdAt}
-            //         size={f.sizeInKb}
-            //         owner=""
-            //         extenstion={f.extension}
-            //         duration={duration}
-            //       />
-            //     </div>
-            // );
-            // })
-
             <ListFiles files={files.data} />
           )}
 

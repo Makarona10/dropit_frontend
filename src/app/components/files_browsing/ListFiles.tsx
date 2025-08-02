@@ -13,6 +13,9 @@ type FileType = {
   duration?: number;
   fps?: number;
   isFavourite: boolean;
+  deleted?: boolean;
+  thumbnail?: string;
+  userId?: string;
 };
 
 type Props = {
@@ -40,9 +43,10 @@ const ListFiles = ({ files }: Props) => {
               size={size}
               favourite={f.isFavourite}
               owner={""}
-              image={
-                "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pexels.com%2Fsearch%2Fbeautiful%2F&psig=AOvVaw0JkUBG3KPo64_uCLDS2nPN&ust=1749788525378000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCLjXzbOE640DFQAAAAAdAAAAABAE"
-              }
+              deleted={f?.deleted}
+              thumbnail={f.thumbnail || ""}
+              userId={f.userId}
+              fps={f?.fps || 0}
             />
           );
         })}

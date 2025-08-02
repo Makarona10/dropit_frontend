@@ -5,11 +5,13 @@ import LoadingSpinner from "@/app/components/common/LoadingSpinner";
 import SideBar from "@/app/components/common/SideBar";
 import ListFiles from "@/app/components/files_browsing/ListFiles";
 import AddFileToTag from "@/app/components/files_browsing/tags_components/AddFileToTag";
+import RemoveFileFromTag from "@/app/components/files_browsing/tags_components/RemoveFromTag";
 import PaginationButtons from "@/app/components/pagination_btns/PaginationComp";
 import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaTag, FaTags } from "react-icons/fa";
+import { IoIosRemoveCircle } from "react-icons/io";
 
 interface File {
   id: number;
@@ -22,6 +24,7 @@ interface File {
   isFavourite: boolean;
   duration?: string;
   resolution?: string;
+  thumbnail?: string;
 }
 
 const buttons = [
@@ -29,10 +32,25 @@ const buttons = [
     name: "Tag a file",
     ico: FaTag,
     color: "#4dcb4d",
+    style: "sm:h-4 sm:w-4 h-3 w-3",
     action: () => {
       const element = document.getElementById("add_file_to_tag");
       if (element) {
-        (element.style.visibility = "visible"), (element.style.opacity = "100");
+        ((element.style.visibility = "visible"),
+          (element.style.opacity = "100"));
+      }
+    },
+  },
+  {
+    name: "Remove tagged file",
+    ico: IoIosRemoveCircle,
+    color: "#ff3333",
+    style: "text-lg",
+    action: () => {
+      const element = document.getElementById("remove_file_from_tag");
+      if (element) {
+        ((element.style.visibility = "visible"),
+          (element.style.opacity = "100"));
       }
     },
   },
@@ -87,7 +105,8 @@ const TagFiles = () => {
       <div className="flex flex-col w-full">
         <Header />
         <AddFileToTag />
-        <div className="w-full flex items-center h-14 px-8 bg-neutral-800 border-t-[1px] border-neutral-100/10">
+        <RemoveFileFromTag />
+        <div className="w-full flex items-center h-16 px-8 bg-neutral-800 border-t-[1px] border-neutral-100/10">
           {buttons.map((b) => {
             const Icon = b.ico;
             return (
@@ -101,9 +120,10 @@ const TagFiles = () => {
               >
                 <Icon
                   style={{ color: b.color }}
-                  className="w-4 h-4 font-semibold"
+                  // className={b.style}
+                  size={16}
                 />
-                <p className="text-sm font-semibold">{b.name}</p>
+                <p className="text-xs sm:text-sm font-semibold">{b.name}</p>
               </div>
             );
           })}

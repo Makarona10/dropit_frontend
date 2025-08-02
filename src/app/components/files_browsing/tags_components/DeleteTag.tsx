@@ -62,10 +62,11 @@ const DeleteTag = ({ tag_id }: _Props) => {
         transition duration-300 invisible`}
       style={{ zIndex: 2 }}
       id={div_id}
+      onClick={(e) => e.stopPropagation()}
     >
       <div className="fixed inset-0 bg-white/10 p-6 shadow-lg overflow-auto"></div>
       <div
-        className="flex flex-col sm:w-[450px] bg-black p-6 rounded-2xl"
+        className="flex flex-col sm:w-[450px] bg-black p-6 rounded-2xl border-[1px] border-white/20"
         style={{ zIndex: 2 }}
         ref={divRef}
       >

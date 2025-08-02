@@ -8,6 +8,7 @@ import { useParams } from "next/navigation";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import path from "path";
+import { downloadFile } from "@/app/functions";
 
 type Btn = {
   ico: IconType;
@@ -22,7 +23,7 @@ const ImagePreviewer = () => {
     loading: true,
     error: false,
     img: {
-      id: null,
+      id: 0,
       userId: "",
       name: "",
       uniqueName: "",
@@ -42,7 +43,7 @@ const ImagePreviewer = () => {
       ico: FaDownload,
       name: "Download",
       action: () => {
-        downloadFile();
+        downloadFile(image.img.id, token || "", image.img.name);
       },
     },
     {
@@ -93,35 +94,6 @@ const ImagePreviewer = () => {
     } catch {}
   };
 
-  const downloadFile = async () => {
-    try {
-      const res = await axios.get(
-        `${process.env.NEXT_PUBLIC_SERVER_URI}/file/download/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          responseType: "blob",
-        },
-      );
-      const blob = new Blob([res.data], { type: res.headers["content-type"] });
-
-      const url = window.URL.createObjectURL(blob);
-
-      const link = document.createElement("a");
-      link.href = url;
-      link.download =
-        res.headers["content-disposition"]?.split("filename=")[1] ||
-        `file_${image.img.name}`;
-      document.body.appendChild(link);
-      link.click();
-
-      // Clean up by revoking the URL and removing the link
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(link);
-    } catch (error) {}
-  };
-
   useEffect(() => {
     const tok = localStorage.getItem("access_token");
     const fetchFiles = async () => {
@@ -170,14 +142,13 @@ const ImagePreviewer = () => {
           })}
         </div>
       </div>
-      <div className="flex justify-center items-center my-auto sm:max-w-10/12 h-full p-5">
+      <div className="flex justify-center items-center p-5">
         <Image
           src={`${path.join(process.env.NEXT_PUBLIC_SERVER_URI || "", "uploads", image?.img?.userId || "", image?.img?.path || "", image?.img?.uniqueName || "")}`}
           width={3840}
           height={2160}
           alt={"Picture"}
-          className="rounded-lg border-[2px] border-while-500/20"
-          style={{ width: "100%", height: "auto" }}
+          className="rounded-lg border-[2px] border-white-500/20 max-w-[80%] max-h-[90%] h-auto w-auto"
         />
       </div>
     </div>

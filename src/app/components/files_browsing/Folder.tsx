@@ -1,14 +1,15 @@
 "use client";
 import { BiSolidEdit } from "react-icons/bi";
 import { MdDeleteForever } from "react-icons/md";
-import { FaFolder } from "react-icons/fa";
+import { FaFolder, FaTrash } from "react-icons/fa";
 import { HiDotsVertical } from "react-icons/hi";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { RiUserSharedLine } from "react-icons/ri";
 import { FaStar } from "react-icons/fa";
 import { FaDownload } from "react-icons/fa6";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import DeleteFolder from "./folderComps/DeleteFolder";
 
 type FolderProps = {
   id: number;
@@ -18,9 +19,8 @@ type FolderProps = {
 
 const Folder = ({ id, name, created_at }: FolderProps) => {
   const [toggleOpts, setToggleOpts] = useState<boolean>(false);
-  const delete_folder_div_id = "delete_folder_window_div";
+  const delete_folder_div_id = `delete_folder_${id}`;
   const router = useRouter();
-  const divRef = useRef<HTMLDivElement>(null);
 
   const options = [
     {
@@ -40,34 +40,6 @@ const Folder = ({ id, name, created_at }: FolderProps) => {
     },
   ];
 
-  const deleteFolder = async () => {
-    try {
-      const token = localStorage.getItem("access_token");
-      if (!token) {
-        router.push("/user/login");
-      }
-      const res = await axios.delete(
-        `${process.env.NEXT_PUBLIC_SERVER_URI}/folder/delete/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
-      if (res.data.statusCode === 200) {
-        // setMsg({ error: false, msg: "Folder Created successfully" });
-        setTimeout(() => {
-          window.location.reload();
-        }, 2000);
-      }
-    } catch (error: any) {
-      // setMsg({
-      //   error: true,
-      //   msg: error?.response?.data?.message || "Unexpected error happened",
-      // });
-    }
-  };
-
   return (
     <div
       className="flex flex-col relative items-center sm:w-[250px] w-[180px] bg-neutral-800 rounded-xl
@@ -78,35 +50,8 @@ const Folder = ({ id, name, created_at }: FolderProps) => {
         router.push(`/folders/folder/${id}?fn=${name}`);
       }}
     >
-      <div
-        className="fixed m-auto h-screen inset-0 select-text cursor-default
-      flex items-center justify-center bg-black bg-opacity-50 z-50   
-      transition duration-300 invisible"
-        id={delete_folder_div_id}
-        onClick={(e) => {
-          e.stopPropagation();
-        }}
-      >
-        <div className="fixed inset-0 bg-white/10 p-6 shadow-lg overflow-auto"></div>
-        <div
-          className="flex flex-col sm:w-[450px] bg-black p-6 rounded-lg gap-6 border-[1px] border-white/30"
-          style={{ zIndex: 2 }}
-          ref={divRef}
-        >
-          <div className="sm:text-xl text-base font-semibold">
-            <
-            Delete folder confirmation
-          </div>
-          <div
-            className="flex w-full gap-3 text-sm"
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
-          >
-            <button className="bg-green-600 p-2 rounded-md">Confirm</button>
-            <button className="bg-primary-600 p-2 rounded-md">Cancel</button>
-          </div>
-        </div>
+      <div className="z-20">
+        <DeleteFolder id={id} />
       </div>
       <div className="flex relative items-center w-full p-4">
         <FaFolder style={{ width: "24px", height: "24px" }} />

@@ -3,35 +3,31 @@ import Header from "@/app/components/common/Header";
 import SideBar from "@/app/components/common/SideBar";
 import { faImages } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import OrdAndFiltHead from "@/app/components/common/Ord&FiltHead";
-import { BiDownArrowAlt, BiUpArrowAlt } from "react-icons/bi";
 import PaginationButtons from "@/app/components/pagination_btns/PaginationComp";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
 import LoadingSpinner from "@/app/components/common/LoadingSpinner";
 import ListFiles from "@/app/components/files_browsing/ListFiles";
+import HeadBtnsBar from "@/app/components/common/HeadBtnsBar";
+import { LuImagePlus } from "react-icons/lu";
+import UploadImage from "@/app/components/create_and_add/UploadImage";
+import Order from "@/app/components/filteration/OrderBy";
+import SortBy from "@/app/components/filteration/SortBy";
+import ImageExtension from "@/app/components/filteration/ImgExtension";
 
-const order = [
-  { name: "Asc", ico: BiUpArrowAlt },
-  { name: "Desc", ico: BiDownArrowAlt },
-];
-
-export const photo_filter = [
+const btns = [
   {
-    name: "PNG",
-  },
-  {
-    name: "JPG/JPEG",
-  },
-  {
-    name: "GIF",
-  },
-  {
-    name: "ICO",
-  },
-  {
-    name: "ANY",
+    name: "Upload image",
+    ico: LuImagePlus,
+    color: "#4AA927",
+    action: () => {
+      const element = document.getElementById("upload_image_div");
+      if (element) {
+        element.style.visibility = "visible";
+        element.style.opacity = "100";
+      }
+    },
   },
 ];
 
@@ -44,8 +40,9 @@ const Photos = () => {
   });
   const searchParams = useSearchParams();
   const page = Number(searchParams.get("page")) || 1;
-  const imgsOrder = searchParams.get("o") || "desc";
-  const extension = searchParams.get("f");
+  const imgsOrder = searchParams.get("order") || "desc";
+  const extension = searchParams.get("ext");
+  const sortBy = searchParams.get("sort_by");
   const router = useRouter();
 
   useEffect(() => {
@@ -55,14 +52,13 @@ const Photos = () => {
     const fetchVideos = async () => {
       try {
         const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_SERVER_URI}/file/get-images?page=${page || 1}`,
+          `${process.env.NEXT_PUBLIC_SERVER_URI}/file/get-images?page=${page || 1}` +
+            `&sortBy=${sortBy || "createdAt"}` +
+            `&order=${imgsOrder || "desc"}` +
+            `${extension ? `&extension=${extension}` : ""} `,
           {
             headers: {
               Authorization: `Bearer ${token}`,
-            },
-            params: {
-              order: imgsOrder.toLowerCase(),
-              extension,
             },
           },
         );
@@ -86,15 +82,18 @@ const Photos = () => {
     };
 
     fetchVideos();
-  }, [page, imgsOrder, extension]);
+  }, [searchParams]);
 
   return (
     <div className="flex h-full w-full ">
+      <div className={`z-20`}>
+        <UploadImage />
+      </div>
       <SideBar title="Photos" />
       <div className="flex flex-col w-full">
         <Header />
-        <div className="flex items-center w-full h-14 bg-neutral-800 border-t-neutral-700/70 border-t-[1px] px-8 gap-8">
-          <OrdAndFiltHead order={order} filter={photo_filter} />
+        <div className="flex items-center w-full h-16 bg-neutral-800 px-5 gap-8">
+          <HeadBtnsBar buttons={btns} />
         </div>
         <div className="flex flex-col flex-wrap p-8 gap-8 w-full">
           <div className="w-full flex items-center ">
@@ -110,6 +109,12 @@ const Photos = () => {
             <div className="w-full flex flex-row-reverse">
               <PaginationButtons total={images.pages} />
             </div>
+          </div>
+          <hr className="opacity-30 sm:w-7/12 w-10/12" />
+          <div className="flex flex-wrap sm:gap-4 gap-2">
+            <SortBy />
+            <Order />
+            <ImageExtension />
           </div>
           <div className="w-full flex flex-wrap gap-5">
             {images.loading && <LoadingSpinner />}

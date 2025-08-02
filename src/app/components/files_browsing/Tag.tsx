@@ -23,16 +23,14 @@ const Tag = ({ id, name, createdAt }: _Props) => {
       className="flex flex-col items-center w-[250px] h-[100px] bg-neutral-800 rounded-xl
             duration-100 hover:bg-neutral-900 cursor-pointer select-none"
       title="This is a title"
+      onClick={() => {
+        router.push(`tags/tfiles/${id}`);
+      }}
     >
       <div className={`z-50 duration-300`}>
         <DeleteTag tag_id={id} />
       </div>
-      <div
-        className="flex items-center w-full p-4 rounded-t-xl active:bg-neutral-950"
-        onClick={() => {
-          router.push(`tags/tfiles/${id}`);
-        }}
-      >
+      <div className="flex items-center w-full p-4 rounded-t-xl active:bg-neutral-950">
         <LiaTagSolid style={{ width: "24px", height: "24px" }} />
         <p
           className="flex items-center w-full overflow-hidden text-ellipsis whitespace-nowrap sm:text-[16px] text-sm text-neutral-300
@@ -49,7 +47,8 @@ const Tag = ({ id, name, createdAt }: _Props) => {
           {/* <p>files</p> */}
           <span
             className="absolute right-2 p-[5px] rounded-full hover:bg-neutral-700 active:bg-neutral-600"
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               const element = document.getElementById(delete_window_div_id);
               if (element) {
                 element.style.visibility = "visible";

@@ -42,17 +42,17 @@ const links = [
   {
     name: "Folders",
     img: faFolderOpen,
-    ref: "shared-folders",
+    ref: "shared/folders",
   },
   {
     name: "Images",
     img: faImages,
-    ref: "shared-images",
+    ref: "shared/images",
   },
   {
     name: "Videos",
     img: faFileVideo,
-    ref: "shared-videos",
+    ref: "shared/videos",
   },
 ];
 
@@ -103,9 +103,9 @@ const HomeNavbar = () => {
               className={`
                             relative flex items-center w-full p-2 pl-7 rounded-xl
                             hover:bg-neutral-800 hover:cursor-pointer
-                            ${pathName.includes(`/home/${l.name}`) && "bg-neutral-800"}
+                            ${pathName.includes(`${l.ref}`) && "bg-neutral-800"}
                             `}
-              href={`${pathName}/${l.ref.toLowerCase()}`}
+              href={`/cloud/${l.ref.toLowerCase()}`}
             >
               {/* <Image
                                     src={l.img}

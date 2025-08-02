@@ -4,22 +4,14 @@ import { IoIosWarning } from "react-icons/io";
 import { IoMdCloudUpload } from "react-icons/io";
 import axios from "axios";
 import { useParams } from "next/navigation";
-import {
-  permittedImages,
-  permittedOtherExtensions,
-  permittedVideos,
-} from "@/app/types";
+import { permittedImages } from "@/app/types";
 
-const permittedExtensions = permittedVideos
-  .concat(permittedOtherExtensions)
-  .concat(permittedImages);
-
-const UploadFile = () => {
+const UploadImage = () => {
   const [error, setError] = useState<string>("");
   const [fileNames, setFileNames] = useState<string[]>([]);
   const upFileRef = useRef<HTMLDivElement>(null);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-  const id = "upload_file_div";
+  const id = "upload_image_div";
   const { folderId } = useParams();
 
   useEffect(() => {
@@ -47,7 +39,7 @@ const UploadFile = () => {
 
     for (const file of files) {
       const fileExtension = file.name.split(".").pop()?.toLowerCase();
-      if (fileExtension && permittedExtensions.includes(fileExtension)) {
+      if (fileExtension && permittedImages.includes(fileExtension)) {
         validFiles.push(file);
         validNames.push(file.name);
       }
@@ -61,7 +53,7 @@ const UploadFile = () => {
       setSelectedFiles([]);
       setFileNames([]);
       setError(
-        "No valid files. Allowed extensions: " + permittedExtensions.join(", "),
+        "No valid files. Allowed extensions: " + permittedImages.join(", "),
       );
       event.target.value = "";
     }
@@ -70,7 +62,7 @@ const UploadFile = () => {
   const pushToServer = async (parentId: number | null) => {
     const token = localStorage.getItem("access_token");
     if (!selectedFiles.length) {
-      setError("No file selected. Please choose a files first.");
+      setError("No file selected. Please choose images first.");
       return;
     }
 
@@ -123,7 +115,7 @@ const UploadFile = () => {
         ref={upFileRef}
       >
         <div className="flex relative pb-2 w-full border-b-[1px] border-white/30">
-          <h1 className="sm:text-lg font-bold text-sm">Upload files</h1>
+          <h1 className="sm:text-lg font-bold text-sm">Upload images</h1>
           <div className="absolute right-0 top-1 group inline-block">
             <div
               className="w-6 h-6 rounded-full bg-blue-500 text-white flex items-center justify-center 
@@ -137,7 +129,7 @@ const UploadFile = () => {
               rounded-md px-3 py-2 opacity-0 group-hover:opacity-100 pointer-events-none whitespace-normal
               transition-opacity duration-300 z-10"
             >
-              Allowed extensions {"->"} {permittedExtensions.join(", ")}
+              Allowed extensions {"->"} {permittedImages.join(", ")}
             </div>
           </div>
         </div>
@@ -155,32 +147,33 @@ const UploadFile = () => {
             hover:bg-primary-600 transition-colors flex items-center gap-2"
           >
             <ArrowUpTrayIcon className="sm:w-5 sm:h-5 h-3 w-3" />
-            <span className="sm:text-base text-xs">Choose File</span>
+            <span className="sm:text-base text-xs">Choose image</span>
           </label>
+
           {fileNames.length > 0 && (
             <p className="sm:text-sm text-[10px] pt-3 text-green-500">
               {selectedFiles.length}{" "}
-              {selectedFiles.length > 1 ? "files are" : "file is"} allowed to
+              {selectedFiles.length > 1 ? "videos are" : "video is"} allowed to
               get uploaded
             </p>
           )}
-          {error && (
-            <div className="flex flex-col items-center sm:text-sm pt-3 text-primary-400">
-              <IoIosWarning className="sm:text-4xl" />
-              <p>{error}</p>
-            </div>
-          )}
         </div>
+        {error && (
+          <div className="flex flex-col items-center sm:text-sm text-xs pt-3 text-primary-400">
+            <IoIosWarning className="sm:text-4xl text-lg" />
+            <p>{error}</p>
+          </div>
+        )}
         <button
           className={`flex items-center gap-2 mt-2 px-4 w-full p-2 bg-green-600 rounded-md sm:text-base text-xs`}
           onClick={() => pushToServer(Number(folderId) || null)}
         >
           <IoMdCloudUpload className="sm:text-xl text-base" />
-          Push to the server
+          Upload selected images
         </button>
       </div>
     </div>
   );
 };
 
-export default UploadFile;
+export default UploadImage;

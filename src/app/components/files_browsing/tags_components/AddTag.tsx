@@ -64,7 +64,7 @@ const AddTag = () => {
     >
       <div className="fixed inset-0 bg-white/10 p-6 shadow-lg overflow-auto"></div>
       <div
-        className="flex flex-col sm:w-[450px] bg-black p-6 rounded-lg gap-6"
+        className="flex flex-col sm:w-[450px] bg-black p-6 rounded-[20px] gap-6 border-[1px] border-white/20"
         style={{ zIndex: 2 }}
         ref={divRef}
       >

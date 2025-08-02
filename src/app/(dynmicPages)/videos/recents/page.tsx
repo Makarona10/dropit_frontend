@@ -3,37 +3,34 @@ import Header from "@/app/components/common/Header";
 import SideBar from "@/app/components/common/SideBar";
 import { faVideo } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import OrdAndFiltHead from "@/app/components/common/Ord&FiltHead";
-import { BiDownArrowAlt, BiUpArrowAlt } from "react-icons/bi";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
 import LoadingSpinner from "@/app/components/common/LoadingSpinner";
 import ListFiles from "@/app/components/files_browsing/ListFiles";
+import UploadVideo from "@/app/components/create_and_add/UploadVideo";
+import HeadBtnsBar from "@/app/components/common/HeadBtnsBar";
+import { RiVideoUploadLine } from "react-icons/ri";
+import VideoDuration from "@/app/components/filteration/VideoDuration";
+import SortBy from "@/app/components/filteration/SortBy";
+import Order from "@/app/components/filteration/OrderBy";
+import VideoExtension from "@/app/components/filteration/VidExtension";
+import PaginationButtons from "@/app/components/pagination_btns/PaginationComp";
 
-const order = [
-  { name: "Newest", ico: BiUpArrowAlt },
-  { name: "Oldest", ico: BiDownArrowAlt },
+const btns = [
+  {
+    name: "Upload video",
+    ico: RiVideoUploadLine,
+    color: "#4AA927",
+    action: () => {
+      const element = document.getElementById("upload_video_div");
+      if (element) {
+        element.style.visibility = "visible";
+        element.style.opacity = "100";
+      }
+    },
+  },
 ];
-
-const video_filter = [
-  {
-    name: "MP4",
-  },
-  {
-    name: "MOV",
-  },
-  {
-    name: "AVI",
-  },
-  {
-    name: "MKV",
-  },
-  {
-    name: "OTHERS",
-  },
-];
-
 const Videos = () => {
   const [videos, setVideos] = useState({
     loading: true,
@@ -43,8 +40,10 @@ const Videos = () => {
   });
   const searchParams = useSearchParams();
   const page = Number(searchParams.get("page")) || 1;
-  const vidsOrder = searchParams.get("o") || "desc";
-  const extension = searchParams.get("f");
+  const vidsOrder = searchParams.get("order") || "desc";
+  const extension = searchParams.get("ext");
+  const sortBy = searchParams.get("sort_by");
+  const duration = searchParams.get("duration");
   const router = useRouter();
 
   useEffect(() => {
@@ -54,7 +53,11 @@ const Videos = () => {
     const fetchVideos = async () => {
       try {
         const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_SERVER_URI}/file/get-videos?page=${page || 1}`,
+          `${process.env.NEXT_PUBLIC_SERVER_URI}/file/get-videos?page=${page || 1}` +
+            `${sortBy ? `&sortBy=${sortBy}` : ""}` +
+            `${duration ? `&duration=${duration}` : ""}` +
+            `${extension ? `&extension=${extension}` : ""}` +
+            `${vidsOrder ? `&order=${vidsOrder}` : ""}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -85,25 +88,38 @@ const Videos = () => {
     };
 
     fetchVideos();
-  }, [page, vidsOrder, extension]);
+  }, [searchParams]);
 
   return (
     <div className="flex h-full w-full ">
+      <div className={`z-20`}>
+        <UploadVideo />
+      </div>
       <SideBar title="Videos" />
       <div className="flex flex-col w-full">
         <Header />
-        <div className="flex items-center w-full h-14 bg-neutral-800 border-t-neutral-700/70 border-t-[1px] px-8 gap-8">
-          <OrdAndFiltHead order={order} filter={video_filter} />
+        <div className="flex items-center w-full h-16 bg-neutral-800 p-4 gap-8">
+          <HeadBtnsBar buttons={btns} />
         </div>
         <div className="flex flex-col flex-wrap p-8 gap-8 w-full">
           <div className="flex gap-3 items-center sm:text-2xl text-lg font-bold">
-            <p>Uploaded Videos</p>
+            <p className="text-nowrap">Uploaded Videos</p>
             <FontAwesomeIcon
               width={30}
               height={30}
               icon={faVideo}
               className="text-white"
             />
+            <div className="flex w-full flex-row-reverse sm:px-8 px-4">
+              <PaginationButtons total={videos.pages} />
+            </div>
+          </div>
+          <hr className="sm:w-7/12 w-10/12 opacity-30" />
+          <div className="flex flex-wrap sm:gap-4 gap-2">
+            <VideoDuration />
+            <VideoExtension />
+            <SortBy />
+            <Order />
           </div>
           <div className="w-full flex flex-wrap gap-5">
             {videos.loading && <LoadingSpinner />}
@@ -114,7 +130,9 @@ const Videos = () => {
             )}
 
             {!videos.loading && !videos.error && videos.videos.length < 1 && (
-              <p className="w-full text-center text-2xl">No videos found</p>
+              <p className="w-full text-center text-2xl font-semibold">
+                No videos found
+              </p>
             )}
 
             {!videos.loading && !videos.error && videos.videos.length > 0 && (

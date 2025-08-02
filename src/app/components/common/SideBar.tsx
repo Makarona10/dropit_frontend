@@ -75,7 +75,7 @@ const SideBar = ({ title }: sideBarSelectios) => {
 
   const pathName = usePathname();
   return (
-    <div className="relative min-h-screen max-h-full flex left-0 bg-neutral-800">
+    <div className="relative min-h-screen max-h-full flex left-0 bg-neutral-800 border-r-[1px] border-neutral-400/30">
       <nav
         aria-label="Global"
         className="flex sm:w-[70px] w-[60px] flex-col relative items-center"

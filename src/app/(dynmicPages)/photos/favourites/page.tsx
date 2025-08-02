@@ -1,38 +1,13 @@
 "use client";
 import Header from "@/app/components/common/Header";
-import OrdAndFiltHead, { FT } from "@/app/components/common/Ord&FiltHead";
 import SideBar from "@/app/components/common/SideBar";
 import { FaStar } from "react-icons/fa";
 import PaginationButtons from "@/app/components/pagination_btns/PaginationComp";
-import { BiDownArrowAlt, BiUpArrowAlt } from "react-icons/bi";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
 import LoadingSpinner from "@/app/components/common/LoadingSpinner";
 import ListFiles from "@/app/components/files_browsing/ListFiles";
-
-const filter = [
-  {
-    name: "PNG",
-  },
-  {
-    name: "JPG/JPEG",
-  },
-  {
-    name: "GIF",
-  },
-  {
-    name: "ICO",
-  },
-  {
-    name: "ANY",
-  },
-];
-
-const order: FT[] = [
-  { name: "Newest", ico: BiUpArrowAlt },
-  { name: "Oldest", ico: BiDownArrowAlt },
-];
 
 const FavouritesPhotos = () => {
   const [images, setImages] = useState({
@@ -92,15 +67,19 @@ const FavouritesPhotos = () => {
       <SideBar title="Photos" />
       <div className="flex flex-col w-full">
         <Header />
-        <div className="w-full px-8 flex items-center h-14 bg-neutral-800 border-t-[1px] border-t-neutral-700/70">
-          <OrdAndFiltHead order={order} filter={filter} />
-        </div>
-        <div className="flex items-center gap-4 pt-10 pl-10">
-          <h1 className="sm:text-2xl text-lg font-bold">Favourite Photos</h1>
-          <FaStar style={{ width: "23px", height: "23px", color: "#A81C1C" }} />
-          <div className="w-full flex sm:flex-row-reverse sm:px-8 items-center">
-            <PaginationButtons total={images.pages} />
+        <div className="flex flex-col gap-5 p-10">
+          <div className="flex items-center gap-3">
+            <h1 className="sm:text-2xl text-lg font-bold text-nowrap">
+              Favourite Photos
+            </h1>
+            <FaStar
+              style={{ width: "26px", height: "26px", color: "#A81C1C" }}
+            />
+            <div className="w-full flex sm:flex-row-reverse sm:px-8 items-center">
+              <PaginationButtons total={images.pages} />
+            </div>
           </div>
+          <hr className="opacity-30 w-10/12 sm:w-7/12" />
         </div>
         <div className="flex flex-wrap gap-5 p-8 w-full">
           {images.loading && <LoadingSpinner />}

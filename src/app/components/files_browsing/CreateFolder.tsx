@@ -44,7 +44,7 @@ const CreateFolder = () => {
       const res = await axios.post(
         `${process.env.NEXT_PUBLIC_SERVER_URI}/folder/create`,
         {
-          name,
+          name: inputRef.current?.value,
           parentId: folderId,
         },
         {
@@ -57,7 +57,7 @@ const CreateFolder = () => {
         setMsg({ error: false, msg: "Folder Created successfully" });
         setTimeout(() => {
           window.location.reload();
-        }, 2000);
+        }, 600);
       }
     } catch (error: any) {
       setMsg({
@@ -84,7 +84,7 @@ const CreateFolder = () => {
     >
       <div className="fixed inset-0 bg-white/10 p-6 shadow-lg overflow-auto"></div>
       <div
-        className="flex flex-col sm:w-[450px] bg-black p-6 rounded-lg gap-6"
+        className="flex flex-col sm:w-[450px] bg-black p-6 rounded-lg gap-6 border-[1px] border-white/20"
         style={{ zIndex: 2 }}
         ref={divRef}
       >

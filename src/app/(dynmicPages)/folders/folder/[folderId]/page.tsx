@@ -12,14 +12,14 @@ import PaginationButtons from "@/app/components/pagination_btns/PaginationComp";
 import axios from "axios";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { FaFolder, FaSort } from "react-icons/fa";
+import { FaFolder } from "react-icons/fa";
 import { MdCreateNewFolder, MdFileUpload } from "react-icons/md";
 
 const upFileBtnId = "upload_file_div";
 
 const btns = [
   {
-    name: "Upload file",
+    name: "Upload files",
     ico: MdFileUpload,
     color: "#4AA927",
     action: () => {

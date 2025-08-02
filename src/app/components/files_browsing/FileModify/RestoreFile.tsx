@@ -1,14 +1,13 @@
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
-import { FaRegTrashAlt } from "react-icons/fa";
+import { MdOutlineRestore, MdOutlineRestorePage } from "react-icons/md";
 
 type FileProps = {
   id: string;
   fileId: number;
-  deleted?: boolean;
 };
 
-const DeleteFile = ({ id, fileId, deleted }: FileProps) => {
+const RestoreFile = ({ id, fileId }: FileProps) => {
   const divRef = useRef<HTMLDivElement>(null);
   const [token, setToken] = useState<string>("");
   const [error, setError] = useState<string>("");
@@ -23,27 +22,11 @@ const DeleteFile = ({ id, fileId, deleted }: FileProps) => {
     }
   };
 
-  const deleteRequest = async () => {
+  const restoreFileRequest = async () => {
     try {
       await axios.post(
-        `${process.env.NEXT_PUBLIC_SERVER_URI}/bin/move-file-to-bin/${fileId}`,
+        `${process.env.NEXT_PUBLIC_SERVER_URI}/bin/restore-file/${fileId}`,
         {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
-      window.location.reload();
-    } catch (error: any) {
-      setError(error?.response?.data?.message);
-    }
-  };
-
-  const deletePermanentlyRequest = async () => {
-    try {
-      await axios.delete(
-        `${process.env.NEXT_PUBLIC_SERVER_URI}/bin/delete-file-permanently/${fileId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -76,19 +59,17 @@ const DeleteFile = ({ id, fileId, deleted }: FileProps) => {
     >
       <div className="fixed inset-0 bg-white/10 p-6 shadow-lg overflow-auto"></div>
       <div
-        className="flex flex-col sm:w-[450px] bg-black p-6 rounded-lg"
+        className="flex flex-col sm:w-[450px] bg-black p-6 rounded-lg border-[1px] border-white/30"
         style={{ zIndex: 2 }}
         ref={divRef}
       >
         <h1 className="sm:text-xl text-base font-bold pb-3 border-b-[1px] border-neutral-300/30">
-          Delete the file
+          Restore file
         </h1>
-        <div className="flex items-center gap-2">
-          <FaRegTrashAlt className="text-md text-primary-500" />
-          <p className="sm:text-base text-sm font-medium py-4">
-            {deleted
-              ? "Warning: File will be deleted forever!"
-              : "File will be transferred to your bin"}
+        <div className="flex gap-2 mt-5">
+          <MdOutlineRestorePage className="sm:text-4xl text-primary-500" />
+          <p className="sm:text-base text-sm font-medium">
+            Retore the file from the bin and move it back to your files.
           </p>
         </div>
         {error && (
@@ -100,11 +81,7 @@ const DeleteFile = ({ id, fileId, deleted }: FileProps) => {
           <button
             className="bg-green-600 active:bg-green-700 p-2 rounded-md"
             onClick={() => {
-              if (deleted) {
-                deletePermanentlyRequest();
-              } else {
-                deleteRequest();
-              }
+              restoreFileRequest();
             }}
           >
             Confirm
@@ -127,4 +104,4 @@ const DeleteFile = ({ id, fileId, deleted }: FileProps) => {
   );
 };
 
-export default DeleteFile;
+export default RestoreFile;

@@ -1,29 +1,74 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
-import dynamic from "next/dynamic";
-import { IconType } from "react-icons";
-import { FaDownload, FaStar } from "react-icons/fa6";
-import { RiUserSharedLine } from "react-icons/ri";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { downloadFile } from "@/app/functions";
-import axios from "axios";
-import path from "path";
-const ReactPlayer = dynamic(() => import("react-player"), { ssr: false });
 
-type Btn = {
+import { useEffect, useRef, useState } from "react";
+import { IconType } from "react-icons";
+import {
+  FaDownload,
+  FaStar,
+  FaPlay,
+  FaPause,
+  FaVolumeHigh,
+  FaVolumeOff,
+  FaForward,
+  FaBackward,
+  FaExpand,
+  FaCompress,
+} from "react-icons/fa6";
+import { RiUserSharedLine } from "react-icons/ri";
+import { useParams } from "next/navigation";
+import axios from "axios";
+import LoadingSpinner from "@/app/components/common/LoadingSpinner";
+import { downloadFile } from "@/app/functions";
+
+// Type definitions
+interface VideoData {
+  id: number | null;
+  userId: string;
+  name: string;
+  uniqueName: string;
+  resolution: string;
+  path: string;
+  duration: number;
+  fps: number;
+  sizeInKb: number;
+  type: string;
+  extension: string;
+  createdAt: string;
+  isFavourite: boolean;
+}
+
+interface Button {
   ico: IconType;
   name: string;
-  action: Function;
-  style?: string;
-};
+  action: () => void;
+  style?: boolean;
+}
 
-const btns_style: string =
-  "sm:text-xl text-lg p-3 hover:bg-white/10 cursor-pointer rounded-full";
+const formatTime = (seconds: number): string => {
+  if (isNaN(seconds)) return "00:00";
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+  return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+};
 
 const VideoPlayerPage = () => {
   const { id } = useParams();
+  const vidRef = useRef<HTMLVideoElement | null>(null);
+  const progressBarRef = useRef<HTMLDivElement | null>(null);
+  const playerRef = useRef<HTMLDivElement | null>(null);
   const [isPaused, setIsPaused] = useState<boolean>(false);
-  const [video, setVideo] = useState({
+  const [currentTime, setCurrentTime] = useState<number>(0);
+  const [duration, setDuration] = useState<number>(0);
+  const [volume, setVolume] = useState<number>(1);
+  const [isMuted, setIsMuted] = useState<boolean>(false);
+  const [buffering, setBuffering] = useState<boolean>(false);
+  const [bufferedProgress, setBufferedProgress] = useState<number>(0);
+  const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
+  const [video, setVideo] = useState<{
+    loading: boolean;
+    error: boolean;
+    vid: VideoData;
+  }>({
     loading: true,
     error: false,
     vid: {
@@ -37,18 +82,20 @@ const VideoPlayerPage = () => {
       fps: 0,
       sizeInKb: 0,
       type: "",
-      extenstion: "",
+      extension: "",
       createdAt: "",
       isFavourite: false,
     },
   });
-  const [token, setToken] = useState<string | null>();
-  const icons: Btn[] = [
+  const [vidPath, setVidPath] = useState<string>("");
+  const [token, setToken] = useState<string>("");
+
+  const buttons: Button[] = [
     {
       ico: FaDownload,
       name: "Download",
-      action: () => {
-        if (id && token) downloadFile(Number(id), token);
+      action: async () => {
+        await downloadFile(Number(id), token, video.vid.name);
       },
     },
     {
@@ -58,120 +105,373 @@ const VideoPlayerPage = () => {
     },
     {
       ico: FaStar,
-      name: "Add to favourite",
+      name: video.vid.isFavourite
+        ? "Remove from favourite"
+        : "Add to favourite",
       action: () => {
         if (video.vid.isFavourite) {
-          removeFromFavourite;
+          removeFromFavourite();
         } else {
           addToFavourite();
         }
       },
-      style: "text-primary-500",
+      style: video.vid.isFavourite,
     },
   ];
 
+  const togglePlayPause = () => {
+    if (vidRef.current) {
+      if (isPaused) {
+        vidRef.current.play().catch((e) => {});
+      } else {
+        vidRef.current.pause();
+      }
+      setIsPaused((prev) => !prev);
+    }
+  };
+
+  const handleProgress = () => {
+    if (vidRef.current) {
+      setCurrentTime(vidRef.current.currentTime);
+      const buffered = vidRef.current.buffered;
+      if (buffered.length > 0) {
+        const bufferedEnd = buffered.end(buffered.length - 1);
+        setBufferedProgress((bufferedEnd / duration) * 100);
+      }
+    }
+  };
+
+  const handleSeek = async (seekTime: number) => {
+    if (vidRef.current) {
+      const buffered = vidRef.current.buffered;
+      let isBuffered = false;
+      for (let i = 0; i < buffered.length; i++) {
+        if (seekTime >= buffered.start(i) && seekTime <= buffered.end(i)) {
+          isBuffered = true;
+          break;
+        }
+      }
+
+      if (isBuffered) {
+        vidRef.current.currentTime = seekTime;
+        setCurrentTime(seekTime);
+        setBuffering(false);
+      } else {
+        setBuffering(true);
+        vidRef.current.pause();
+        setIsPaused(true);
+
+        const checkBuffer = () =>
+          new Promise<void>((resolve) => {
+            const onProgress = () => {
+              const buffered = vidRef.current!.buffered;
+              for (let i = 0; i < buffered.length; i++) {
+                if (
+                  seekTime >= buffered.start(i) &&
+                  seekTime <= buffered.end(i)
+                ) {
+                  vidRef.current!.removeEventListener("progress", onProgress);
+                  resolve();
+                  break;
+                }
+              }
+            };
+            vidRef.current!.addEventListener("progress", onProgress);
+          });
+
+        await checkBuffer();
+        vidRef.current.currentTime = seekTime;
+        setCurrentTime(seekTime);
+        setBuffering(false);
+        if (!isPaused) {
+          vidRef.current.play().catch();
+        }
+      }
+    }
+  };
+
+  const handleProgressBarClick = async (
+    e: React.MouseEvent<HTMLDivElement>,
+  ) => {
+    if (vidRef.current && progressBarRef.current) {
+      const rect = progressBarRef.current.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const width = rect.width;
+      const seekPercentage = (clickX / width) * 100;
+      const seekTime = (seekPercentage / 100) * duration;
+      await handleSeek(seekTime);
+    }
+  };
+
+  const handleSkipForward = async () => {
+    if (vidRef.current) {
+      const newTime = Math.min(currentTime + 10, duration);
+      await handleSeek(newTime);
+    }
+  };
+
+  const handleSkipBackward = async () => {
+    if (vidRef.current) {
+      const newTime = Math.max(currentTime - 10, 0);
+      await handleSeek(newTime);
+    }
+  };
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement && playerRef.current) {
+      playerRef.current.requestFullscreen().catch();
+      setIsFullscreen(true);
+    } else {
+      document.exitFullscreen().catch();
+      setIsFullscreen(false);
+    }
+  };
+
+  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (vidRef.current) {
+      const newVolume = Number(e.target.value) / 100;
+      vidRef.current.volume = newVolume;
+      setVolume(newVolume);
+      setIsMuted(newVolume === 0);
+    }
+  };
+
+  const toggleMute = () => {
+    if (vidRef.current) {
+      if (isMuted) {
+        vidRef.current.volume = volume || 1;
+        setIsMuted(false);
+      } else {
+        vidRef.current.volume = 0;
+        setIsMuted(true);
+      }
+    }
+  };
+
   const addToFavourite = async () => {
     try {
+      const tok = localStorage.getItem("access_token");
+      setToken(tok || "");
       await axios.post(
         `${process.env.NEXT_PUBLIC_SERVER_URI}/favourite/add-file?fileId=${id}`,
         {},
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${tok}` },
         },
       );
-      setVideo({ ...video, vid: { ...video.vid, isFavourite: true } });
-    } catch {}
+      setVideo((prev) => ({
+        ...prev,
+        vid: { ...prev.vid, isFavourite: true },
+      }));
+    } catch (error) {}
   };
 
   const removeFromFavourite = async () => {
     try {
+      const token = localStorage.getItem("access_token");
       await axios.delete(
         `${process.env.NEXT_PUBLIC_SERVER_URI}/favourite/remove-file?fileId=${id}`,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         },
       );
-      setVideo({ ...video, vid: { ...video.vid, isFavourite: false } });
-    } catch {}
+      setVideo((prev) => ({
+        ...prev,
+        vid: { ...prev.vid, isFavourite: false },
+      }));
+    } catch (error) {}
   };
 
   useEffect(() => {
     const tok = localStorage.getItem("access_token");
-    const fetchFiles = async () => {
-      setToken(tok);
-      setVideo({ ...video, loading: true });
+    setToken(tok || "");
+    const fetchVideo = async () => {
+      setVideo((prev) => ({ ...prev, loading: true }));
       try {
         const res = await axios.get(
           `${process.env.NEXT_PUBLIC_SERVER_URI}/file/get-file/${id}`,
           {
-            headers: {
-              Authorization: `Bearer ${tok}`,
-            },
+            headers: { Authorization: `Bearer ${tok}` },
           },
         );
-        setVideo({ loading: false, error: false, vid: res.data.data });
-      } catch (error) {
+        const baseUrl = process.env.NEXT_PUBLIC_SERVER_URI || "";
+        const videoUrl = `${baseUrl}/Uploads/${res.data.data.userId}/${res.data.data.path}/${encodeURIComponent(res.data.data.uniqueName)}`;
+        setVidPath(videoUrl);
+        setDuration(res.data.data.duration);
         setVideo({
           loading: false,
-          error: true,
-          vid: { ...video.vid, isFavourite: false },
+          error: false,
+          vid: res.data.data,
         });
+      } catch (error) {
+        setVideo((prev) => ({
+          ...prev,
+          loading: false,
+          error: true,
+        }));
       }
     };
 
-    fetchFiles();
-  }, []);
+    fetchVideo();
 
-  console.log(
-    `${path.join(process.env.NEXT_PUBLIC_SERVER_URI || "", "uploads", video?.vid?.userId || "", video?.vid?.path || "", video?.vid?.uniqueName || "")}`,
-  );
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    return () =>
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+  }, [id]);
 
   return (
-    <div className="w-full relative min-h-screen mx-auto rounded-xl overflow-hidden">
-      {/* <video */}
-      {/*   ref={videoRef} */}
-      {/*   loop */}
-      {/*   muted */}
-      {/*   autoPlay */}
-      {/*   className="w-full border-2 border-primary-500" */}
-      {/* > */}
-      {/*   <source src="/videos/video.mp4" type="video/mp4" /> */}
-      {/* </video> */}
-      {/* <div className="relative bottom-8 sm:px-5 flex "> */}
-      {/*   <button className="text-white" onClick={togglePlayPause}> */}
-      {/*     {isPaused ? "Play" : "Pause"} */}
-      {/*   </button> */}
-      {/*   <p>{(vidProgress * 100).toFixed(2)}%</p> */}
-      {/* </div> */}
-      <div className="flex items-center p-3 w-full bg-neutral-800 shadow-sm shadow-neutral-600">
-        <div className="flex items-center justify-center w-full gap-4 m-auto text-xl">
-          {icons.map((b: Btn, idx: number) => {
-            const Icon = b.ico;
-            return (
-              <div key={idx} className={btns_style} title={b.name}>
-                <Icon />
-              </div>
-            );
-          })}
+    <div className="w-full min-h-screen bg-gradient-to-b from-neutral-900 to-neutral-800 flex items-center justify-center p-4">
+      <div className="w-full max-w-4xl bg-neutral-800 rounded-xl shadow-lg overflow-hidden">
+        {/* Upper Bar */}
+        <div className="flex items-center p-3 w-full bg-neutral-800 shadow-sm shadow-neutral-600">
+          <div className="flex items-center justify-center w-full gap-4 text-xl">
+            {buttons.map((b, idx) => (
+              <button
+                key={idx}
+                className={`sm:text-xl text-lg p-3 hover:bg-white/10 cursor-pointer rounded-full ${b.style ? "text-primary-500" : "text-gray-400"}`}
+                title={b.name}
+                onClick={b.action}
+              >
+                <b.ico />
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
-      <div className="w-full sm:mt-32 m-auto flex flex-col">
-        <ReactPlayer
-          playing={!isPaused}
-          style={{
-            margin: "auto",
-            maxWidth: "100%",
-            height: "min-content",
-            borderStyle: "solid",
-            borderWidth: "1px",
-          }}
-          url={`${path.join(process.env.NEXT_PUBLIC_SERVER_URI || "", "uploads", video?.vid?.userId || "", video?.vid?.path || "", video?.vid?.uniqueName || "")}`}
-          controls={true}
-        />
+        {/* Video Container */}
+        <div ref={playerRef} className="relative w-full aspect-video">
+          {video.loading || !vidPath ? (
+            <div className="flex items-center justify-center h-full">
+              <LoadingSpinner />
+            </div>
+          ) : video.error ? (
+            <div className="flex items-center justify-center h-full text-white">
+              Error loading video
+            </div>
+          ) : (
+            <div className="relative group">
+              <video
+                ref={vidRef}
+                loop
+                className="max-h-[700px] w-full h-auto object-contain bg-black"
+                onTimeUpdate={handleProgress}
+                onProgress={handleProgress}
+                onError={(e) => {}}
+              >
+                <source src={vidPath} type="video/mp4" />
+              </video>
+              {buffering && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/50">
+                  <LoadingSpinner />
+                </div>
+              )}
+              {/* Control Bar */}
+              <div className="absolute bottom-0 left-0 right-0 bg-neutral-900/80 p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <div className="flex items-center gap-2">
+                  {/* Skip Backward */}
+                  <button
+                    className="text-white p-2 hover:bg-white/20 rounded-full transition-all duration-200"
+                    onClick={handleSkipBackward}
+                    title="Skip Backward 10s"
+                  >
+                    <FaBackward size={20} />
+                  </button>
+                  {/* Play/Pause */}
+                  <button
+                    className="text-white p-2 hover:bg-white/20 rounded-full transition-all duration-200"
+                    onClick={togglePlayPause}
+                    title={isPaused ? "Play" : "Pause"}
+                  >
+                    {isPaused ? <FaPlay size={20} /> : <FaPause size={20} />}
+                  </button>
+                  {/* Skip Forward */}
+                  <button
+                    className="text-white p-2 hover:bg-white/20 rounded-full transition-all duration-200"
+                    onClick={handleSkipForward}
+                    title="Skip Forward 10s"
+                  >
+                    <FaForward size={20} />
+                  </button>
+                  {/* Progress Bar */}
+                  <div
+                    ref={progressBarRef}
+                    className="relative flex-1 mx-2 h-1 bg-neutral-700 rounded-full cursor-pointer"
+                    onClick={handleProgressBarClick}
+                  >
+                    <div
+                      className="absolute top-0 left-0 h-full bg-gray-500 rounded-full"
+                      style={{ width: `${bufferedProgress}%` }}
+                    />
+                    <div
+                      className="absolute top-0 left-0 h-full bg-primary-500 rounded-full"
+                      style={{
+                        width: duration
+                          ? `${(currentTime / duration) * 100}%`
+                          : "0%",
+                      }}
+                    />
+                    <div
+                      className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-primary-500 rounded-full hidden group-hover:block"
+                      style={{
+                        left: duration
+                          ? `${(currentTime / duration) * 100}%`
+                          : "0%",
+                        transform: "translate(-50%, -50%)",
+                      }}
+                    />
+                  </div>
+                  {/* Timer */}
+                  <span className="text-white text-sm min-w-[100px]">
+                    {formatTime(currentTime)} / {formatTime(duration)}
+                  </span>
+                  {/* Volume Control */}
+                  <button
+                    className="text-white p-2 hover:bg-white/20 rounded-full transition-all duration-200"
+                    onClick={toggleMute}
+                    title={isMuted ? "Unmute" : "Mute"}
+                  >
+                    {isMuted ? (
+                      <FaVolumeOff size={20} />
+                    ) : (
+                      <FaVolumeHigh size={20} />
+                    )}
+                  </button>
+                  <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    value={isMuted ? 0 : volume * 100}
+                    onChange={handleVolumeChange}
+                    className="w-20 accent-primary-500 cursor-pointer"
+                  />
+                  {/* Fullscreen */}
+                  <button
+                    className="text-white p-2 hover:bg-white/20 rounded-full transition-all duration-200"
+                    onClick={toggleFullscreen}
+                    title={
+                      isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"
+                    }
+                  >
+                    {isFullscreen ? (
+                      <FaCompress size={20} />
+                    ) : (
+                      <FaExpand size={20} />
+                    )}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+        {/* Video Info */}
+        <div className="p-4 text-white">
+          <h2 className="text-xl font-semibold">{video.vid.name || "Video"}</h2>
+          <p className="text-sm text-gray-400">
+            {video.vid.resolution} • {(video.vid.sizeInKb / 1024).toFixed(2)} MB
+          </p>
+        </div>
       </div>
     </div>
   );

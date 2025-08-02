@@ -12,6 +12,7 @@ type DetProps = {
   uploaded: string;
   size: string;
   owner: string;
+  fps: number;
 };
 
 const FileDetails = ({
@@ -23,6 +24,7 @@ const FileDetails = ({
   extension,
   uploaded,
   size,
+  fps,
   owner,
 }: DetProps) => {
   const divRef = useRef<HTMLDivElement>(null);
@@ -53,9 +55,9 @@ const FileDetails = ({
       id={id}
       onClick={(e) => e.stopPropagation()}
     >
-      <div className="fixed inset-0 bg-white/10 p-6 shadow-lg overflow-auto"></div>
+      <div className="fixed inset-0 bg-white/10 p-6 shadow-lg overflow-auto "></div>
       <div
-        className="flex flex-col sm:w-[450px] bg-black p-6 rounded-lg"
+        className="flex flex-col sm:w-[450px] bg-black p-6 rounded-lg border-[2px] border-neutral-700"
         ref={divRef}
         style={{ zIndex: 2 }}
         onClick={(e) => {
@@ -63,8 +65,8 @@ const FileDetails = ({
         }}
       >
         <div
-          className="text-lg text-white/90 pb-3
-          border-b-[1px] border-b-neutral-800/40"
+          className="text-xl text-white/90 font-semibold pb-3
+          border-b-[1px] border-b-neutral-600/80"
         >
           File properties
         </div>
@@ -86,25 +88,26 @@ const FileDetails = ({
             <p className="text-sm font-bold">Extension:</p>{" "}
             <p className="ml-1 text-sm">{extension}</p>
           </div>
-          {/* <div className="flex items-cetner"> */}
-          {/*   <p className="text-sm font-bold">Owner:</p>{" "} */}
-          {/*   <p className="ml-1 text-sm">{owner}</p> */}
-          {/* </div> */}
           <div className="flex items-cetner">
             <p className="text-sm font-bold">Uploaded:</p>{" "}
             <p className="ml-1 text-sm">{uploaded}</p>
           </div>
-          {file_type === "video" ||
-            (file_type === "image" && (
-              <div className="flex items-cetner">
-                <p className="text-sm font-bold">Resolution:</p>{" "}
-                <p className="ml-1 text-sm">{resolution}</p>
-              </div>
-            ))}
+          {(file_type === "video" || file_type === "image") && (
+            <div className="flex items-cetner">
+              <p className="text-sm font-bold">Resolution:</p>{" "}
+              <p className="ml-1 text-sm">{resolution}</p>
+            </div>
+          )}
           {(file_type === "audio" || file_type === "video") && (
             <div className="flex items-cetner">
               <p className="text-sm font-bold">Duration:</p>{" "}
               <p className="ml-1 text-sm">{duration}</p>
+            </div>
+          )}
+          {file_type === "video" && (
+            <div className="flex items-cetner">
+              <p className="text-sm font-bold">FPS:</p>{" "}
+              <p className="ml-1 text-sm">{fps}</p>
             </div>
           )}
           <button

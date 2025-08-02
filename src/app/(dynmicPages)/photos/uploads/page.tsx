@@ -4,32 +4,7 @@ import SideBar from "@/app/components/common/SideBar";
 import { faVideo } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import FileComponent from "@/app/components/files_browsing/FileComponent";
-import OrdAndFiltHead from "@/app/components/common/Ord&FiltHead";
-import { BiDownArrowAlt, BiUpArrowAlt } from "react-icons/bi";
 import { useSearchParams } from "next/navigation";
-
-const order = [
-  { name: "Newest", ico: BiUpArrowAlt },
-  { name: "Oldest", ico: BiDownArrowAlt },
-];
-
-const video_filter = [
-  {
-    name: "MP4",
-  },
-  {
-    name: "MOV",
-  },
-  {
-    name: "AVI",
-  },
-  {
-    name: "MKV",
-  },
-  {
-    name: "OTHERS",
-  },
-];
 
 const PhotosUploads = () => {
   const searchParams = useSearchParams();
@@ -40,9 +15,6 @@ const PhotosUploads = () => {
       <SideBar title="Photos" />
       <div className="flex flex-col w-full">
         <Header />
-        <div className="flex items-center w-full h-14 bg-neutral-800 border-t-neutral-700/70 border-t-[1px] px-8 gap-8">
-          <OrdAndFiltHead order={order} filter={video_filter} />
-        </div>
         <div className="flex flex-col flex-wrap p-8 gap-8 w-full">
           <div className="flex gap-3 items-center sm:text-2xl text-lg font-bold">
             <p>Uploaded Videos last {days || 0} days</p>

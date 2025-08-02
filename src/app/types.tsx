@@ -1,3 +1,42 @@
+export const permittedImages = [
+  "jpg",
+  "jpeg",
+  "png",
+  "gif",
+  "wav",
+  "tiff",
+  "svg",
+  "ico",
+  "avif",
+  "webp",
+  "apng",
+  "jfif",
+  "pjpeg",
+  "pjp",
+];
+
+export const permittedVideos = [
+  "mp4",
+  "mov",
+  "avi",
+  "flv",
+  "mkv",
+  "wmv",
+  "webm",
+  "mpeg",
+];
+
+export const permittedOtherExtensions = [
+  "txt",
+  "doc",
+  "gz",
+  "pdf",
+  "deb",
+  "docx",
+  "rar",
+  "zip",
+];
+
 export type _File = {
   name: string;
   id: number;

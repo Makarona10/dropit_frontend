@@ -16,11 +16,15 @@ export function formatFileSize(sizeInKb: number): string {
   } else if (sizeInKb > 1000) {
     return `${(sizeInKb / 1000).toFixed(2)} MB`;
   } else {
-    return `${sizeInKb} KB`;
+    return `${sizeInKb.toFixed(2)} KB`;
   }
 }
 
-export const downloadFile = async (id: number, token: string) => {
+export const downloadFile = async (
+  id: number,
+  token: string,
+  fileName: string,
+) => {
   try {
     const res = await axios.get(
       `${process.env.NEXT_PUBLIC_SERVER_URI}/file/download/${id}`,
@@ -31,14 +35,16 @@ export const downloadFile = async (id: number, token: string) => {
         responseType: "blob",
       },
     );
-    const blob = new Blob([res.data], { type: res.headers["content-type"] });
+
+    const contentType =
+      res.headers["content-type"] || "application/octet-stream";
+
+    const blob = new Blob([res.data], { type: contentType });
 
     const url = window.URL.createObjectURL(blob);
-
     const link = document.createElement("a");
     link.href = url;
-    link.download =
-      res.headers["content-disposition"]?.split("filename=")[1] || `file_${id}`;
+    link.download = fileName;
     document.body.appendChild(link);
     link.click();
 
