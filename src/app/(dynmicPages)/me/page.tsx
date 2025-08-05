@@ -133,7 +133,8 @@ const Me = () => {
   }, []);
 
   return (
-    <div className="w-full h-full flex bg-gradient-to-r from-primary-900/20 to-slate-500/20">
+    <div className="w-full h-full flex">
+      <div className="fixed inset-0 bg-[url('/cover.jpeg')] bg-cover bg-center bg-no-repeat z-[-1]"></div>
       <SideBar title="Me" />
       {info.loading && (
         <div className="m-auto">
@@ -248,8 +249,8 @@ const Me = () => {
               </div>
             </div>
             <div className="flex flex-col bg-neutral-800 w-full rounded-xl sm:p-9 p-5 gap-4 border-[1px] border-white/10">
-              <div className="flex flex-col sm:gap-7 text-md">
-                <div className="flex items-center nowrap gap-3 w-full">
+              <div className="flex flex-col sm:gap-7 gap-5 text-md">
+                <div className="flex items-center nowrap gap-3 w-full text-sm sm:text-base">
                   <LuFileStack size={20} className="text-primary-500" />
                   <p>Total files uploaded:</p>
                   <p className="font-semibold">{info.data.totalFiles} files</p>
@@ -258,7 +259,7 @@ const Me = () => {
                     {formatFileSize(info.data.usedQuota)}
                   </p>
                 </div>
-                <div className="flex items-center nowrap gap-3 w-full">
+                <div className="flex items-center nowrap gap-3 w-full text-sm sm:text-base">
                   <FaImages size={20} className="text-primary-500" />
                   <p>uploaded images:</p>
                   <p className="font-semibold">
@@ -269,7 +270,7 @@ const Me = () => {
                     {formatFileSize(info.data.images.size)}
                   </p>
                 </div>
-                <div className="flex items-center nowrap gap-3 w-full">
+                <div className="flex items-center nowrap gap-3 w-full text-sm sm:text-base">
                   <FaPhotoVideo size={20} className="text-primary-500" />
                   <p>uploaded videos:</p>
                   <p className="font-semibold">
@@ -280,7 +281,7 @@ const Me = () => {
                     {formatFileSize(info.data.videos.size)}
                   </p>
                 </div>
-                <div className="flex items-center nowrap gap-3 w-full">
+                <div className="flex items-center nowrap gap-3 w-full text-sm sm:text-base">
                   <FaHeadset size={20} className="text-primary-500" />
                   <p>uploaded audios:</p>
                   <p className="font-semibold">
@@ -291,7 +292,7 @@ const Me = () => {
                     {formatFileSize(info.data.audios.size)}
                   </p>
                 </div>
-                <div className="flex items-center nowrap gap-3 w-full">
+                <div className="flex items-center nowrap gap-3 w-full text-sm sm:text-base">
                   <IoDocumentText size={20} className="text-primary-500" />
                   <p>other types:</p>
                   <p className="font-semibold">

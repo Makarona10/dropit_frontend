@@ -23,11 +23,11 @@ const Folder = ({ id, name, created_at }: FolderProps) => {
   const router = useRouter();
 
   const options = [
-    {
-      name: "Add to favourites",
-      func: null,
-      ico: FaStar,
-    },
+    // {
+    //   name: "Add to favourites",
+    //   func: null,
+    //   ico: FaStar,
+    // },
     {
       name: "Share",
       func: null,
@@ -73,7 +73,7 @@ const Folder = ({ id, name, created_at }: FolderProps) => {
         </div>
         <div className="absolute top-5 right-16 z-10">
           <ul
-            className={`flex flex-col text-[12px] w-full gap-1 bg-neutral-800 text-neutral-100/50 rounded-lg duration-150 ${!toggleOpts && "scale-0 size-0"}`}
+            className={`flex flex-col text-[12px] w-[150px] border-[1px] border-white/40 gap-1 bg-neutral-800 text-neutral-100/50 rounded-lg duration-150 ${!toggleOpts && "scale-0 size-0"}`}
           >
             {options.map((o) => {
               const Icon = o.ico;

@@ -111,7 +111,15 @@ const Header = () => {
       bg-neutral-800 py-2 w-full"
     >
       <div className="flex items-center sm:px-6 px-2 sm:gap-4">
-        <a href="/cloud/recents">DROPIT logo</a>
+        <a href="/cloud/recents" className="w-12 h-12">
+          <Image
+            alt="dropit logo"
+            src={"/redlogo.png"}
+            width={250}
+            height={250}
+            className="min-w-12 min-h-12"
+          />
+        </a>
         <form
           className="flex w-[240px] sm:w-[400px] items-center"
           onSubmit={(e) => {

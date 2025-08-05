@@ -1,5 +1,6 @@
 "use client";
 import { useSearchParams, useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 const btnStyle = `sm:text-2xl text-lg flex items-center justify-center text-center
   hover:bg-white/20 active:bg-white/20 cursor-pointer rounded-full size-8 select-none`;
@@ -19,6 +20,13 @@ const PaginationButtons = ({ total }: _Props) => {
 
     router.push(`?${params.toString()}`);
   };
+
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("page", "1");
+
+    router.push(`?${params.toString()}`);
+  }, [total]);
 
   return (
     <div className="flex items-center sm:gap-2 gap-1">

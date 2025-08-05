@@ -21,7 +21,7 @@ const CleanBin = () => {
 
   const deleteRequest = async () => {
     try {
-      await axios.delete(
+      const res = await axios.delete(
         `${process.env.NEXT_PUBLIC_SERVER_URI}/bin/clean-bin`,
         {
           headers: {
@@ -29,7 +29,7 @@ const CleanBin = () => {
           },
         },
       );
-      // window.location.reload();
+      if (res.status === 200) window.location.reload();
     } catch (error: any) {
       setError(error?.response?.data?.message);
     }

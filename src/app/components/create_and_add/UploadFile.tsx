@@ -53,6 +53,14 @@ const UploadFile = () => {
       }
     }
 
+    if (validFiles.length > 20) {
+      setError("You are only allowed to upload maximum of 20 files at a time.");
+      setSelectedFiles([]);
+      return;
+    } else {
+      setError("");
+    }
+
     if (validFiles.length) {
       setError("");
       setSelectedFiles(validFiles);
@@ -71,6 +79,10 @@ const UploadFile = () => {
     const token = localStorage.getItem("access_token");
     if (!selectedFiles.length) {
       setError("No file selected. Please choose a files first.");
+      return;
+    }
+    if (selectedFiles.length > 20) {
+      setError("You are only allowed to upload maximum of 20 files at a time.");
       return;
     }
 
@@ -118,7 +130,7 @@ const UploadFile = () => {
     >
       <div className="fixed inset-0 bg-white/10 p-6 shadow-lg overflow-auto"></div>
       <div
-        className="flex flex-col sm:w-[450px] bg-neutral-900 p-6 rounded-lg border-2 border-neutral-500"
+        className="flex flex-col sm:w-[450px] w-10/12 bg-neutral-900 p-6 rounded-lg border-2 border-neutral-500"
         style={{ zIndex: 2 }}
         ref={upFileRef}
       >
@@ -141,6 +153,19 @@ const UploadFile = () => {
             </div>
           </div>
         </div>
+        {error && (
+          <div className="flex flex-col items-center sm:text-sm text-xs pt-3 text-primary-400">
+            <IoIosWarning className="sm:text-4xl text-xl" />
+            <p>{error}</p>
+          </div>
+        )}
+        {fileNames.length > 0 && !error && (
+          <p className="sm:text-sm text-[10px] pt-3 text-green-500">
+            {selectedFiles.length}{" "}
+            {selectedFiles.length > 1 ? "files are" : "file is"} ready to get
+            uploaded
+          </p>
+        )}
         <div className="flex items-center gap-2 mt-5">
           <input
             type="file"
@@ -155,25 +180,13 @@ const UploadFile = () => {
             hover:bg-primary-600 transition-colors flex items-center gap-2"
           >
             <ArrowUpTrayIcon className="sm:w-5 sm:h-5 h-3 w-3" />
-            <span className="sm:text-base text-xs">Choose File</span>
+            <span className="sm:text-base text-xs">Choose Files</span>
           </label>
-          {fileNames.length > 0 && (
-            <p className="sm:text-sm text-[10px] pt-3 text-green-500">
-              {selectedFiles.length}{" "}
-              {selectedFiles.length > 1 ? "files are" : "file is"} allowed to
-              get uploaded
-            </p>
-          )}
-          {error && (
-            <div className="flex flex-col items-center sm:text-sm pt-3 text-primary-400">
-              <IoIosWarning className="sm:text-4xl" />
-              <p>{error}</p>
-            </div>
-          )}
         </div>
         <button
-          className={`flex items-center gap-2 mt-2 px-4 w-full p-2 bg-green-600 rounded-md sm:text-base text-xs`}
+          className={`flex items-center gap-2 mt-2 px-4 w-full p-2 bg-green-600 rounded-md sm:text-base text-xs disabled:opacity-65`}
           onClick={() => pushToServer(Number(folderId) || null)}
+          disabled={error || selectedFiles.length < 1 ? true : false}
         >
           <IoMdCloudUpload className="sm:text-xl text-base" />
           Push to the server

@@ -1,13 +1,16 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFacebook, faGoogle } from "@fortawesome/free-brands-svg-icons";
 import axios from "axios";
+import Image from "next/image";
 
 const inputStyle =
-  "sm:text-lg p-2 rounded-sm text-sm w-full my-1 bg-neutral-200/10 outline-0 border-b-2 border-transparent focus:border-b-primary-400";
-const placeholderStyle = "placeholder:text-base";
+  "md:text-lg text-sm p-2 rounded-sm text-sm w-full my-1 bg-neutral-200/10 outline-none ring-0 ring-offset-0" +
+  "border-none border-b-2 border-transparent focus:border-b-primary-400";
+const placeholderStyle =
+  "placeholder:md:text-base placeholder:text-sm placeholder:text-neutral";
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
@@ -28,7 +31,6 @@ const LoginPage = () => {
     setError("");
     setSuccess("");
 
-    // Basic validation
     if (!formData.email || !formData.password) {
       setError("Email and password are required");
       return;
@@ -36,7 +38,7 @@ const LoginPage = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3001/auth/login",
+        `${process.env.NEXT_PUBLIC_SERVER_URI}/auth/login`,
         {
           email: formData.email,
           password: formData.password,
@@ -50,7 +52,6 @@ const LoginPage = () => {
       );
 
       if (response.status === 200) {
-        // Store access_token in localStorage (or adjust as needed)
         localStorage.setItem("access_token", response.data.data.access_token);
         setSuccess("Login successful");
         router.push("/cloud/recents");
@@ -63,25 +64,38 @@ const LoginPage = () => {
     }
   };
 
+  useEffect(() => {
+    const token = localStorage.getItem("access_token");
+    if (token) router.push("/cloud/recents");
+  }, []);
+
   return (
-    <div className="flex flex-col">
-      <div className="flex items-center px-16 sm:h-16 border-b-2 border-b-slate-300/30">
-        <div className="text-2xl">Dropit Logo</div>
-      </div>
-      <div className="h-full w-full">
-        <div className="sm:w-[500px] flex flex-col rounded-lg p-7 border-2 border-neutral-700 m-auto mt-28">
+    <div className="flex flex-col h-screen bg-[url('/mockup.jpg')] bg-cover bg-center ">
+      <div className="md:w-[700px] w-full md:bg-neutral-900/90 bg-neutral-900/70 h-full flex flex-col md:p-20 p-5 border-r-[1px] border-white/30">
+        <div className="flex items-center sm:h-20 py-3  mb-6">
+          <div className="text-2xl">
+            <Image
+              src={"/whitelogo.png"}
+              width={250}
+              height={250}
+              alt="dropit logo"
+              className="md:h-20 md:w-20 h-14 w-14"
+            />
+          </div>
+        </div>
+        <div className="flex flex-col">
           <div className="flex flex-col gap-2">
-            <h1 className="text-3xl font-bold">Sign in</h1>
-            <p className="mb-4 opacity-70">
+            <h1 className="md:text-3xl text-xl font-bold">Sign in</h1>
+            <p className="mb-4 opacity-70 md:text-lg text-sm">
               Enter your email and password and get back your uploaded files
             </p>
           </div>
           {error && <p className="text-red-500 text-sm">{error}</p>}
           {success && <p className="text-green-500 text-sm">{success}</p>}
-          <form className="w-full mt-4" onSubmit={handleSubmit}>
+          <form className="w-full mt-4" onSubmit={handleSubmit} noValidate>
             <div className="flex flex-col gap-6 items-center w-full">
               <div className="w-full">
-                <label className="flex flex-col text-lg">
+                <label className="flex flex-col md:text-lg text-sm w-full">
                   Email
                   <input
                     className={`${inputStyle} ${placeholderStyle}`}
@@ -94,7 +108,7 @@ const LoginPage = () => {
                 </label>
               </div>
               <div className="w-full">
-                <label className="flex flex-col text-lg">
+                <label className="flex flex-col md:text-lg text-sm w-full">
                   Password
                   <input
                     className={`${inputStyle} ${placeholderStyle}`}
@@ -108,11 +122,11 @@ const LoginPage = () => {
               </div>
               <button
                 type="submit"
-                className="w-full my-3 p-2 bg-primary-500 text-lg rounded-md active:bg-primary-600"
+                className="w-full my-3 p-2 bg-primary-500 md:text-lg text-sm rounded-md active:bg-primary-600"
               >
                 SIGN IN
               </button>
-              <div className="flex justify-center text-sm gap-2 opacity-70">
+              <div className="flex justify-center md:text-sm text-xs gap-2 opacity-70">
                 <a
                   href="/user/register"
                   className="cursor-pointer underline hover:no-underline"
@@ -125,7 +139,7 @@ const LoginPage = () => {
               </div>
               <div className="w-full flex items-center justify-center gap-1">
                 <div className="w-full flex gap-4 cursor-pointer p-2 justify-center items-center bg-white rounded-sm">
-                  <p className="text-md text-black/80 line-clamp-1">
+                  <p className="md:text-sm text-xs text-black/80 line-clamp-1">
                     Login with Google
                   </p>
                   <FontAwesomeIcon
@@ -136,7 +150,7 @@ const LoginPage = () => {
                   />
                 </div>
                 <div className="w-full flex gap-4 cursor-pointer p-2 justify-center items-center bg-[#3b5998] rounded-sm">
-                  <p className="text-md text-white/80 line-clamp-1">
+                  <p className="md:text-sm text-xs text-white/90 line-clamp-1">
                     Login with Facebook
                   </p>
                   <FontAwesomeIcon

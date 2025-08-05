@@ -279,11 +279,11 @@ const FileComponent = ({
 
       {/* The toggled options menu of file component */}
       <div
-        className={`absolute z-20 top-12 left-3 w-[155px] duration-200 ${!togFOpts && "scale-0"}`}
+        className={`absolute z-20 top-12 left-3 w-[155px] duration-200 ${!togFOpts && "opacity-0 mt-5 invisible"}`}
         ref={fileMenuRef}
         onClick={(e) => e.stopPropagation()}
       >
-        <ul className="flex flex-col text-[12px] w-full gap-1 bg-neutral-800 text-neutral-100/50 rounded-lg border-[1px] border-neutral-400/20">
+        <ul className="flex flex-col text-[12px] font-semibold w-full gap-1 bg-neutral-800 text-neutral-100/50 rounded-lg border-[1px] border-neutral-400/20">
           {opts.concat(deleted ? deletedOpts : []).map((o: option) => {
             const Icon = o.ico;
             return (
@@ -334,7 +334,7 @@ const FileComponent = ({
             <IoDocument />
           )}
         </div>
-        <p className="overflow-hidden font-semibold">{fName}</p>
+        <p className="overflow-hidden font-bold">{fName}</p>
       </div>
     </div>
   );

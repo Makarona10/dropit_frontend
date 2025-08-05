@@ -20,7 +20,6 @@ import axios from "axios";
 import LoadingSpinner from "@/app/components/common/LoadingSpinner";
 import { downloadFile } from "@/app/functions";
 
-// Type definitions
 interface VideoData {
   id: number | null;
   userId: string;
@@ -341,7 +340,10 @@ const VideoPlayerPage = () => {
           </div>
         </div>
         {/* Video Container */}
-        <div ref={playerRef} className="relative w-full aspect-video">
+        <div
+          ref={playerRef}
+          className="relative w-full aspect-video fullscreen:w-screen fullscreen:h-screen"
+        >
           {video.loading || !vidPath ? (
             <div className="flex items-center justify-center h-full">
               <LoadingSpinner />
@@ -351,11 +353,11 @@ const VideoPlayerPage = () => {
               Error loading video
             </div>
           ) : (
-            <div className="relative group">
+            <div className="relative group fullscreen:w-screen fullscreen:h-screen">
               <video
                 ref={vidRef}
                 loop
-                className="max-h-[700px] w-full h-auto object-contain bg-black"
+                className="w-full h-full object-contain bg-black"
                 onTimeUpdate={handleProgress}
                 onProgress={handleProgress}
                 onError={(e) => {}}

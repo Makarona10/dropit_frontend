@@ -45,6 +45,16 @@ const UploadImage = () => {
       }
     }
 
+    if (validFiles.length > 20) {
+      setError(
+        "You are only allowed to upload maximum of 20 images at a time.",
+      );
+      setSelectedFiles([]);
+      return;
+    } else {
+      setError("");
+    }
+
     if (validFiles.length) {
       setError("");
       setSelectedFiles(validFiles);
@@ -61,10 +71,6 @@ const UploadImage = () => {
 
   const pushToServer = async (parentId: number | null) => {
     const token = localStorage.getItem("access_token");
-    if (!selectedFiles.length) {
-      setError("No file selected. Please choose images first.");
-      return;
-    }
 
     try {
       const formData = new FormData();
@@ -133,6 +139,19 @@ const UploadImage = () => {
             </div>
           </div>
         </div>
+        {error && (
+          <div className="flex flex-col items-center sm:text-sm text-xs pt-3 text-primary-400">
+            <IoIosWarning className="sm:text-4xl text-lg" />
+            <p>{error}</p>
+          </div>
+        )}
+        {fileNames.length > 0 && !error && (
+          <p className="sm:text-sm text-[10px] pt-3 text-green-500">
+            {selectedFiles.length}{" "}
+            {selectedFiles.length > 1 ? "images are" : "image is"} allowed to
+            get uploaded
+          </p>
+        )}
         <div className="flex items-center gap-2 mt-5">
           <input
             type="file"
@@ -149,23 +168,10 @@ const UploadImage = () => {
             <ArrowUpTrayIcon className="sm:w-5 sm:h-5 h-3 w-3" />
             <span className="sm:text-base text-xs">Choose image</span>
           </label>
-
-          {fileNames.length > 0 && (
-            <p className="sm:text-sm text-[10px] pt-3 text-green-500">
-              {selectedFiles.length}{" "}
-              {selectedFiles.length > 1 ? "videos are" : "video is"} allowed to
-              get uploaded
-            </p>
-          )}
         </div>
-        {error && (
-          <div className="flex flex-col items-center sm:text-sm text-xs pt-3 text-primary-400">
-            <IoIosWarning className="sm:text-4xl text-lg" />
-            <p>{error}</p>
-          </div>
-        )}
         <button
-          className={`flex items-center gap-2 mt-2 px-4 w-full p-2 bg-green-600 rounded-md sm:text-base text-xs`}
+          className={`flex items-center gap-2 mt-2 px-4 w-full p-2 bg-green-600 rounded-md sm:text-base text-xs disabled:opacity-65`}
+          disabled={selectedFiles.length < 1 || error ? true : false}
           onClick={() => pushToServer(Number(folderId) || null)}
         >
           <IoMdCloudUpload className="sm:text-xl text-base" />

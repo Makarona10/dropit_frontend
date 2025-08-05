@@ -20,7 +20,6 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  // Initialize token synchronously from localStorage
   const initialToken =
     typeof window !== "undefined" ? localStorage.getItem("access_token") : null;
   const [token, setToken] = useState<string | null>(initialToken);
@@ -28,7 +27,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const router = useRouter();
 
-  // Sync token with localStorage changes (e.g., external updates)
   useEffect(() => {
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === "access_token") {
@@ -41,7 +39,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return () => window.removeEventListener("storage", handleStorageChange);
   }, []);
 
-  // Redirect only if not authenticated and not loading
   useEffect(() => {
     if (!isLoading && token === null && typeof window !== "undefined") {
       router.push("/user/login");
@@ -50,6 +47,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = () => {
     localStorage.removeItem("access_token");
+    sessionStorage.removeItem("name");
+    sessionStorage.removeItem("email");
     setToken(null);
     setIsLoading(false);
     router.push("/user/login");
