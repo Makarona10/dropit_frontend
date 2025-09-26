@@ -1,15 +1,15 @@
 "use client";
-import Header from "@/app/components/common/Header";
-import SideBar from "@/app/components/common/SideBar";
+import Header from "@/components/common/Header";
+import SideBar from "@/components/common/SideBar";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import PaginationButtons from "@/app/components/pagination_btns/PaginationComp";
+import PaginationButtons from "@/components/pagination_btns/PaginationComp";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
-import LoadingSpinner from "@/app/components/common/LoadingSpinner";
-import ListFiles from "@/app/components/files_browsing/ListFiles";
-import Order from "@/app/components/filteration/OrderBy";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
+import ListFiles from "@/components/files_browsing/ListFiles";
+import Order from "@/components/filteration/OrderBy";
 
 const DeletedPhotos = () => {
   const [images, setImages] = useState({

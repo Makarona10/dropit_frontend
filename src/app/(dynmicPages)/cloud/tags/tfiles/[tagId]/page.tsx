@@ -1,12 +1,12 @@
 "use client";
 
-import Header from "@/app/components/common/Header";
-import LoadingSpinner from "@/app/components/common/LoadingSpinner";
-import SideBar from "@/app/components/common/SideBar";
-import ListFiles from "@/app/components/files_browsing/ListFiles";
-import AddFileToTag from "@/app/components/files_browsing/tags_components/AddFileToTag";
-import RemoveFileFromTag from "@/app/components/files_browsing/tags_components/RemoveFromTag";
-import PaginationButtons from "@/app/components/pagination_btns/PaginationComp";
+import Header from "@/components/common/Header";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
+import SideBar from "@/components/common/SideBar";
+import ListFiles from "@/components/files_browsing/ListFiles";
+import AddFileToTag from "@/components/files_browsing/tags_components/AddFileToTag";
+import RemoveFileFromTag from "@/components/files_browsing/tags_components/RemoveFromTag";
+import PaginationButtons from "@/components/pagination_btns/PaginationComp";
 import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";

@@ -1,4 +1,4 @@
-import ComingSoon from "@/app/components/pages/ComingSoon";
+import ComingSoon from "@/components/pages/ComingSoon";
 
 export default function SharedVideos() {
   return <ComingSoon />;

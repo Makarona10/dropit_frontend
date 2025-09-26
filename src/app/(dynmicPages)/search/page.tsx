@@ -1,17 +1,17 @@
 "use client";
 
-import Header from "@/app/components/common/Header";
-import LoadingSpinner from "@/app/components/common/LoadingSpinner";
-import SideBar from "@/app/components/common/SideBar";
-import UploadFile from "@/app/components/create_and_add/UploadFile";
-import FileComponent from "@/app/components/files_browsing/FileComponent";
-import OrderBy from "@/app/components/filteration/OrderBy";
-import TypeFilter from "@/app/components/filteration/TypeFilter";
-import PaginationButtons from "@/app/components/pagination_btns/PaginationComp";
+import Header from "@/components/common/Header";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
+import SideBar from "@/components/common/SideBar";
+import UploadFile from "@/components/create_and_add/UploadFile";
+import FileComponent from "@/components/files_browsing/FileComponent";
+import OrderBy from "@/components/filteration/OrderBy";
+import TypeFilter from "@/components/filteration/TypeFilter";
+import PaginationButtons from "@/components/pagination_btns/PaginationComp";
 import axios from "axios";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { BiDownArrowAlt, BiSearch, BiUpArrowAlt } from "react-icons/bi";
+import { BiSearch } from "react-icons/bi";
 
 const searchResultPage = () => {
   const search_params = useSearchParams();

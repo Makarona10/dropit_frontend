@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import Header from "./components/common/Header";
+import Header from "@/components/common/Header";
 
 export default function Custom404() {
   return (

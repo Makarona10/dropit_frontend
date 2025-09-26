@@ -1,18 +1,18 @@
 "use client";
 
-import HeadBtnsBar from "@/app/components/common/HeadBtnsBar";
-import Header from "@/app/components/common/Header";
-import SideBar from "@/app/components/common/SideBar";
-import UploadFile from "@/app/components/create_and_add/UploadFile";
+import HeadBtnsBar from "@/components/common/HeadBtnsBar";
+import Header from "@/components/common/Header";
+import SideBar from "@/components/common/SideBar";
+import UploadFile from "@/components/create_and_add/UploadFile";
 import { _File, _Folder } from "@/app/types";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { MdWatchLater, MdFileUpload, MdCreateNewFolder } from "react-icons/md";
-import LoadingSpinner from "@/app/components/common/LoadingSpinner";
-import ListFiles from "@/app/components/files_browsing/ListFiles";
-import Folder from "@/app/components/files_browsing/Folder";
-import CreateFolder from "@/app/components/files_browsing/CreateFolder";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
+import ListFiles from "@/components/files_browsing/ListFiles";
+import Folder from "@/components/files_browsing/Folder";
+import CreateFolder from "@/components/files_browsing/CreateFolder";
 
 type _StateType<T> = {
   loading: boolean;

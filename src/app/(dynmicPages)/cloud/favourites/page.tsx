@@ -1,16 +1,16 @@
 "use client";
-import Header from "@/app/components/common/Header";
-import SideBar from "@/app/components/common/SideBar";
+import Header from "@/components/common/Header";
+import SideBar from "@/components/common/SideBar";
 import { FaStar } from "react-icons/fa";
-import PaginationButtons from "@/app/components/pagination_btns/PaginationComp";
-import ListFiles from "@/app/components/files_browsing/ListFiles";
+import PaginationButtons from "@/components/pagination_btns/PaginationComp";
+import ListFiles from "@/components/files_browsing/ListFiles";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import LoadingSpinner from "@/app/components/common/LoadingSpinner";
-import TypeFilter from "@/app/components/filteration/TypeFilter";
-import Order from "@/app/components/filteration/OrderBy";
-import SortBy from "@/app/components/filteration/SortBy";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
+import TypeFilter from "@/components/filteration/TypeFilter";
+import Order from "@/components/filteration/OrderBy";
+import SortBy from "@/components/filteration/SortBy";
 
 const FavouritesPage = () => {
   const router = useRouter();

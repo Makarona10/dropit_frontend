@@ -17,7 +17,7 @@ import {
 import { RiUserSharedLine } from "react-icons/ri";
 import { useParams } from "next/navigation";
 import axios from "axios";
-import LoadingSpinner from "@/app/components/common/LoadingSpinner";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
 import { downloadFile } from "@/app/functions";
 
 interface VideoData {

@@ -1,15 +1,15 @@
 "use client";
 
-import Header from "@/app/components/common/Header";
-import SideBar from "@/app/components/common/SideBar";
+import Header from "@/components/common/Header";
+import SideBar from "@/components/common/SideBar";
 import { FaFolder } from "react-icons/fa";
-import HeadBtnsBar from "@/app/components/common/HeadBtnsBar";
-import CreateFolder from "@/app/components/files_browsing/CreateFolder";
-import ListFolders from "@/app/components/files_browsing/ListFolders";
+import HeadBtnsBar from "@/components/common/HeadBtnsBar";
+import CreateFolder from "@/components/files_browsing/CreateFolder";
+import ListFolders from "@/components/files_browsing/ListFolders";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
-import LoadingSpinner from "@/app/components/common/LoadingSpinner";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
 import { MdCreateNewFolder } from "react-icons/md";
 
 const btns = [

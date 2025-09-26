@@ -1,17 +1,17 @@
 "use client";
 
-import Header from "@/app/components/common/Header";
-import SideBar from "@/app/components/common/SideBar";
-import Tag from "@/app/components/files_browsing/Tag";
+import Header from "@/components/common/Header";
+import SideBar from "@/components/common/SideBar";
+import Tag from "@/components/files_browsing/Tag";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { FaTags } from "react-icons/fa6";
-import HeadBtnsBar from "@/app/components/common/HeadBtnsBar";
-import AddTag from "@/app/components/files_browsing/tags_components/AddTag";
+import HeadBtnsBar from "@/components/common/HeadBtnsBar";
+import AddTag from "@/components/files_browsing/tags_components/AddTag";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useSearchParams } from "next/navigation";
-import LoadingSpinner from "@/app/components/common/LoadingSpinner";
-import PaginationButtons from "@/app/components/pagination_btns/PaginationComp";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
+import PaginationButtons from "@/components/pagination_btns/PaginationComp";
 
 type Tag = {
   id: number;

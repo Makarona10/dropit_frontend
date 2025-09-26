@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { AuthProvider } from "@/lib/authContext";
+import { AuthProvider } from "@/contexts/AuthContext";
+import NextTopLoader from "nextjs-toploader";
 
 export const metadata: Metadata = {
   title: "Dropit",
@@ -15,6 +16,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`antialiased lining-nums bg-neutral-950`}>
+        <NextTopLoader color="#FF0000" />
         <AuthProvider>{children}</AuthProvider>
       </body>
     </html>

@@ -1,20 +1,20 @@
 "use client";
-import Header from "@/app/components/common/Header";
-import SideBar from "@/app/components/common/SideBar";
+import Header from "@/components/common/Header";
+import SideBar from "@/components/common/SideBar";
 import { faImages } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import PaginationButtons from "@/app/components/pagination_btns/PaginationComp";
+import PaginationButtons from "@/components/pagination_btns/PaginationComp";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
-import LoadingSpinner from "@/app/components/common/LoadingSpinner";
-import ListFiles from "@/app/components/files_browsing/ListFiles";
-import HeadBtnsBar from "@/app/components/common/HeadBtnsBar";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
+import ListFiles from "@/components/files_browsing/ListFiles";
+import HeadBtnsBar from "@/components/common/HeadBtnsBar";
 import { LuImagePlus } from "react-icons/lu";
-import UploadImage from "@/app/components/create_and_add/UploadImage";
-import Order from "@/app/components/filteration/OrderBy";
-import SortBy from "@/app/components/filteration/SortBy";
-import ImageExtension from "@/app/components/filteration/ImgExtension";
+import UploadImage from "@/components/create_and_add/UploadImage";
+import Order from "@/components/filteration/OrderBy";
+import SortBy from "@/components/filteration/SortBy";
+import ImageExtension from "@/components/filteration/ImgExtension";
 
 const btns = [
   {

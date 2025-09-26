@@ -1,9 +1,9 @@
 "use client";
-import Header from "@/app/components/common/Header";
-import SideBar from "@/app/components/common/SideBar";
+import Header from "@/components/common/Header";
+import SideBar from "@/components/common/SideBar";
 import { faVideo } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import FileComponent from "@/app/components/files_browsing/FileComponent";
+import FileComponent from "@/components/files_browsing/FileComponent";
 import { useSearchParams } from "next/navigation";
 
 const PhotosUploads = () => {

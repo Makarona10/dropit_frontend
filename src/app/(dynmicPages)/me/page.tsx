@@ -1,6 +1,6 @@
 "use client";
-import SideBar from "../../components/common/SideBar";
-import CircleProgress from "@/app/components/progress_visual/CircleProgress";
+import SideBar from "@/components/common/SideBar";
+import CircleProgress from "@/components/progress_visual/CircleProgress";
 import { MdOutlineTipsAndUpdates } from "react-icons/md";
 import { GiHand } from "react-icons/gi";
 import { FaHeadset, FaImages, FaPhotoVideo } from "react-icons/fa";
@@ -9,9 +9,9 @@ import { IoDocumentText } from "react-icons/io5";
 import { BsServer } from "react-icons/bs";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import LoadingSpinner from "@/app/components/common/LoadingSpinner";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
 import { formatFileSize } from "@/app/functions";
-import Header from "@/app/components/common/Header";
+import Header from "@/components/common/Header";
 
 type Media_type = {
   name: string;

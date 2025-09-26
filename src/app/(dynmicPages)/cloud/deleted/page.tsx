@@ -1,17 +1,17 @@
 "use client";
-import Header from "@/app/components/common/Header";
-import SideBar from "@/app/components/common/SideBar";
+import Header from "@/components/common/Header";
+import SideBar from "@/components/common/SideBar";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import ListFiles from "@/app/components/files_browsing/ListFiles";
+import ListFiles from "@/components/files_browsing/ListFiles";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter, useSearchParams } from "next/navigation";
-import LoadingSpinner from "@/app/components/common/LoadingSpinner";
-import PaginationButtons from "@/app/components/pagination_btns/PaginationComp";
-import HeadBtnsBar from "@/app/components/common/HeadBtnsBar";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
+import PaginationButtons from "@/components/pagination_btns/PaginationComp";
+import HeadBtnsBar from "@/components/common/HeadBtnsBar";
 import { MdDeleteForever } from "react-icons/md";
-import CleanBin from "@/app/components/files_browsing/binOptions/CleanBin";
+import CleanBin from "@/components/files_browsing/binOptions/CleanBin";
 
 const btns = [
   {

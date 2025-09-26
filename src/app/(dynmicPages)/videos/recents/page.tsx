@@ -1,21 +1,21 @@
 "use client";
-import Header from "@/app/components/common/Header";
-import SideBar from "@/app/components/common/SideBar";
+import Header from "@/components/common/Header";
+import SideBar from "@/components/common/SideBar";
 import { faVideo } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
-import LoadingSpinner from "@/app/components/common/LoadingSpinner";
-import ListFiles from "@/app/components/files_browsing/ListFiles";
-import UploadVideo from "@/app/components/create_and_add/UploadVideo";
-import HeadBtnsBar from "@/app/components/common/HeadBtnsBar";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
+import ListFiles from "@/components/files_browsing/ListFiles";
+import UploadVideo from "@/components/create_and_add/UploadVideo";
+import HeadBtnsBar from "@/components/common/HeadBtnsBar";
 import { RiVideoUploadLine } from "react-icons/ri";
-import VideoDuration from "@/app/components/filteration/VideoDuration";
-import SortBy from "@/app/components/filteration/SortBy";
-import Order from "@/app/components/filteration/OrderBy";
-import VideoExtension from "@/app/components/filteration/VidExtension";
-import PaginationButtons from "@/app/components/pagination_btns/PaginationComp";
+import VideoDuration from "@/components/filteration/VideoDuration";
+import SortBy from "@/components/filteration/SortBy";
+import Order from "@/components/filteration/OrderBy";
+import VideoExtension from "@/components/filteration/VidExtension";
+import PaginationButtons from "@/components/pagination_btns/PaginationComp";
 
 const btns = [
   {
