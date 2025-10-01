@@ -5,8 +5,7 @@ import { faImages } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import PaginationButtons from "@/components/pagination_btns/PaginationComp";
 import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import axios from "axios";
+import { useSearchParams } from "next/navigation";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import ListFiles from "@/components/files_browsing/ListFiles";
 import HeadBtnsBar from "@/components/common/HeadBtnsBar";
@@ -15,6 +14,7 @@ import UploadImage from "@/components/create_and_add/UploadImage";
 import Order from "@/components/filteration/OrderBy";
 import SortBy from "@/components/filteration/SortBy";
 import ImageExtension from "@/components/filteration/ImgExtension";
+import { useApi } from "@/lib/useApi";
 
 const btns = [
   {
@@ -43,24 +43,17 @@ const Photos = () => {
   const imgsOrder = searchParams.get("order") || "desc";
   const extension = searchParams.get("ext");
   const sortBy = searchParams.get("sort_by");
-  const router = useRouter();
+  const { api } = useApi();
 
   useEffect(() => {
-    const token = localStorage.getItem("access_token");
-    if (!token) router.push("/user/login");
-
     const fetchVideos = async () => {
       try {
-        const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_SERVER_URI}/file/get-images?page=${page || 1}` +
+        const res = await api(
+          `/file/get-images?page=${page || 1}` +
             `&sortBy=${sortBy || "createdAt"}` +
             `&order=${imgsOrder || "desc"}` +
             `${extension ? `&extension=${extension}` : ""} `,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
+          "get",
         );
         if (res.data.statusCode === 200) {
           setImages({

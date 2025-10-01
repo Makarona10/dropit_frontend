@@ -16,9 +16,9 @@ import {
 } from "react-icons/fa6";
 import { RiUserSharedLine } from "react-icons/ri";
 import { useParams } from "next/navigation";
-import axios from "axios";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import { downloadFile } from "@/app/functions";
+import { useApi } from "@/lib/useApi";
 
 interface VideoData {
   id: number | null;
@@ -87,14 +87,14 @@ const VideoPlayerPage = () => {
     },
   });
   const [vidPath, setVidPath] = useState<string>("");
-  const [token, setToken] = useState<string>("");
+  const { api } = useApi();
 
   const buttons: Button[] = [
     {
       ico: FaDownload,
       name: "Download",
       action: async () => {
-        await downloadFile(Number(id), token, video.vid.name);
+        await downloadFile(Number(id), video.vid.name);
       },
     },
     {
@@ -249,15 +249,7 @@ const VideoPlayerPage = () => {
 
   const addToFavourite = async () => {
     try {
-      const tok = localStorage.getItem("access_token");
-      setToken(tok || "");
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_SERVER_URI}/favourite/add-file?fileId=${id}`,
-        {},
-        {
-          headers: { Authorization: `Bearer ${tok}` },
-        },
-      );
+      await api(`/favourite/add-file?fileId=${id}`, "post");
       setVideo((prev) => ({
         ...prev,
         vid: { ...prev.vid, isFavourite: true },
@@ -267,13 +259,7 @@ const VideoPlayerPage = () => {
 
   const removeFromFavourite = async () => {
     try {
-      const token = localStorage.getItem("access_token");
-      await axios.delete(
-        `${process.env.NEXT_PUBLIC_SERVER_URI}/favourite/remove-file?fileId=${id}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        },
-      );
+      await api(`/favourite/remove-file?fileId=${id}`, "delete");
       setVideo((prev) => ({
         ...prev,
         vid: { ...prev.vid, isFavourite: false },
@@ -282,17 +268,10 @@ const VideoPlayerPage = () => {
   };
 
   useEffect(() => {
-    const tok = localStorage.getItem("access_token");
-    setToken(tok || "");
     const fetchVideo = async () => {
       setVideo((prev) => ({ ...prev, loading: true }));
       try {
-        const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_SERVER_URI}/file/get-file/${id}`,
-          {
-            headers: { Authorization: `Bearer ${tok}` },
-          },
-        );
+        const res = await api(`/file/get-file/${id}`, "get");
         const baseUrl = process.env.NEXT_PUBLIC_SERVER_URI || "";
         const videoUrl = `${baseUrl}/Uploads/${res.data.data.userId}/${res.data.data.path}/${encodeURIComponent(res.data.data.uniqueName)}`;
         setVidPath(videoUrl);

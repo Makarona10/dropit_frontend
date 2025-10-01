@@ -3,8 +3,9 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFacebook, faGoogle } from "@fortawesome/free-brands-svg-icons";
-import axios from "axios";
 import Image from "next/image";
+import { useAuth } from "@/contexts/AuthContext";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
 
 const inputStyle =
   "md:text-lg text-sm p-2 rounded-sm text-sm w-full my-1 bg-neutral-200/10 outline-none ring-0 ring-offset-0" +
@@ -17,9 +18,11 @@ const LoginPage = () => {
     email: "",
     password: "",
   });
+  const [authReady, setAuthReady] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const router = useRouter();
+  const { login, isAuthenticated } = useAuth();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -37,27 +40,14 @@ const LoginPage = () => {
     }
 
     try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_SERVER_URI}/auth/login`,
-        {
-          email: formData.email,
-          password: formData.password,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        },
-      );
+      const response: any = await login(formData.email, formData.password);
 
-      if (response.status === 200) {
-        localStorage.setItem("access_token", response.data.data.access_token);
+      if (response?.status === 200) {
         setSuccess("Login successful");
         router.push("/cloud/recents");
         setFormData({ email: "", password: "" });
       } else {
-        setError(response.data?.message || "Invalid email or password");
+        setError(response?.data?.message || "Invalid email or password");
       }
     } catch (err) {
       setError("An error occurred. Please try again.");
@@ -65,10 +55,26 @@ const LoginPage = () => {
   };
 
   useEffect(() => {
-    const token = localStorage.getItem("access_token");
-    if (token) router.push("/cloud/recents");
+    isAuthenticated().then((res) => {
+      if (res) {
+        return router.push("/cloud/recents");
+      } else {
+        setAuthReady(true);
+      }
+    });
+
+    return () => {
+      setAuthReady(false);
+    };
   }, []);
 
+  if (!authReady) {
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    );
+  }
   return (
     <div className="flex flex-col h-screen bg-[url('/mockup.jpg')] bg-cover bg-center ">
       <div className="md:w-[700px] w-full md:bg-neutral-900/90 bg-neutral-900/70 h-full flex flex-col md:p-20 p-5 border-r-[1px] border-white/30">

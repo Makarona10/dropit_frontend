@@ -5,11 +5,11 @@ import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import PaginationButtons from "@/components/pagination_btns/PaginationComp";
 import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import axios from "axios";
+import { useSearchParams } from "next/navigation";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import ListFiles from "@/components/files_browsing/ListFiles";
 import Order from "@/components/filteration/OrderBy";
+import { useApi } from "@/lib/useApi";
 
 const DeletedVideos = () => {
   const [videos, setVideos] = useState({
@@ -21,22 +21,15 @@ const DeletedVideos = () => {
   const searchParams = useSearchParams();
   const page = Number(searchParams.get("page")) || 1;
   const vidsOrder = searchParams.get("order") || "desc";
-  const router = useRouter();
+  const { api } = useApi();
 
   useEffect(() => {
-    const token = localStorage.getItem("access_token");
-    if (!token) router.push("/user/login");
-
     const fetchVideos = async () => {
       try {
-        const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_SERVER_URI}/bin/deleted-files?` +
+        const res = await api(
+          `/bin/deleted-files?` +
             `page=${page || 1}&type=video&order=${vidsOrder.toLowerCase()}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
+          "get",
         );
         if (res.data.statusCode === 200) {
           setVideos({

@@ -5,14 +5,13 @@ import Header from "@/components/common/Header";
 import SideBar from "@/components/common/SideBar";
 import UploadFile from "@/components/create_and_add/UploadFile";
 import { _File, _Folder } from "@/app/types";
-import axios from "axios";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { MdWatchLater, MdFileUpload, MdCreateNewFolder } from "react-icons/md";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import ListFiles from "@/components/files_browsing/ListFiles";
 import Folder from "@/components/files_browsing/Folder";
 import CreateFolder from "@/components/files_browsing/CreateFolder";
+import { useApi } from "@/lib/useApi";
 
 type _StateType<T> = {
   loading: boolean;
@@ -48,18 +47,6 @@ const btns = [
       }
     },
   },
-  // {
-  //   name: "Sort by name",
-  //   ico: FaSort,
-  //   color: "#D2D2D2",
-  //   action: () => {},
-  // },
-  // {
-  //   name: "Sort by files",
-  //   ico: FaSort,
-  //   color: "#D2D2D2",
-  //   action: () => {},
-  // },
 ];
 
 const RecentsPage = () => {
@@ -73,28 +60,15 @@ const RecentsPage = () => {
     error: false,
     data: [],
   });
-  const router = useRouter();
+  const { api } = useApi();
 
   useEffect(() => {
     const fetchFiles = async () => {
       try {
-        const token = localStorage.getItem("access_token");
-        // if (!token) return router.push("/user/login");
-        const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_SERVER_URI}/file/recently-uploaded`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
-        );
-
+        const res = await api(`file/recently-uploaded`, "get");
         setFiles({ ...files, loading: false, data: res.data.data.files });
         setFolders({ ...folders, loading: false, data: res.data.data.folders });
       } catch (error: any) {
-        if (error.response.status === 401) {
-          router.push("/user/login");
-        }
         setFiles({ error: true, loading: false, data: [] });
         setFolders({ error: true, loading: false, data: [] });
       }

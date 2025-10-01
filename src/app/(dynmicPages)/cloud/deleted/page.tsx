@@ -5,13 +5,13 @@ import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ListFiles from "@/components/files_browsing/ListFiles";
 import { useEffect, useState } from "react";
-import axios from "axios";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import PaginationButtons from "@/components/pagination_btns/PaginationComp";
 import HeadBtnsBar from "@/components/common/HeadBtnsBar";
 import { MdDeleteForever } from "react-icons/md";
 import CleanBin from "@/components/files_browsing/binOptions/CleanBin";
+import { useApi } from "@/lib/useApi";
 
 const btns = [
   {
@@ -35,23 +35,14 @@ const Deleted = () => {
     files: [],
     pages: 0,
   });
-  const router = useRouter();
   const searchParams = useSearchParams();
   const page = searchParams.get("page") || 1;
+  const { api } = useApi();
 
   useEffect(() => {
     const fetchDeletedFiles = async () => {
       try {
-        const token = localStorage.getItem("access_token");
-        if (!token) router.push("user/login");
-        const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_SERVER_URI}/bin/deleted-files?page=${page || 1}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
-        );
+        const res = await api(`/bin/deleted-files?page=${page || 1}`, "get");
         setFiles({
           loading: false,
           error: false,

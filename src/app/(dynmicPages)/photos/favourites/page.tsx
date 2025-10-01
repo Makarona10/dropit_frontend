@@ -4,10 +4,10 @@ import SideBar from "@/components/common/SideBar";
 import { FaStar } from "react-icons/fa";
 import PaginationButtons from "@/components/pagination_btns/PaginationComp";
 import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import axios from "axios";
+import { useSearchParams } from "next/navigation";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import ListFiles from "@/components/files_browsing/ListFiles";
+import { useApi } from "@/lib/useApi";
 
 const FavouritesPhotos = () => {
   const [images, setImages] = useState({
@@ -20,20 +20,15 @@ const FavouritesPhotos = () => {
   const page = Number(searchParams.get("page")) || 1;
   const imgsOrder = searchParams.get("o") || "desc";
   const extension = searchParams.get("f");
-  const router = useRouter();
+  const { api } = useApi();
 
   useEffect(() => {
-    const token = localStorage.getItem("access_token");
-    if (!token) router.push("/user/login");
-
     const fetchImages = async () => {
       try {
-        const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_SERVER_URI}/favourite/get-images?page=${page || 1}`,
+        const res = await api(
+          `/favourite/get-images?page=${page || 1}`,
+          "get",
           {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
             params: {
               order: imgsOrder.toLowerCase(),
               extension,

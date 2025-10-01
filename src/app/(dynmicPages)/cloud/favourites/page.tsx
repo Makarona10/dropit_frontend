@@ -4,16 +4,15 @@ import SideBar from "@/components/common/SideBar";
 import { FaStar } from "react-icons/fa";
 import PaginationButtons from "@/components/pagination_btns/PaginationComp";
 import ListFiles from "@/components/files_browsing/ListFiles";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import TypeFilter from "@/components/filteration/TypeFilter";
 import Order from "@/components/filteration/OrderBy";
 import SortBy from "@/components/filteration/SortBy";
+import { useApi } from "@/lib/useApi";
 
 const FavouritesPage = () => {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const [files, setFiles] = useState({
     loading: true,
@@ -25,24 +24,17 @@ const FavouritesPage = () => {
   const fileType = searchParams.get("type");
   const sortBy = searchParams.get("sort_by");
   const order = searchParams.get("order");
+  const { api } = useApi();
 
   useEffect(() => {
-    const token = localStorage.getItem("access_token");
     const getFiles = async () => {
-      if (!token) router.push("user/login");
-
       try {
-        const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_SERVER_URI}/favourite/get-favourite?page=${page}` +
+        const res = await api(
+          `/favourite/get-favourite?page=${page}` +
             `${fileType ? `&type=${fileType}` : ""}` +
             `${sortBy ? `&sortBy=${sortBy}` : ""}` +
             `&order=${order || "desc"}`,
-
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
+          "get",
         );
         setFiles({
           error: false,

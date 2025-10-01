@@ -1,4 +1,4 @@
-import axios from "axios";
+import { useApi } from "@/lib/useApi";
 
 export function formatDuration(seconds: number): string {
   const minutes = Math.floor(seconds / 60);
@@ -20,21 +20,13 @@ export function formatFileSize(sizeInKb: number): string {
   }
 }
 
-export const downloadFile = async (
-  id: number,
-  token: string,
-  fileName: string,
-) => {
+export const downloadFile = async (id: number, fileName: string) => {
+  const { api } = useApi();
+
   try {
-    const res = await axios.get(
-      `${process.env.NEXT_PUBLIC_SERVER_URI}/file/download/${id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        responseType: "blob",
-      },
-    );
+    const res = await api(`/file/download/${id}`, "get", {
+      responseType: "blob",
+    });
 
     const contentType =
       res.headers["content-type"] || "application/octet-stream";

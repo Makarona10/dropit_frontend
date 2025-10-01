@@ -5,10 +5,10 @@ import { RiUserSharedLine } from "react-icons/ri";
 import { FaStar } from "react-icons/fa";
 import Image from "next/image";
 import { useParams } from "next/navigation";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import path from "path";
 import { downloadFile } from "@/app/functions";
+import { useApi } from "@/lib/useApi";
 
 type Btn = {
   ico: IconType;
@@ -19,6 +19,7 @@ type Btn = {
 
 const ImagePreviewer = () => {
   const { id } = useParams();
+  const { api } = useApi();
   const [image, setImage] = useState({
     loading: true,
     error: false,
@@ -36,14 +37,12 @@ const ImagePreviewer = () => {
       isFavourite: false,
     },
   });
-  const [token, setToken] = useState<string | null>();
-
   const icons: Btn[] = [
     {
       ico: FaDownload,
       name: "Download",
       action: () => {
-        downloadFile(image.img.id, token || "", image.img.name);
+        downloadFile(image.img.id, image.img.name);
       },
     },
     {
@@ -67,47 +66,23 @@ const ImagePreviewer = () => {
 
   const addToFavourite = async () => {
     try {
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_SERVER_URI}/favourite/add-file?fileId=${id}`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
+      await api(`/favourite/add-file?fileId=${id}`, "post");
       setImage({ ...image, img: { ...image.img, isFavourite: true } });
     } catch {}
   };
 
   const removeFromFavourite = async () => {
     try {
-      await axios.delete(
-        `${process.env.NEXT_PUBLIC_SERVER_URI}/favourite/remove-file?fileId=${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
+      await api(`/favourite/remove-file?fileId=${id}`, "delete");
       setImage({ ...image, img: { ...image.img, isFavourite: false } });
     } catch {}
   };
 
   useEffect(() => {
-    const tok = localStorage.getItem("access_token");
     const fetchFiles = async () => {
-      setToken(tok);
       setImage({ ...image, loading: true });
       try {
-        const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_SERVER_URI}/file/get-file/${id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${tok}`,
-            },
-          },
-        );
+        const res = await api(`/file/get-file/${id}`, "get");
         setImage({ loading: false, error: false, img: res.data.data });
       } catch (error) {
         setImage({

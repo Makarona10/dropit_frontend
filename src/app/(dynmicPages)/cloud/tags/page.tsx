@@ -8,10 +8,10 @@ import { FaTags } from "react-icons/fa6";
 import HeadBtnsBar from "@/components/common/HeadBtnsBar";
 import AddTag from "@/components/files_browsing/tags_components/AddTag";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { useSearchParams } from "next/navigation";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import PaginationButtons from "@/components/pagination_btns/PaginationComp";
+import { useApi } from "@/lib/useApi";
 
 type Tag = {
   id: number;
@@ -44,21 +44,12 @@ const TagsPage = () => {
     data: [],
     pages: 0,
   });
+  const { api } = useApi();
 
   useEffect(() => {
-    const token = localStorage.getItem("access_token");
-    const getTags = async (page: number, token: string | null) => {
-      if (!token) return;
-
+    const getTags = async (page: number) => {
       try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_SERVER_URI}/tag/list-tags?page=${page}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
-        );
+        const response = await api(`/tag/list-tags?page=${page}`, "get");
         setTags({
           error: false,
           loading: false,
@@ -70,7 +61,7 @@ const TagsPage = () => {
       }
     };
 
-    getTags(page, token);
+    getTags(page);
   }, []);
 
   return (

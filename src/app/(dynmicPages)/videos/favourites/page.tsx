@@ -3,15 +3,15 @@ import Header from "@/components/common/Header";
 import SideBar from "@/components/common/SideBar";
 import { FaStar } from "react-icons/fa";
 import PaginationButtons from "@/components/pagination_btns/PaginationComp";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import ListFiles from "@/components/files_browsing/ListFiles";
 import VideoDuration from "@/components/filteration/VideoDuration";
 import VideoExtension from "@/components/filteration/VidExtension";
 import SortBy from "@/components/filteration/SortBy";
 import Order from "@/components/filteration/OrderBy";
+import { useApi } from "@/lib/useApi";
 
 const FavouriteVideos = () => {
   const [videos, setVideos] = useState({
@@ -27,26 +27,19 @@ const FavouriteVideos = () => {
   const size = searchParams.get("sizeInKb");
   const duration = searchParams.get("duration");
   const sortBy = searchParams.get("sort_by");
-  const router = useRouter();
+  const { api } = useApi();
 
   useEffect(() => {
-    const token = localStorage.getItem("access_token");
-    if (!token) router.push("/user/login");
-
     const fetchVideos = async () => {
       try {
-        const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_SERVER_URI}/favourite/get-favourite-videos?page=${page || 1}` +
+        const res = await api(
+          `/favourite/get-favourite-videos?page=${page || 1}` +
             `${vidsOrder ? `&order=${vidsOrder}` : ""}` +
             `${extension ? `&extension=${extension}` : ""}` +
             `${size ? `&size=${size}` : ""}` +
             `${sortBy ? `&sortBy=${sortBy}` : ""}` +
             `${duration ? `&duration=${duration}` : ""}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
+          "get",
         );
         if (res.data.statusCode === 200) {
           setVideos({

@@ -4,8 +4,7 @@ import SideBar from "@/components/common/SideBar";
 import { faVideo } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import axios from "axios";
+import { useSearchParams } from "next/navigation";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import ListFiles from "@/components/files_browsing/ListFiles";
 import UploadVideo from "@/components/create_and_add/UploadVideo";
@@ -16,6 +15,7 @@ import SortBy from "@/components/filteration/SortBy";
 import Order from "@/components/filteration/OrderBy";
 import VideoExtension from "@/components/filteration/VidExtension";
 import PaginationButtons from "@/components/pagination_btns/PaginationComp";
+import { useApi } from "@/lib/useApi";
 
 const btns = [
   {
@@ -44,24 +44,19 @@ const Videos = () => {
   const extension = searchParams.get("ext");
   const sortBy = searchParams.get("sort_by");
   const duration = searchParams.get("duration");
-  const router = useRouter();
+  const { api } = useApi();
 
   useEffect(() => {
-    const token = localStorage.getItem("access_token");
-    if (!token) router.push("/user/login");
-
     const fetchVideos = async () => {
       try {
-        const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_SERVER_URI}/file/get-videos?page=${page || 1}` +
+        const res = await api(
+          `/file/get-videos?page=${page || 1}` +
             `${sortBy ? `&sortBy=${sortBy}` : ""}` +
             `${duration ? `&duration=${duration}` : ""}` +
             `${extension ? `&extension=${extension}` : ""}` +
             `${vidsOrder ? `&order=${vidsOrder}` : ""}`,
+          "get",
           {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
             data: {
               order: vidsOrder,
               extension,

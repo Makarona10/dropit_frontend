@@ -8,7 +8,7 @@ import FileComponent from "@/components/files_browsing/FileComponent";
 import OrderBy from "@/components/filteration/OrderBy";
 import TypeFilter from "@/components/filteration/TypeFilter";
 import PaginationButtons from "@/components/pagination_btns/PaginationComp";
-import axios from "axios";
+import { useApi } from "@/lib/useApi";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { BiSearch } from "react-icons/bi";
@@ -25,21 +25,17 @@ const searchResultPage = () => {
     files: [],
     pages: 0,
   });
+  const { api } = useApi();
 
   const fetchSearchResult = async (name: string) => {
     if (!name) return;
     setSResult({ ...sResult, loading: true });
     try {
-      const token = localStorage.getItem("access_token");
-      const res = await axios.get(
-        `${process.env.NEXT_PUBLIC_SERVER_URI}/search/files/${name}/?page=${+page || 1}` +
+      const res = await api(
+        `/search/files/${name}/?page=${+page || 1}` +
           `&order=${order}` +
           `${file_type ? `&type=${file_type}` : ""}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
+        "get",
       );
       setSResult({
         error: "",

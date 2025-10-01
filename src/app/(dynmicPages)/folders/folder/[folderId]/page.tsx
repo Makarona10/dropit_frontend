@@ -9,8 +9,8 @@ import CreateFolder from "@/components/files_browsing/CreateFolder";
 import ListFiles from "@/components/files_browsing/ListFiles";
 import ListFolders from "@/components/files_browsing/ListFolders";
 import PaginationButtons from "@/components/pagination_btns/PaginationComp";
-import axios from "axios";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useApi } from "@/lib/useApi";
+import { useParams, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaFolder } from "react-icons/fa";
 import { MdCreateNewFolder, MdFileUpload } from "react-icons/md";
@@ -59,28 +59,19 @@ const FolderContent = () => {
     loading: true,
     pages: 0,
   });
-  const router = useRouter();
   const searchParams = useSearchParams();
   const page = searchParams.get("page") || 1;
   const folderName = searchParams.get("fn") || "Content";
+  const { api } = useApi();
 
   useEffect(() => {
-    const token = localStorage.getItem("access_token");
-    if (!token) {
-      router.push("/user/login");
-    }
-
     const fetchContent = async () => {
       setFiles({ ...files, loading: true });
       setFolders({ ...folders, loading: true });
       try {
-        const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_SERVER_URI}/folder/folder-content/${folderId}?page=${page || 1}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
+        const res = await api(
+          `/folder/folder-content/${folderId}?page=${page || 1}`,
+          "get",
         );
         if (res.data.statusCode === 200) {
           setFiles({

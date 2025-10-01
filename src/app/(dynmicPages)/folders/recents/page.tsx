@@ -7,10 +7,10 @@ import HeadBtnsBar from "@/components/common/HeadBtnsBar";
 import CreateFolder from "@/components/files_browsing/CreateFolder";
 import ListFolders from "@/components/files_browsing/ListFolders";
 import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import axios from "axios";
+import { useSearchParams } from "next/navigation";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import { MdCreateNewFolder } from "react-icons/md";
+import { useApi } from "@/lib/useApi";
 
 const btns = [
   {
@@ -35,26 +35,14 @@ const RecentFoldersPage = () => {
     folders: [],
     pages: 0,
   });
-  const router = useRouter();
   const searchParams = useSearchParams();
   const page = Number(searchParams.get("page"));
+  const { api } = useApi();
 
   useEffect(() => {
-    const token = localStorage.getItem("access_token");
-    if (!token) {
-      router.push("/user/login");
-    }
-
     const fetchFolders = async () => {
       try {
-        const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_SERVER_URI}/folder?page=${page || 1}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
-        );
+        const res = await api(`/folder?page=${page || 1}`, "get");
         if (res.data.statusCode === 200) {
           setFolders({
             error: false,

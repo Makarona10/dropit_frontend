@@ -7,8 +7,8 @@ import ListFiles from "@/components/files_browsing/ListFiles";
 import AddFileToTag from "@/components/files_browsing/tags_components/AddFileToTag";
 import RemoveFileFromTag from "@/components/files_browsing/tags_components/RemoveFromTag";
 import PaginationButtons from "@/components/pagination_btns/PaginationComp";
-import axios from "axios";
-import { useParams, useRouter } from "next/navigation";
+import { useApi } from "@/lib/useApi";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaTag, FaTags } from "react-icons/fa";
 import { IoIosRemoveCircle } from "react-icons/io";
@@ -64,24 +64,15 @@ const TagFiles = () => {
     loading: true,
     pages: 0,
   });
-  const router = useRouter();
+  const { api } = useApi();
 
   useEffect(() => {
-    const token = localStorage.getItem("access_token");
-    if (!token) {
-      router.push("/user/login");
-    }
-
     const fetchFiles = async () => {
       setFiles({ ...files, loading: true });
       try {
-        const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_SERVER_URI}/tag/tag-files/${tagId}?page=${page || 1}&orderBy=createdAt&arrange=desc`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
+        const res = await api(
+          `/tag/tag-files/${tagId}?page=${page || 1}&orderBy=createdAt&arrange=desc`,
+          "get",
         );
         if (res.data.statusCode === 200) {
           setFiles({

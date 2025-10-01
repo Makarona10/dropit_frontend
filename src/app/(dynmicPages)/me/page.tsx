@@ -8,10 +8,10 @@ import { LuFileStack } from "react-icons/lu";
 import { IoDocumentText } from "react-icons/io5";
 import { BsServer } from "react-icons/bs";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import { formatFileSize } from "@/app/functions";
 import Header from "@/components/common/Header";
+import { useApi } from "@/lib/useApi";
 
 type Media_type = {
   name: string;
@@ -88,23 +88,17 @@ const Me = () => {
       audios: { size: 0, count: 0 },
     },
   });
+  const { api } = useApi();
 
   const calculatePercentage = (mediaSize: number) => {
     const result = (mediaSize / info.data.totalQuota) * 100;
     return result.toFixed(0);
   };
 
-  const fetchAccountDetails = async (token: string) => {
+  const fetchAccountDetails = async () => {
     setInfo({ ...info, loading: true });
     try {
-      const result = await axios.get(
-        `${process.env.NEXT_PUBLIC_SERVER_URI}/user/me`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
+      const result = await api(`/user/me`, "get");
 
       const formattedDate = new Date(
         result.data.data.createdAt,
@@ -128,8 +122,7 @@ const Me = () => {
   };
 
   useEffect(() => {
-    const token = localStorage.getItem("access_token");
-    fetchAccountDetails(token || "");
+    fetchAccountDetails();
   }, []);
 
   return (
