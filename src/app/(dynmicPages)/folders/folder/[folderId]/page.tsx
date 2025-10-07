@@ -17,34 +17,6 @@ import { MdCreateNewFolder, MdFileUpload } from "react-icons/md";
 
 const upFileBtnId = "upload_file_div";
 
-const btns = [
-  {
-    name: "Upload files",
-    ico: MdFileUpload,
-    color: "#4AA927",
-    action: () => {
-      const element = document.getElementById(upFileBtnId);
-      if (element) {
-        element.style.visibility = "visible";
-        element.style.opacity = "100";
-      }
-    },
-  },
-  {
-    name: "Create Folder",
-    ico: MdCreateNewFolder,
-    color: "#4AA927",
-    action: () => {
-      const add_tag_div_id = "create_folder";
-      const element = document.getElementById(add_tag_div_id);
-      if (element) {
-        element.style.visibility = "visible";
-        element.style.opacity = "100";
-      }
-    },
-  },
-];
-
 const FolderContent = () => {
   const { folderId } = useParams();
   const [files, setFiles] = useState({
@@ -59,10 +31,31 @@ const FolderContent = () => {
     loading: true,
     pages: 0,
   });
+  const [isUploadFileVisible, setIsUploadFileVisible] = useState(false);
+  const [isCreateFolderVisible, setIsCreateFolderVisible] = useState(false);
   const searchParams = useSearchParams();
   const page = searchParams.get("page") || 1;
   const folderName = searchParams.get("fn") || "Content";
   const { api } = useApi();
+
+  const btns = [
+    {
+      name: "Upload files",
+      ico: MdFileUpload,
+      color: "#4AA927",
+      action: () => {
+        setIsUploadFileVisible(true);
+      },
+    },
+    {
+      name: "Create Folder",
+      ico: MdCreateNewFolder,
+      color: "#4AA927",
+      action: () => {
+        setIsCreateFolderVisible(true);
+      },
+    },
+  ];
 
   useEffect(() => {
     const fetchContent = async () => {
@@ -99,8 +92,14 @@ const FolderContent = () => {
   return (
     <div className="flex w-full">
       <div className={`z-20`}>
-        <UploadFile />
-        <CreateFolder />
+        <UploadFile
+          isOpen={isUploadFileVisible}
+          onClose={() => setIsUploadFileVisible(false)}
+        />
+        <CreateFolder
+          isOpen={isCreateFolderVisible}
+          onClose={() => setIsCreateFolderVisible(false)}
+        />
       </div>
       <SideBar title="Folders" />
       <div className="flex flex-col w-full">

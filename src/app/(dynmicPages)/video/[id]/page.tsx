@@ -94,7 +94,7 @@ const VideoPlayerPage = () => {
       ico: FaDownload,
       name: "Download",
       action: async () => {
-        await downloadFile(Number(id), video.vid.name);
+        await downloadFile(api, Number(id), video.vid.name);
       },
     },
     {

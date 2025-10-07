@@ -13,51 +13,10 @@ import { useEffect, useState } from "react";
 import { FaTag, FaTags } from "react-icons/fa";
 import { IoIosRemoveCircle } from "react-icons/io";
 
-interface File {
-  id: number;
-  name: string;
-  userId: string;
-  sizeInKb: number;
-  type: "image" | "video" | "audio" | "other";
-  extension: string;
-  createdAt: string;
-  isFavourite: boolean;
-  duration?: string;
-  resolution?: string;
-  thumbnail?: string;
-}
-
-const buttons = [
-  {
-    name: "Tag a file",
-    ico: FaTag,
-    color: "#4dcb4d",
-    style: "sm:h-4 sm:w-4 h-3 w-3",
-    action: () => {
-      const element = document.getElementById("add_file_to_tag");
-      if (element) {
-        ((element.style.visibility = "visible"),
-          (element.style.opacity = "100"));
-      }
-    },
-  },
-  {
-    name: "Remove tagged file",
-    ico: IoIosRemoveCircle,
-    color: "#ff3333",
-    style: "text-lg",
-    action: () => {
-      const element = document.getElementById("remove_file_from_tag");
-      if (element) {
-        ((element.style.visibility = "visible"),
-          (element.style.opacity = "100"));
-      }
-    },
-  },
-];
-
 const TagFiles = () => {
   const { tagId, page } = useParams();
+  const [isAddToTagVisible, setIsAddToTagVisible] = useState(false);
+  const [isRemoveFromTagVisible, setIsRemoveFromTagVisible] = useState(false);
   const [files, setFiles] = useState({
     error: false,
     data: [],
@@ -65,6 +24,26 @@ const TagFiles = () => {
     pages: 0,
   });
   const { api } = useApi();
+  const buttons = [
+    {
+      name: "Tag a file",
+      ico: FaTag,
+      color: "#4dcb4d",
+      style: "sm:h-4 sm:w-4 h-3 w-3",
+      action: () => {
+        setIsAddToTagVisible(true);
+      },
+    },
+    {
+      name: "Remove tagged file",
+      ico: IoIosRemoveCircle,
+      color: "#ff3333",
+      style: "text-lg",
+      action: () => {
+        setIsRemoveFromTagVisible(true);
+      },
+    },
+  ];
 
   useEffect(() => {
     const fetchFiles = async () => {
@@ -92,11 +71,17 @@ const TagFiles = () => {
 
   return (
     <div className="flex w-full">
+      <AddFileToTag
+        isOpen={isAddToTagVisible}
+        onClose={() => setIsAddToTagVisible(false)}
+      />
+      <RemoveFileFromTag
+        isOpen={isRemoveFromTagVisible}
+        onClose={() => setIsRemoveFromTagVisible(false)}
+      />
       <SideBar title="Cloud" />
       <div className="flex flex-col w-full">
         <Header />
-        <AddFileToTag />
-        <RemoveFileFromTag />
         <div className="w-full flex items-center h-16 px-8 bg-neutral-800 border-t-[1px] border-neutral-100/10">
           {buttons.map((b) => {
             const Icon = b.ico;
@@ -109,11 +94,7 @@ const TagFiles = () => {
                   b.action();
                 }}
               >
-                <Icon
-                  style={{ color: b.color }}
-                  // className={b.style}
-                  size={16}
-                />
+                <Icon style={{ color: b.color }} size={16} />
                 <p className="text-xs sm:text-sm font-semibold">{b.name}</p>
               </div>
             );

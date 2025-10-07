@@ -19,36 +19,6 @@ type _StateType<T> = {
   data: Array<T>;
 };
 
-const upFileBtnId = "upload_file_div";
-const createFolderId = "create_folder";
-
-const btns = [
-  {
-    name: "Upload files",
-    ico: MdFileUpload,
-    color: "#4AA927",
-    action: () => {
-      const element = document.getElementById(upFileBtnId);
-      if (element) {
-        element.style.visibility = "visible";
-        element.style.opacity = "100";
-      }
-    },
-  },
-  {
-    name: "Create folder",
-    ico: MdCreateNewFolder,
-    color: "#4AA927",
-    action: () => {
-      const element = document.getElementById(createFolderId);
-      if (element) {
-        element.style.visibility = "visible";
-        element.style.opacity = "100";
-      }
-    },
-  },
-];
-
 const RecentsPage = () => {
   const [files, setFiles] = useState<_StateType<_File>>({
     loading: true,
@@ -60,8 +30,28 @@ const RecentsPage = () => {
     error: false,
     data: [],
   });
+  const [isUploadFileVisible, setIsUploadFileVisible] =
+    useState<boolean>(false);
+  const [isCreateFolderVisible, setIsCreateFolderVisible] =
+    useState<boolean>(false);
   const { api } = useApi();
 
+  const btns = [
+    {
+      name: "Upload files",
+      ico: MdFileUpload,
+      color: "#4AA927",
+      action: () => setIsUploadFileVisible(true),
+    },
+    {
+      name: "Create folder",
+      ico: MdCreateNewFolder,
+      color: "#4AA927",
+      action: () => {
+        setIsCreateFolderVisible(true);
+      },
+    },
+  ];
   useEffect(() => {
     const fetchFiles = async () => {
       try {
@@ -81,8 +71,14 @@ const RecentsPage = () => {
     <div className="flex w-full">
       {/* upload file section */}
       <div className={`z-20`}>
-        <UploadFile />
-        <CreateFolder />
+        <UploadFile
+          isOpen={isUploadFileVisible}
+          onClose={() => setIsUploadFileVisible(false)}
+        />
+        <CreateFolder
+          isOpen={isCreateFolderVisible}
+          onClose={() => setIsCreateFolderVisible(false)}
+        />
       </div>
       <SideBar title="Cloud" />
       <div className="flex flex-col w-full">

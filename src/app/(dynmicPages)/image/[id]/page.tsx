@@ -42,7 +42,7 @@ const ImagePreviewer = () => {
       ico: FaDownload,
       name: "Download",
       action: () => {
-        downloadFile(image.img.id, image.img.name);
+        downloadFile(api, image.img.id, image.img.name);
       },
     },
     {
