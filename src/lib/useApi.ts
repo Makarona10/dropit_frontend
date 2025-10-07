@@ -13,11 +13,9 @@ export function useApi() {
     url: string,
     method: HttpMethod,
     data?: any,
-    headers?: Record<string, string>,
+    config: any = {},
   ): Promise<AxiosResponse> => {
     try {
-      const config = { headers };
-
       let response: AxiosResponse;
 
       switch (method) {

@@ -36,7 +36,11 @@ api.interceptors.request.use(
 
     let token: string | null = localStorage.getItem("accessToken");
     if (!token) {
-      if (window.location.pathname !== "/user/login") {
+      if (
+        window.location.pathname !== "/user/login" &&
+        window.location.pathname !== "/user/register" &&
+        window.location.pathname !== "/"
+      ) {
         return Promise.reject(401);
       }
     }
@@ -72,7 +76,11 @@ api.interceptors.request.use(
       } catch (error) {
         processQueue(error, null);
         localStorage.removeItem("accessToken");
-        if (window.location.pathname !== "/user/login") {
+        if (
+          window.location.pathname !== "/user/login" &&
+          window.location.pathname !== "/user/register" &&
+          window.location.pathname !== "/"
+        ) {
           window.location.href = "/user/login";
         }
         return Promise.reject(error);
