@@ -25,6 +25,7 @@ import Image from "next/image";
 import { IoDocument } from "react-icons/io5";
 import RestoreFile from "./FileModify/RestoreFile";
 import { useApi } from "@/lib/useApi";
+import ShareFileModal from "./shareComponents/ShareFileModal";
 
 type props = {
   id: number;
@@ -80,6 +81,10 @@ const FileComponent = ({
   const fileMenuRef = useRef<HTMLDivElement>(null);
   const [hovered, setHovered] = useState<boolean>(false);
   const [togFOpts, setTogFOpts] = useState<boolean>(false);
+  const [shareModalVisible, setShareModalVisible] = useState<boolean>(false);
+  const [isDetailsVisible, setIsDetailsVisible] = useState<boolean>(false);
+  const [isDeleteFileVisible, setIsDeleteFileVisible] =
+    useState<boolean>(false);
   const [LocalFavourite, setLocalFavourite] = useState(favourite);
   const { api } = useApi();
 
@@ -88,7 +93,7 @@ const FileComponent = ({
       name: "Download",
       ico: FaDownload,
       action: () => {
-        downloadFile(id, fName);
+        downloadFile(api, id, fName);
         setTogFOpts(false);
       },
     },
@@ -96,6 +101,7 @@ const FileComponent = ({
       name: "Share file",
       ico: RiUserSharedLine,
       action: () => {
+        setShareModalVisible(true);
         setTogFOpts(false);
       },
     },
@@ -116,23 +122,14 @@ const FileComponent = ({
       ico: FaRegTrashAlt,
       action: () => {
         setTogFOpts(false);
-        const element = document.getElementById(`${id.toString()}_df`);
-        if (element) {
-          element.style.opacity = "100";
-          element.style.visibility = "visible";
-        }
+        setIsDeleteFileVisible(true);
       },
     },
     {
       name: "Properties",
       ico: IoIosInformationCircleOutline,
-      action: (id: string) => {
-        setTogFOpts(false);
-        const element = document.getElementById(`${id.toString()}_details`);
-        if (element) {
-          element.style.opacity = "100";
-          element.style.visibility = "visible";
-        }
+      action: () => {
+        setIsDetailsVisible(true);
       },
     },
   ];
@@ -143,11 +140,6 @@ const FileComponent = ({
       ico: MdOutlineSettingsBackupRestore,
       action: () => {
         setTogFOpts(false);
-        const element = document.getElementById(id.toString() + "_rf");
-        if (element) {
-          element.style.opacity = "100";
-          element.style.visibility = "visible";
-        }
       },
     },
   ];
@@ -202,12 +194,24 @@ const FileComponent = ({
         uploaded={uploaded}
         size={size}
         owner={owner}
-        fps={Number(fps)}
+        fps={+fps}
+        isOpen={isDetailsVisible}
+        onClose={() => setIsDetailsVisible(false)}
       />
 
       <RestoreFile id={id.toString() + "_rf"} fileId={id} />
       <ChangeDirectoryOverlay id={`${id.toString()}_cd`} />
-      <DeleteFile id={`${id.toString()}_df`} fileId={id} deleted={deleted} />
+      <DeleteFile
+        fileId={id}
+        deleted={deleted}
+        isOpen={isDeleteFileVisible}
+        onClose={() => setIsDeleteFileVisible(false)}
+      />
+      <ShareFileModal
+        isOpen={shareModalVisible}
+        onClose={() => setShareModalVisible(false)}
+        fileId={id}
+      />
 
       <div className="absolute left-1 top-1">
         <div

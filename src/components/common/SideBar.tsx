@@ -93,18 +93,17 @@ const SideBar = ({ title }: sideBarSelectios) => {
             <Link
               key={idx}
               className={`
-                                flex flex-col justify-center items-center w-full h-[74px]
-                                text-zinc-300 greyscale
-                                hover:bg-black transition-all duration-100
-                                ${pathName.includes(`/${l.name.toLowerCase()}`) && "bg-black"}
-                                `}
+                         flex flex-col justify-center items-center w-full h-[74px]
+                         text-zinc-300 greyscale
+                         hover:bg-black transition-all duration-100
+                         ${pathName.split("/")[1].includes(`${l.name.toLowerCase()}/`) && "bg-black"}`}
               href={"/" + l.ref}
             >
               <FontAwesomeIcon
-                className={`sm:w-[30px] sm:h-[30px] w-[24px] h-[24px] greyscale ${pathName.includes(`/${l.name.toLowerCase()}`) ? "bg-black" : "bg-transparent"}`}
+                className={`sm:w-[30px] sm:h-[30px] w-[24px] h-[24px] greyscale ${pathName.split("/")[1].includes(`${l.name.toLowerCase()}/`) ? "bg-black" : "bg-transparent"}`}
                 icon={l.img}
                 style={{
-                  color: `${pathName.includes(`/${l.name.toLowerCase()}`) ? "#c83c51" : "grey"}`,
+                  color: `${pathName.split("/")[1].includes(`${l.name.toLowerCase()}`) ? "#c83c51" : "grey"}`,
                 }}
               />
               <p className="mt-1 sm:text-[13px] text-[11px] font-[500]">

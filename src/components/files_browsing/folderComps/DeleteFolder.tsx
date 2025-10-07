@@ -1,26 +1,13 @@
+import Modal, { ModalProps } from "@/components/common/Modal";
 import { useApi } from "@/lib/useApi";
-import { useEffect, useRef } from "react";
-import { FaTrash } from "react-icons/fa";
-import { IoIosWarning } from "react-icons/io";
+import { FaRegTrashAlt } from "react-icons/fa";
 
-type _Props = {
+interface _Props extends ModalProps {
   id: number;
-};
+}
 
-const DeleteFolder = ({ id }: _Props) => {
-  const delete_folder_div_id = `delete_folder_${id}`;
-  const divRef = useRef<HTMLDivElement>(null);
+const DeleteFolder = ({ id, isOpen, onClose }: _Props) => {
   const { api } = useApi();
-
-  const handleOutsideClick = (event: any) => {
-    if (divRef.current && !divRef.current.contains(event.target)) {
-      const element = document.getElementById(delete_folder_div_id);
-      if (element) {
-        element.style.visibility = "hidden";
-        element.style.opacity = "0";
-      }
-    }
-  };
 
   const deleteFolder = async () => {
     try {
@@ -39,43 +26,19 @@ const DeleteFolder = ({ id }: _Props) => {
     }
   };
 
-  useEffect(() => {
-    window.addEventListener("mousedown", handleOutsideClick);
-
-    return () => {
-      window.removeEventListener("mousedown", handleOutsideClick);
-    };
-  }, []);
-
   return (
-    <div
-      className="fixed m-auto h-screen inset-0 select-text cursor-default
-        flex items-center justify-center bg-black bg-opacity-50 z-50   
-        transition duration-300 invisible"
-      id={delete_folder_div_id}
-      onClick={(e) => {
-        e.stopPropagation();
-      }}
-    >
-      <div className="fixed inset-0 bg-white/10 p-6 shadow-lg overflow-auto"></div>
-      <div
-        className="flex flex-col sm:w-[450px] bg-black p-6 rounded-lg gap-6 border-[1px] border-white/30"
-        style={{ zIndex: 2 }}
-        ref={divRef}
-      >
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <div className="flex flex-col sm:w-[450px] rounded-lg gap-6">
         <div className="flex items-center gap-2 sm:text-xl text-base font-semibold">
-          <FaTrash />
           <p>Deletion confirmation</p>
         </div>
         <hr className="relative bottom-2 opacity-40" />
-        <div className="flex">
-          <p className="opacity-100 font-bold text-base flex gap-2">
-            <IoIosWarning className="text-primary-500 sm:text-2xl text-xl" />
-            The folder and all its content will be deleted permanently!
-          </p>
+        <div className="flex items-start gap-2">
+          <FaRegTrashAlt className="text-primary-500 sm:text-xl text-xl mt-1" />
+          <p>The folder and all its content will be deleted permanently!</p>
         </div>
         <div
-          className="flex w-full gap-3 text-sm mt-2"
+          className="flex flex-row-reverse w-full gap-3 text-sm mt-2"
           onClick={(e) => {
             e.stopPropagation();
           }}
@@ -89,20 +52,14 @@ const DeleteFolder = ({ id }: _Props) => {
             Confirm
           </button>
           <button
-            onClick={() => {
-              const e = document.getElementById(delete_folder_div_id);
-              if (e) {
-                e.style.visibility = "hidden";
-                e.style.opacity = "0";
-              }
-            }}
-            className="bg-primary-600 active:bg-primary-700 p-2 rounded-md"
+            onClick={onClose}
+            className="bg-neutral-700 active:bg-neutral-800 p-2 rounded-md"
           >
             Cancel
           </button>
         </div>
       </div>
-    </div>
+    </Modal>
   );
 };
 

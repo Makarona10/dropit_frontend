@@ -19,7 +19,7 @@ type FolderProps = {
 
 const Folder = ({ id, name, created_at }: FolderProps) => {
   const [toggleOpts, setToggleOpts] = useState<boolean>(false);
-  const delete_folder_div_id = `delete_folder_${id}`;
+  const [isDeleteVisible, setIsDeleteVisible] = useState<boolean>(false);
   const router = useRouter();
 
   const options = [
@@ -50,9 +50,11 @@ const Folder = ({ id, name, created_at }: FolderProps) => {
         router.push(`/folders/folder/${id}?fn=${name}`);
       }}
     >
-      <div className="z-20">
-        <DeleteFolder id={id} />
-      </div>
+      <DeleteFolder
+        isOpen={isDeleteVisible}
+        onClose={() => setIsDeleteVisible(false)}
+        id={id}
+      />
       <div className="flex relative items-center w-full p-4">
         <FaFolder style={{ width: "24px", height: "24px" }} />
         <p
@@ -103,13 +105,8 @@ const Folder = ({ id, name, created_at }: FolderProps) => {
             <span
               className="p-2 rounded-full hover:bg-neutral-700 active:bg-black"
               onClick={(e) => {
-                const element = document.getElementById(delete_folder_div_id);
-                if (element) {
-                  element.style.visibility = "visible";
-                  element.style.opacity = "100";
-                }
+                setIsDeleteVisible(true);
                 e.stopPropagation();
-                // deleteFolder();
               }}
             >
               <MdDeleteForever

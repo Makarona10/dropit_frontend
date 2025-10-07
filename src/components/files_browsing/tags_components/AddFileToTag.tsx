@@ -1,12 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import LoadingSpinner from "../../common/LoadingSpinner";
 import { useParams } from "next/navigation";
 import { FaFile } from "react-icons/fa";
 import { useApi } from "@/lib/useApi";
+import Modal, { ModalProps } from "@/components/common/Modal";
 
-const AddFileToTag = () => {
-  const id = "add_file_to_tag";
-  const divRef = useRef<HTMLDivElement>(null);
+const AddFileToTag = ({ isOpen, onClose }: ModalProps) => {
   const [files, setFiles] = useState({
     loading: false,
     error: "",
@@ -62,38 +61,9 @@ const AddFileToTag = () => {
     }
   };
 
-  const hideDiv = () => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.style.visibility = "hidden";
-      element.style.opacity = "0";
-    }
-  };
-
-  const handleOutsideClick = (event: any) => {
-    if (divRef.current && !divRef.current.contains(event.target)) {
-      hideDiv();
-    }
-  };
-
-  useEffect(() => {
-    window.addEventListener("mousedown", handleOutsideClick);
-
-    return () => {
-      window.removeEventListener("mousedown", handleOutsideClick);
-    };
-  }, []);
   return (
-    <div
-      className="fixed m-auto h-screen inset-0 select-text cursor-default
-      flex items-center justify-center bg-black bg-opacity-50 z-50   
-      transition duration-300 p-3 invisible"
-      id={id}
-    >
-      <div
-        className="w-[500px] min-h-[151px] flex flex-col p-5 bg-neutral-800 rounded-xl border-[1px] border-white/10"
-        ref={divRef}
-      >
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <div className="w-[500px] min-h-[151px] flex flex-col">
         <h1 className="sm:text-lg text-base font-semibold">
           Add file to the tag
         </h1>
@@ -157,7 +127,7 @@ const AddFileToTag = () => {
         )}
         <div className="w-full relative flex items-center mt-6">
           <button
-            onClick={hideDiv}
+            onClick={onClose}
             className="sm:text-sm text-xs p-2 bg-primary-500 rounded-md active:bg-primary-600"
           >
             close
@@ -188,7 +158,7 @@ const AddFileToTag = () => {
           </div>
         </div>
       </div>
-    </div>
+    </Modal>
   );
 };
 

@@ -1,8 +1,9 @@
-import React, { useEffect, useRef } from "react";
+import { useRef } from "react";
+import Modal, { ModalProps } from "../common/Modal";
 
 type FType = "video" | "image" | "audio" | "other";
 
-type DetProps = {
+interface DetProps extends ModalProps {
   id: string;
   file_type: FType;
   name: string;
@@ -13,7 +14,7 @@ type DetProps = {
   size: string;
   owner: string;
   fps: number;
-};
+}
 
 const FileDetails = ({
   id,
@@ -26,44 +27,14 @@ const FileDetails = ({
   size,
   fps,
   owner,
+  isOpen,
+  onClose,
 }: DetProps) => {
   const divRef = useRef<HTMLDivElement>(null);
 
-  const handleOutsideClick = (event: any) => {
-    if (divRef.current && !divRef.current.contains(event.target)) {
-      const element = document.getElementById(id);
-      if (element) {
-        element.style.opacity = "0";
-        element.style.visibility = "hidden";
-      }
-    }
-  };
-
-  useEffect(() => {
-    window.addEventListener("mousedown", handleOutsideClick);
-
-    return () => {
-      window.removeEventListener("mousedown", handleOutsideClick);
-    };
-  }, []);
-
   return (
-    <div
-      className="fixed m-auto h-screen inset-0 select-text cursor-default
-      flex items-center justify-center bg-black bg-opacity-50 z-50   
-      transition duration-300 invisible"
-      id={id}
-      onClick={(e) => e.stopPropagation()}
-    >
-      <div className="fixed inset-0 bg-white/10 p-6 shadow-lg overflow-auto "></div>
-      <div
-        className="flex flex-col sm:w-[450px] w-10/12 bg-black p-6 rounded-lg border-[2px] border-neutral-700"
-        ref={divRef}
-        style={{ zIndex: 2 }}
-        onClick={(e) => {
-          e.stopPropagation();
-        }}
-      >
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <div className="flex flex-col sm:w-[450px] rounded-lg p-2" ref={divRef}>
         <div
           className="sm:text-xl text-lg text-white/90 font-semibold pb-3
           border-b-[1px] border-b-neutral-600/80"
@@ -114,20 +85,14 @@ const FileDetails = ({
             </div>
           )}
           <button
-            className="sm:text-sm text-xs p-2 bg-primary-600 rounded-lg mt-3 hover:bg-primary-500 cursor-pointer"
-            onClick={() => {
-              const element = document.getElementById(id);
-              if (element) {
-                element.style.visibility = "hidden";
-                element.style.opacity = "0";
-              }
-            }}
+            className="transition duration-300 sm:text-sm text-xs font-semibold p-2 bg-primary-600 rounded-lg mt-3 hover:bg-primary-500 cursor-pointer"
+            onClick={onClose}
           >
             Close
           </button>
         </div>
       </div>
-    </div>
+    </Modal>
   );
 };
 

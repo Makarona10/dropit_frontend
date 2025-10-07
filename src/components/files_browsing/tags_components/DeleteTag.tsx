@@ -1,69 +1,30 @@
 import { useEffect, useRef, useState } from "react";
 import { MdOutlineWarning } from "react-icons/md";
 import { useApi } from "@/lib/useApi";
+import Modal from "@/components/common/Modal";
+import { ModalProps } from "@/components/common/Modal";
 
 const delBtnsStyle = "p-2 rounded-lg text-sm";
 
-type _Props = {
+interface _Props extends ModalProps {
   tag_id: number;
-};
+}
 
-const DeleteTag = ({ tag_id }: _Props) => {
-  const div_id = `delete_${tag_id}`;
-  const divRef = useRef<HTMLDivElement>(null);
-  const [error, setError] = useState<boolean>(false);
+const DeleteTag = ({ tag_id, isOpen, onClose }: _Props) => {
   const { api } = useApi();
 
   const deleteTagRequest = async () => {
-    const token = localStorage.getItem("access_token");
-    if (!token) return;
-
     try {
       const response = await api(`/tag/delete?tagId=${tag_id}`, "delete");
       if (response.data.statusCode === 200) {
         window.location.reload();
       }
-    } catch (error) {
-      setError(true);
-    }
+    } catch (error) {}
   };
 
-  const hideDeleteDiv = () => {
-    const element = document.getElementById(div_id);
-    if (element) {
-      element.style.visibility = "hidden";
-      element.style.opacity = "0";
-    }
-  };
-
-  const handleOutsideClick = (event: any) => {
-    if (divRef.current && !divRef.current.contains(event.target)) {
-      hideDeleteDiv();
-    }
-  };
-
-  useEffect(() => {
-    window.addEventListener("mousedown", handleOutsideClick);
-
-    return () => {
-      window.removeEventListener("mousedown", handleOutsideClick);
-    };
-  }, []);
   return (
-    <div
-      className={`fixed m-auto h-screen inset-0 select-text cursor-default
-        flex items-center justify-center bg-black bg-opacity-50 z-50   
-        transition duration-300 invisible`}
-      style={{ zIndex: 2 }}
-      id={div_id}
-      onClick={(e) => e.stopPropagation()}
-    >
-      <div className="fixed inset-0 bg-white/10 p-6 shadow-lg overflow-auto"></div>
-      <div
-        className="flex flex-col sm:w-[450px] bg-black p-6 rounded-2xl border-[1px] border-white/20"
-        style={{ zIndex: 2 }}
-        ref={divRef}
-      >
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <div className="flex flex-col sm:w-[410px]">
         <div className="flex flex-col justify-center sm:text-lg">
           <div className="flex items-center">
             <MdOutlineWarning />
@@ -84,15 +45,13 @@ const DeleteTag = ({ tag_id }: _Props) => {
           </button>
           <button
             className={`${delBtnsStyle} bg-neutral-700 active:bg-neutral-800`}
-            onClick={() => {
-              hideDeleteDiv();
-            }}
+            onClick={onClose}
           >
             Cancel
           </button>
         </div>
       </div>
-    </div>
+    </Modal>
   );
 };
 

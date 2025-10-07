@@ -3,10 +3,9 @@ import { useApi } from "@/lib/useApi";
 import { useParams } from "next/navigation";
 import { useRef, useEffect, useState } from "react";
 import { FaFolder } from "react-icons/fa";
+import Modal, { ModalProps } from "../common/Modal";
 
-const CreateFolder = () => {
-  const id = "create_folder";
-  const divRef = useRef<HTMLDivElement>(null);
+const CreateFolder = ({ isOpen, onClose }: ModalProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const { folderId } = useParams();
   const [name, setName] = useState<string>("");
@@ -15,20 +14,6 @@ const CreateFolder = () => {
     msg: "",
   });
   const { api } = useApi();
-
-  const hideDiv = () => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.style.visibility = "hidden";
-      element.style.opacity = "0";
-    }
-  };
-
-  const handleOutsideClick = (event: any) => {
-    if (divRef.current && !divRef.current.contains(event.target)) {
-      hideDiv();
-    }
-  };
 
   const createFolderRequest = async () => {
     setName(inputRef.current?.value || "");
@@ -55,27 +40,9 @@ const CreateFolder = () => {
     }
   };
 
-  useEffect(() => {
-    window.addEventListener("mousedown", handleOutsideClick);
-
-    return () => {
-      window.removeEventListener("mousedown", handleOutsideClick);
-    };
-  }, []);
-
   return (
-    <div
-      className="fixed m-auto h-screen inset-0 select-text cursor-default
-      flex items-center justify-center bg-black bg-opacity-50 z-50   
-      transition duration-300 invisible"
-      id={id}
-    >
-      <div className="fixed inset-0 bg-white/10 p-6 shadow-lg overflow-auto"></div>
-      <div
-        className="flex flex-col sm:w-[450px] bg-black p-6 rounded-lg gap-2 border-[1px] border-white/20"
-        style={{ zIndex: 2 }}
-        ref={divRef}
-      >
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <div className="flex flex-col sm:w-[450px] w-[200px] gap-2">
         <div className="flex items-center gap-3 sm:text-lg text-sm font-bold mb-4">
           <h1>Create a new folder</h1>
           <FaFolder />
@@ -105,14 +72,14 @@ const CreateFolder = () => {
             Confirm
           </button>
           <button
+            onClick={onClose}
             className="p-2 bg-neutral-700 rounded-lg active:bg-neutral-800"
-            onClick={() => hideDiv()}
           >
             Cancel
           </button>
         </div>
       </div>
-    </div>
+    </Modal>
   );
 };
 

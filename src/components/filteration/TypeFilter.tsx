@@ -33,7 +33,7 @@ export default function TypeFilter() {
     setIsOpen((prev) => !prev);
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: any) => {
     setSelectedType(e.target.value);
   };
 

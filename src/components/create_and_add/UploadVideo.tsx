@@ -1,37 +1,18 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { ArrowUpTrayIcon } from "@heroicons/react/24/outline";
 import { IoIosWarning } from "react-icons/io";
 import { IoMdCloudUpload } from "react-icons/io";
 import { useParams } from "next/navigation";
 import { permittedVideos } from "@/app/types";
 import { useApi } from "@/lib/useApi";
+import Modal, { ModalProps } from "../common/Modal";
 
-const UploadVideo = () => {
+const UploadVideo = ({ isOpen, onClose }: ModalProps) => {
   const [error, setError] = useState<string>("");
   const [fileNames, setFileNames] = useState<string[]>([]);
-  const upFileRef = useRef<HTMLDivElement>(null);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-  const id = "upload_video_div";
   const { folderId } = useParams();
   const { api } = useApi();
-
-  useEffect(() => {
-    const handleUploadOutsideClick = (event: any) => {
-      if (upFileRef.current && !upFileRef.current.contains(event.target)) {
-        const element = document.getElementById(id);
-        if (element) {
-          element.style.opacity = "0";
-          element.style.visibility = "hidden";
-        }
-      }
-    };
-
-    window.addEventListener("mousedown", handleUploadOutsideClick);
-
-    return () => {
-      window.removeEventListener("mousedown", handleUploadOutsideClick);
-    };
-  }, []);
 
   const handleFileChange = (event: any) => {
     const files = Array.from(event.target.files) as File[];
@@ -90,11 +71,7 @@ const UploadVideo = () => {
       if (response.data.statusCode === 201) {
         window.location.reload();
       }
-      const element = document.getElementById(id);
-      if (element) {
-        element.style.opacity = "0";
-        element.style.visibility = "hidden";
-      }
+      onClose();
     } catch (error: any) {
       setError(
         error.response?.data?.message ||
@@ -104,18 +81,8 @@ const UploadVideo = () => {
   };
 
   return (
-    <div
-      className="fixed m-auto h-screen inset-0 select-text cursor-default
-      flex items-center justify-center bg-black bg-opacity-50 z-20   
-      transition duration-300 invisible opacity-0"
-      id={id}
-    >
-      <div className="fixed inset-0 bg-white/10 p-6 shadow-lg overflow-auto"></div>
-      <div
-        className="flex flex-col sm:w-[450px] bg-neutral-900 p-6 rounded-lg border-2 border-neutral-500"
-        style={{ zIndex: 2 }}
-        ref={upFileRef}
-      >
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <div className="flex flex-col sm:w-[450px] ">
         <div className="w-full relative flex pb-2 border-b-[1px] border-white/30">
           <h1 className="sm:text-lg font-bold text-sm">Upload videos</h1>
 
@@ -175,7 +142,7 @@ const UploadVideo = () => {
           Upload the videos
         </button>
       </div>
-    </div>
+    </Modal>
   );
 };
 

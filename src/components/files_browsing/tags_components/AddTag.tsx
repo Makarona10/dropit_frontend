@@ -1,36 +1,13 @@
 "use client";
+import Modal, { ModalProps } from "@/components/common/Modal";
 import { useApi } from "@/lib/useApi";
-import { useRef, useEffect, useState } from "react";
+import { useState } from "react";
 import { FaTags } from "react-icons/fa6";
 
-const AddTag = () => {
-  const id = "add_tag";
-  const divRef = useRef<HTMLDivElement>(null);
+const AddTag = ({ isOpen, onClose }: ModalProps) => {
   const [name, setName] = useState<string>("");
   const [error, setError] = useState<string>("");
   const { api } = useApi();
-
-  const hideDiv = () => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.style.visibility = "hidden";
-      element.style.opacity = "0";
-    }
-  };
-
-  const handleOutsideClick = (event: any) => {
-    if (divRef.current && !divRef.current.contains(event.target)) {
-      hideDiv();
-    }
-  };
-
-  useEffect(() => {
-    window.addEventListener("mousedown", handleOutsideClick);
-
-    return () => {
-      window.removeEventListener("mousedown", handleOutsideClick);
-    };
-  }, []);
 
   const addTagSubmit = async () => {
     if (!name || name.length < 1) {
@@ -43,7 +20,6 @@ const AddTag = () => {
       const res = await api(`/tag/create`, "post", { name });
 
       if (res.data.statusCode === 201) {
-        hideDiv();
         window.location.reload();
       }
     } catch (error: any) {
@@ -52,18 +28,8 @@ const AddTag = () => {
   };
 
   return (
-    <div
-      className="fixed m-auto h-screen inset-0 select-text cursor-default
-      flex items-center justify-center bg-black bg-opacity-50 z-50   
-      transition duration-300 invisible"
-      id={id}
-    >
-      <div className="fixed inset-0 bg-white/10 p-6 shadow-lg overflow-auto"></div>
-      <div
-        className="flex flex-col sm:w-[450px] bg-black p-6 rounded-[20px] gap-6 border-[1px] border-white/20"
-        style={{ zIndex: 2 }}
-        ref={divRef}
-      >
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <div className="flex flex-col sm:w-[450px] gap-4">
         <div className="flex items-center gap-3 sm:text-lg text-sm font-bold">
           <h1>Write a name for your tag</h1>
           <FaTags />
@@ -92,13 +58,13 @@ const AddTag = () => {
           </button>
           <button
             className="p-2 bg-neutral-700 rounded-lg active:bg-neutral-800"
-            onClick={() => hideDiv()}
+            onClick={onClose}
           >
             Cancel
           </button>
         </div>
       </div>
-    </div>
+    </Modal>
   );
 };
 

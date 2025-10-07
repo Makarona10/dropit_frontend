@@ -1,3 +1,4 @@
+"use client";
 import { LiaTagSolid } from "react-icons/lia";
 import { MdDeleteForever } from "react-icons/md";
 import DeleteTag from "./tags_components/DeleteTag";
@@ -11,25 +12,23 @@ type _Props = {
 };
 
 const Tag = ({ id, name, createdAt }: _Props) => {
-  const delete_window_div_id = `delete_${id}`;
+  const [isDeleteVisible, setIsDeleteVisible] = useState<boolean>(false);
   const router = useRouter();
-
-  // const navigateToTagFiles = async () => {
-  //   return router.push(`/cloud/tags/tfiles/${id}`);
-  // };
 
   return (
     <div
       className="flex flex-col items-center w-[250px] h-[100px] bg-neutral-800 rounded-xl
             duration-100 hover:bg-neutral-900 cursor-pointer select-none"
-      title="This is a title"
+      title="click to view files"
       onClick={() => {
         router.push(`tags/tfiles/${id}`);
       }}
     >
-      <div className={`z-50 duration-300`}>
-        <DeleteTag tag_id={id} />
-      </div>
+      <DeleteTag
+        tag_id={id}
+        isOpen={isDeleteVisible}
+        onClose={() => setIsDeleteVisible(false)}
+      />
       <div className="flex items-center w-full p-4 rounded-t-xl active:bg-neutral-950">
         <LiaTagSolid style={{ width: "24px", height: "24px" }} />
         <p
@@ -49,11 +48,7 @@ const Tag = ({ id, name, createdAt }: _Props) => {
             className="absolute right-2 p-[5px] rounded-full hover:bg-neutral-700 active:bg-neutral-600"
             onClick={(e) => {
               e.stopPropagation();
-              const element = document.getElementById(delete_window_div_id);
-              if (element) {
-                element.style.visibility = "visible";
-                element.style.opacity = "100";
-              }
+              setIsDeleteVisible(true);
             }}
           >
             <MdDeleteForever title="delete tag" className="w-5 h-5" />
