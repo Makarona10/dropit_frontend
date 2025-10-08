@@ -36,7 +36,7 @@ export function useApi() {
       if (error.response?.status === 401 || Number(error) === 401) {
         router.push("/user/login");
       }
-      return Promise.reject();
+      return Promise.reject(error);
     }
   };
 

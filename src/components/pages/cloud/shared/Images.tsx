@@ -10,11 +10,19 @@ import ImageExtension from "@/components/filteration/ImgExtension";
 import ImageSize from "@/components/filteration/ImgSize";
 import Order from "@/components/filteration/OrderBy";
 import SortBy from "@/components/filteration/SortBy";
+import PaginationButtons from "@/components/pagination_btns/PaginationComp";
 import { useApi } from "@/lib/useApi";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function SharedImagesComponent() {
   const { api } = useApi();
+  const searchParams = useSearchParams();
+  const page = searchParams.get("page") || 1;
+  const extension = searchParams.get("ext");
+  const size = searchParams.get("sizeInKb");
+  const sortBy = searchParams.get("sort_by");
+  const order = searchParams.get("order");
   const [files, setFiles] = useState({
     loading: true,
     error: false,
@@ -24,8 +32,22 @@ export default function SharedImagesComponent() {
 
   useEffect(() => {
     const fetchSharedImages = async () => {
+      setFiles({ loading: true, error: false, files: [], pages: 0 });
       try {
-        const res = await api("file/shared/images", "get");
+        const res = await api(
+          "file/shared/images",
+          "get",
+          {},
+          {
+            params: {
+              page,
+              extension,
+              sizeInKb: size,
+              sortBy,
+              order,
+            },
+          },
+        );
         setFiles({
           loading: false,
           error: false,
@@ -43,14 +65,19 @@ export default function SharedImagesComponent() {
     };
 
     fetchSharedImages();
-  }, []);
+  }, [searchParams]);
   return (
     <div className="flex h-full w-full">
       <SideBar title="Cloud" />
       <div className="w-full h-full flex flex-col">
         <Header />
         <PagesContainer>
-          <h1 className="text-2xl font-bold">Shared Images</h1>
+          <div className="w-full flex items-center">
+            <h1 className="text-2xl font-bold">Shared Images</h1>
+            <div className="flex flex-row-reverse flex-1">
+              <PaginationButtons total={files.pages || 0} />
+            </div>
+          </div>
           <Separator />
           <ButtonsContainer>
             <ImageExtension />

@@ -5,9 +5,11 @@ import Separator from "@/components/common/Separator";
 import SideBar from "@/components/common/SideBar";
 import ListSharedComponents from "@/components/files_browsing/shared/ListSharedComponents";
 import ButtonsContainer from "@/components/filteration/container/ButtonsContainer";
+import Order from "@/components/filteration/OrderBy";
 import SortBy from "@/components/filteration/SortBy";
 import VideoDuration from "@/components/filteration/VideoDuration";
 import VideoExtension from "@/components/filteration/VidExtension";
+import PaginationButtons from "@/components/pagination_btns/PaginationComp";
 import { useApi } from "@/lib/useApi";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -18,7 +20,7 @@ export default function SharedVideosComponent() {
   const sort_by = search.get("sort_by");
   const order = search.get("order");
   const duration = search.get("duration");
-  const extension = search.get("extension");
+  const extension = search.get("ext");
   const size = search.get("size");
   const { api } = useApi();
   const [files, setFiles] = useState({
@@ -30,15 +32,23 @@ export default function SharedVideosComponent() {
 
   useEffect(() => {
     const fetchSharedVideos = async () => {
+      setFiles({ loading: true, error: false, files: [], pages: 0 });
       try {
-        const res = await api("file/shared/videos", "get", {
-          page,
-          sort_by,
-          order,
-          duration,
-          extension,
-          size,
-        });
+        const res = await api(
+          "file/shared/videos",
+          "get",
+          {},
+          {
+            params: {
+              page,
+              sortBy: sort_by,
+              order,
+              duration,
+              extension,
+              size,
+            },
+          },
+        );
         setFiles({
           loading: false,
           error: false,
@@ -56,7 +66,7 @@ export default function SharedVideosComponent() {
     };
 
     fetchSharedVideos();
-  }, []);
+  }, [search]);
 
   return (
     <div className="flex h-full w-full">
@@ -64,11 +74,17 @@ export default function SharedVideosComponent() {
       <div className="w-full h-full flex flex-col">
         <Header />
         <PagesContainer>
-          <h1 className="text-2xl font-bold">Shared Videos</h1>
+          <div className="full flex items-center">
+            <h1 className="text-2xl font-bold">Shared Videos</h1>
+            <div className="flex flex-row-reverse flex-1">
+              <PaginationButtons total={files.pages || 0} />
+            </div>
+          </div>
           <Separator />
           <ButtonsContainer>
             <VideoDuration />
             <SortBy />
+            <Order />
             <VideoExtension />
           </ButtonsContainer>
           <div className="flex flex-wrap gap-4"></div>

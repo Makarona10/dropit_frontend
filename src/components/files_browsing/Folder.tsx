@@ -1,15 +1,14 @@
 "use client";
 import { BiSolidEdit } from "react-icons/bi";
 import { MdDeleteForever } from "react-icons/md";
-import { FaFolder, FaTrash } from "react-icons/fa";
+import { FaFolder } from "react-icons/fa";
 import { HiDotsVertical } from "react-icons/hi";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { RiUserSharedLine } from "react-icons/ri";
-import { FaStar } from "react-icons/fa";
 import { FaDownload } from "react-icons/fa6";
 import { useRouter } from "next/navigation";
-import axios from "axios";
 import DeleteFolder from "./folderComps/DeleteFolder";
+import ShareFolderModal from "./shareComponents/ShareFolderModal";
 
 type FolderProps = {
   id: number;
@@ -20,22 +19,20 @@ type FolderProps = {
 const Folder = ({ id, name, created_at }: FolderProps) => {
   const [toggleOpts, setToggleOpts] = useState<boolean>(false);
   const [isDeleteVisible, setIsDeleteVisible] = useState<boolean>(false);
+  const [isShareVisible, setIsShareVisible] = useState<boolean>(false);
   const router = useRouter();
 
   const options = [
-    // {
-    //   name: "Add to favourites",
-    //   func: null,
-    //   ico: FaStar,
-    // },
     {
       name: "Share",
-      func: null,
+      func: () => {
+        setIsShareVisible(true);
+      },
       ico: RiUserSharedLine,
     },
     {
       name: "Download",
-      func: null,
+      func: () => {},
       ico: FaDownload,
     },
   ];
@@ -54,6 +51,11 @@ const Folder = ({ id, name, created_at }: FolderProps) => {
         isOpen={isDeleteVisible}
         onClose={() => setIsDeleteVisible(false)}
         id={id}
+      />
+      <ShareFolderModal
+        isOpen={isShareVisible}
+        onClose={() => setIsShareVisible(false)}
+        folderId={id}
       />
       <div className="flex relative items-center w-full p-4">
         <FaFolder style={{ width: "24px", height: "24px" }} />
@@ -85,6 +87,7 @@ const Folder = ({ id, name, created_at }: FolderProps) => {
                   className="flex items-center p-2 duration-150 rounded-lg hover:bg-neutral-700 hover:text-neutral-100"
                   onClick={(e) => {
                     e.stopPropagation();
+                    o.func();
                   }}
                 >
                   <p className="pr-6">{o.name}</p>

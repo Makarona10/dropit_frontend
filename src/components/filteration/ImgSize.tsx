@@ -47,7 +47,7 @@ export default function ImageSize() {
 
   const setOrderParam = (duration: string) => {
     const params = new URLSearchParams(searchParams.toString());
-    params.set("size", duration);
+    params.set("sizeInKb", duration);
     router.push(`${pathName}?${params.toString()}`);
   };
 

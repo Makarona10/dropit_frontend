@@ -7,10 +7,10 @@ import { buttons } from "@/styles";
 import { useRef, useState } from "react";
 import { FaShare } from "react-icons/fa";
 
-interface ShareFileProps {
+interface ShareFolderProps {
   isOpen: boolean;
   onClose: () => void;
-  fileId: number;
+  folderId: number;
 }
 
 interface User {
@@ -19,11 +19,11 @@ interface User {
   email: string;
 }
 
-export default function ShareFileModal({
+export default function ShareFolderModal({
   isOpen,
   onClose,
-  fileId,
-}: ShareFileProps) {
+  folderId,
+}: ShareFolderProps) {
   const [users, setUsers] = useState<User[]>([]);
   const [usersLoading, setUsersLoading] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
@@ -57,7 +57,7 @@ export default function ShareFileModal({
     setUsersLoading(false);
   };
 
-  const shareFile = async () => {
+  const shareFolder = async () => {
     if (!selectedUser?.email) {
       setError("Please select a user");
       return;
@@ -65,9 +65,9 @@ export default function ShareFileModal({
     setError("");
     setShareLoading(true);
     try {
-      const res = await api(`/share/file`, "post", {
+      const res = await api(`/share/folder`, "post", {
         sharedWithEmail: selectedUser?.email,
-        fileId: fileId,
+        folderId,
       });
       if (res.status === 200) {
         setError("");
@@ -83,9 +83,9 @@ export default function ShareFileModal({
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="w-96 flex flex-col gap-2 text-xs sm:text-sm">
         <div className="flex flex-col gap-1">
-          <h1 className="text-xl font-bold">Share File</h1>
+          <h1 className="text-xl font-bold">Share Folder</h1>
           <p className="text-neutral-400 text-sm">
-            Share this file with others
+            Share this folder with others
           </p>
         </div>
         <form
@@ -163,7 +163,7 @@ export default function ShareFileModal({
           hover:bg-primary-600 active:bg-primary-600 disabled:opacity-60
           disabled:cursor-not-allowed disabled:hover:bg-primary-500 disabled:active:bg-primary-500`}
           disabled={selectedUser === null || shareLoading}
-          onClick={shareFile}
+          onClick={shareFolder}
         >
           {shareLoading ? (
             <LoadingDots />
