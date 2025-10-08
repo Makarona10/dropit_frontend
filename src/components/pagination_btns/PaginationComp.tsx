@@ -29,7 +29,7 @@ const PaginationButtons = ({ total }: _Props) => {
   }, [total]);
 
   return (
-    <div className="flex items-center sm:gap-2 gap-1">
+    <div className="flex items-center sm:gap-2 gap-1 sm:px-8">
       <div
         className={`${btnStyle} ${currentPage <= 1 && "opacity-70"}`}
         onClick={() => {

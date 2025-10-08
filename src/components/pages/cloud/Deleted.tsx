@@ -13,6 +13,8 @@ import HeadBtnsBar from "@/components/common/HeadBtnsBar";
 import { MdDeleteForever } from "react-icons/md";
 import CleanBin from "@/components/files_browsing/binOptions/CleanBin";
 import { useApi } from "@/lib/useApi";
+import PagesContainer from "@/components/common/Container";
+import Separator from "@/components/common/Separator";
 
 const Deleted = () => {
   const [files, setFiles] = useState({
@@ -69,10 +71,8 @@ const Deleted = () => {
       <SideBar title="Cloud" />
       <div className="flex flex-col w-full">
         <Header />
-        <div className="flex items-center w-full h-16 bg-neutral-800 border-t-neutral-700/70 border-t-[1px] px-2 gap-8">
-          <HeadBtnsBar buttons={btns} />
-        </div>
-        <div className="flex flex-col flex-wrap p-8 gap-8 w-full">
+        <HeadBtnsBar buttons={btns} />
+        <PagesContainer>
           <div className="flex gap-3 items-center sm:text-2xl text-lg font-bold">
             <p>Your personal trash bin</p>
             <FontAwesomeIcon
@@ -85,6 +85,7 @@ const Deleted = () => {
               <PaginationButtons total={files.pages} />
             </div>
           </div>
+          <Separator />
           <div className="w-full flex flex-wrap gap-5">
             {!files.loading && !files.error && files.files.length > 0 && (
               <ListFiles files={files.files} />
@@ -105,7 +106,7 @@ const Deleted = () => {
             {files.loading && <LoadingSpinner />}
           </div>
           <hr className="opacity-30" />
-        </div>
+        </PagesContainer>
       </div>
     </div>
   );

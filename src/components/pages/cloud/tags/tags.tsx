@@ -12,6 +12,8 @@ import { useSearchParams } from "next/navigation";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import PaginationButtons from "@/components/pagination_btns/PaginationComp";
 import { useApi } from "@/lib/useApi";
+import PagesContainer from "@/components/common/Container";
+import Separator from "@/components/common/Separator";
 
 type Tag = {
   id: number;
@@ -70,52 +72,53 @@ const Tags = () => {
       <div className="flex flex-col w-full">
         <Header />
         <HeadBtnsBar buttons={btns} />
-        <div className="grid grid-cols-2 pt-10">
-          <div className="flex items-center gap-4 pl-10">
-            <h1 className="sm:text-2xl text-lg font-bold">Tags</h1>
-            <FaTags className="text-primary-500 sm:w-[21px] sm:h-[21px] h-[16px] w-[16px]" />
+        <PagesContainer>
+          <div className="grid grid-cols-2 ">
+            <div className="flex items-center gap-4">
+              <h1 className="sm:text-2xl text-lg font-bold">Tags</h1>
+              <FaTags className="text-primary-500 sm:w-[21px] sm:h-[21px] h-[16px] w-[16px]" />
+            </div>
+            <div className="w-full flex flex-row-reverse">
+              <PaginationButtons total={tags.pages || 0} />
+            </div>
           </div>
-          <div className="w-full flex flex-row-reverse sm:px-16 px-8">
-            <PaginationButtons total={tags.pages || 0} />
+          <Separator />
+
+          <div className="flex flex-wrap gap-5 w-full">
+            {tags.loading && (
+              <div className="w-full flex justify-center">
+                <LoadingSpinner />
+              </div>
+            )}
+            {tags.error && !tags.loading && (
+              <div className="w-full flex ">
+                <p className="w-full text-center text-2xl underline font-semibold">
+                  Error happened while loading tags! try refreshing the page
+                </p>
+              </div>
+            )}
+            {!tags.loading && tags.data.length === 0 && !tags.error && (
+              <div className="w-full text-center font-bold">
+                <p className="text-2xl font-semibold">No Tags created yet.</p>
+              </div>
+            )}
+            {!tags.loading &&
+              tags.data.length > 0 &&
+              !tags.error &&
+              tags.data.map((t: Tag) => {
+                const theDate = new Date(t.createdAt);
+
+                return (
+                  <Tag
+                    key={t.id}
+                    id={t.id}
+                    name={t.name}
+                    createdAt={theDate.toLocaleDateString()}
+                  />
+                );
+              })}
           </div>
-        </div>
-        <div className="flex flex-wrap gap-5 p-8 w-full">
-          {tags.loading && (
-            <div className="w-full flex justify-center">
-              <LoadingSpinner />
-            </div>
-          )}
-
-          {tags.error && !tags.loading && (
-            <div className="w-full flex ">
-              <p className="w-full text-center text-2xl underline font-semibold">
-                Error happened while loading tags! try refreshing the page
-              </p>
-            </div>
-          )}
-
-          {!tags.loading && tags.data.length === 0 && !tags.error && (
-            <div className="w-full text-center font-bold">
-              <p className="text-2xl font-semibold">No Tags created yet.</p>
-            </div>
-          )}
-
-          {!tags.loading &&
-            tags.data.length > 0 &&
-            !tags.error &&
-            tags.data.map((t: Tag) => {
-              const theDate = new Date(t.createdAt);
-
-              return (
-                <Tag
-                  key={t.id}
-                  id={t.id}
-                  name={t.name}
-                  createdAt={theDate.toLocaleDateString()}
-                />
-              );
-            })}
-        </div>
+        </PagesContainer>
       </div>
     </div>
   );

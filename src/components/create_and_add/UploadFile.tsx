@@ -10,6 +10,7 @@ import {
 } from "@/app/types";
 import { useApi } from "@/lib/useApi";
 import Modal, { ModalProps } from "../common/Modal";
+import LoadingDots from "../visuals/ButtonLoading";
 
 const permittedExtensions = permittedVideos
   .concat(permittedOtherExtensions)
@@ -19,6 +20,7 @@ const UploadFile = ({ isOpen, onClose }: ModalProps) => {
   const [error, setError] = useState<string>("");
   const [fileNames, setFileNames] = useState<string[]>([]);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [isRequestProcessing, setIsRequestProcessing] = useState(false);
   const { folderId } = useParams();
   const { api } = useApi();
 
@@ -73,11 +75,18 @@ const UploadFile = ({ isOpen, onClose }: ModalProps) => {
         formData.append("files", file);
       });
 
+      setIsRequestProcessing(true);
       const response = await api(
         `/file/upload-file${parentId ? `?parentId=${parentId}` : ""}`,
         "post",
         formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        },
       );
+      setIsRequestProcessing(false);
       setError("");
       setFileNames([]);
       setSelectedFiles([]);
@@ -85,6 +94,7 @@ const UploadFile = ({ isOpen, onClose }: ModalProps) => {
         window.location.reload();
       }
     } catch (error: any) {
+      setIsRequestProcessing(false);
       setError(
         error?.response?.data?.message ||
           "Failed to upload file. Please try again.",
@@ -146,10 +156,22 @@ const UploadFile = ({ isOpen, onClose }: ModalProps) => {
       <button
         className={`flex items-center gap-2 mt-2 px-4 w-full p-2 bg-green-600 rounded-md sm:text-base text-xs disabled:opacity-65 disabled:cursor-not-allowed`}
         onClick={() => pushToServer(Number(folderId) || null)}
-        disabled={error || selectedFiles.length < 1 ? true : false}
+        disabled={
+          error || isRequestProcessing || selectedFiles.length < 1
+            ? true
+            : false
+        }
       >
-        <IoMdCloudUpload className="sm:text-xl text-base" />
-        Push to the server
+        {isRequestProcessing ? (
+          <div className="w-full h-6 flex items-center justify-center">
+            <LoadingDots />
+          </div>
+        ) : (
+          <>
+            <IoMdCloudUpload className="sm:text-xl text-base" />
+            <p>Push to the server</p>
+          </>
+        )}
       </button>
     </Modal>
   );

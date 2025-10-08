@@ -10,6 +10,9 @@ import LoadingSpinner from "@/components/common/LoadingSpinner";
 import ListFiles from "@/components/files_browsing/ListFiles";
 import Order from "@/components/filteration/OrderBy";
 import { useApi } from "@/lib/useApi";
+import Separator from "@/components/common/Separator";
+import PagesContainer from "@/components/common/Container";
+import ButtonsContainer from "@/components/filteration/container/ButtonsContainer";
 
 const DeletedPhotos = () => {
   const [images, setImages] = useState({
@@ -59,7 +62,7 @@ const DeletedPhotos = () => {
       <SideBar title="Photos" />
       <div className="flex flex-col w-full">
         <Header />
-        <div className="flex flex-col flex-wrap p-8 gap-8 w-full">
+        <PagesContainer>
           <div className="w-full flex gap-3 items-center">
             <div className="sm:w-[280px] gap-3 flex items-center sm:text-2xl text-lg font-bold">
               <p>Your Photos Bin</p>
@@ -74,12 +77,14 @@ const DeletedPhotos = () => {
               <PaginationButtons total={images.pages} />
             </div>
           </div>
-          <hr className="opacity-30 w-10/12 sm:w-7/12" />
+          <Separator />
           <div className="flex flex-wrap gap-2 sm:gap-4 items-center">
-            <Order />
-            <p className="font-semibold sm:text-sm text-xs text-neutral-400">
-              ⓘ order due to deletion date.
-            </p>
+            <ButtonsContainer>
+              <Order />
+              <p className="font-semibold sm:text-sm text-xs text-neutral-400 my-auto">
+                ⓘ order due to deletion date.
+              </p>
+            </ButtonsContainer>
           </div>
           <div className="w-full flex flex-wrap gap-5">
             {images.loading && <LoadingSpinner />}
@@ -97,8 +102,7 @@ const DeletedPhotos = () => {
               <ListFiles files={images.images} />
             )}
           </div>
-          <hr className="opacity-30" />
-        </div>
+        </PagesContainer>
       </div>
     </div>
   );

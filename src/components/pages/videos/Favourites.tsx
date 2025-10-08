@@ -12,6 +12,9 @@ import VideoExtension from "@/components/filteration/VidExtension";
 import SortBy from "@/components/filteration/SortBy";
 import Order from "@/components/filteration/OrderBy";
 import { useApi } from "@/lib/useApi";
+import PagesContainer from "@/components/common/Container";
+import ButtonsContainer from "@/components/filteration/container/ButtonsContainer";
+import Separator from "@/components/common/Separator";
 
 const FavouriteVideos = () => {
   const [videos, setVideos] = useState({
@@ -68,7 +71,7 @@ const FavouriteVideos = () => {
       <SideBar title="Videos" />
       <div className="flex flex-col w-full">
         <Header />
-        <div className="flex flex-col gap-8 p-8">
+        <PagesContainer>
           <div className="flex items-center gap-3">
             <div className="sm:w-[300px] flex items-center gap-3">
               <h1 className="sm:text-2xl text-lg font-bold">
@@ -78,36 +81,36 @@ const FavouriteVideos = () => {
                 style={{ width: "23px", height: "23px", color: "#A81C1C" }}
               />
             </div>
-            <div className="w-full flex sm:flex-row-reverse sm:px-8 items-center">
+            <div className="w-full flex sm:flex-row-reverse items-center">
               <PaginationButtons total={videos.pages} />
             </div>
           </div>
-          <hr className="opacity-30 sm:w-7/12 w-10/12" />
-          <div className="flex sm:gap-4 gap-2 flex-wrap">
+          <Separator />
+          <ButtonsContainer>
             <VideoDuration />
             <VideoExtension />
             <SortBy />
             <Order />
+          </ButtonsContainer>
+          <div className="flex flex-wrap gap-5 w-full">
+            {videos.loading && <LoadingSpinner />}
+            {!videos.loading && videos.error && (
+              <p className="w-full text-center text-2xl underline">
+                Error happened, try refreshing the page
+              </p>
+            )}
+
+            {!videos.loading && !videos.error && videos.videos.length < 1 && (
+              <p className="w-full text-center text-2xl font-semibold">
+                No videos found
+              </p>
+            )}
+
+            {!videos.loading && !videos.error && videos.videos.length > 0 && (
+              <ListFiles files={videos.videos} />
+            )}
           </div>
-        </div>
-        <div className="flex flex-wrap gap-5 pl-8 w-full">
-          {videos.loading && <LoadingSpinner />}
-          {!videos.loading && videos.error && (
-            <p className="w-full text-center text-2xl underline">
-              Error happened, try refreshing the page
-            </p>
-          )}
-
-          {!videos.loading && !videos.error && videos.videos.length < 1 && (
-            <p className="w-full text-center text-2xl font-semibold">
-              No videos found
-            </p>
-          )}
-
-          {!videos.loading && !videos.error && videos.videos.length > 0 && (
-            <ListFiles files={videos.videos} />
-          )}
-        </div>
+        </PagesContainer>
       </div>
     </div>
   );

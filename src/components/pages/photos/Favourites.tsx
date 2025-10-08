@@ -8,6 +8,8 @@ import { useSearchParams } from "next/navigation";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import ListFiles from "@/components/files_browsing/ListFiles";
 import { useApi } from "@/lib/useApi";
+import PagesContainer from "@/components/common/Container";
+import Separator from "@/components/common/Separator";
 
 const FavouritesPhotos = () => {
   const [images, setImages] = useState({
@@ -62,7 +64,7 @@ const FavouritesPhotos = () => {
       <SideBar title="Photos" />
       <div className="flex flex-col w-full">
         <Header />
-        <div className="flex flex-col gap-5 p-10">
+        <PagesContainer>
           <div className="flex items-center gap-3">
             <h1 className="sm:text-2xl text-lg font-bold text-nowrap">
               Favourite Photos
@@ -70,28 +72,28 @@ const FavouritesPhotos = () => {
             <FaStar
               style={{ width: "26px", height: "26px", color: "#A81C1C" }}
             />
-            <div className="w-full flex sm:flex-row-reverse sm:px-8 items-center">
+            <div className="w-full flex flex-row-reverse items-center">
               <PaginationButtons total={images.pages} />
             </div>
           </div>
-          <hr className="opacity-30 w-10/12 sm:w-7/12" />
-        </div>
-        <div className="flex flex-wrap gap-5 p-8 w-full">
-          {images.loading && <LoadingSpinner />}
-          {!images.loading && images.error && (
-            <p className="w-full text-center text-2xl underline">
-              Error happened, try refreshing the page
-            </p>
-          )}
+          <Separator />
+          <div className="flex flex-wrap gap-5 w-full">
+            {images.loading && <LoadingSpinner />}
+            {!images.loading && images.error && (
+              <p className="w-full text-center text-2xl underline">
+                Error happened, try refreshing the page
+              </p>
+            )}
 
-          {!images.loading && !images.error && images.images.length < 1 && (
-            <p className="w-full text-center text-2xl">No images found</p>
-          )}
+            {!images.loading && !images.error && images.images.length < 1 && (
+              <p className="w-full text-center text-2xl">No images found</p>
+            )}
 
-          {!images.loading && !images.error && images.images.length > 0 && (
-            <ListFiles files={images.images} />
-          )}
-        </div>
+            {!images.loading && !images.error && images.images.length > 0 && (
+              <ListFiles files={images.images} />
+            )}
+          </div>
+        </PagesContainer>
       </div>
     </div>
   );

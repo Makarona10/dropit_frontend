@@ -16,6 +16,9 @@ import Order from "@/components/filteration/OrderBy";
 import VideoExtension from "@/components/filteration/VidExtension";
 import PaginationButtons from "@/components/pagination_btns/PaginationComp";
 import { useApi } from "@/lib/useApi";
+import Separator from "@/components/common/Separator";
+import ButtonsContainer from "@/components/filteration/container/ButtonsContainer";
+import PagesContainer from "@/components/common/Container";
 
 const Videos = () => {
   const [videos, setVideos] = useState({
@@ -93,10 +96,8 @@ const Videos = () => {
       <SideBar title="Videos" />
       <div className="flex flex-col w-full">
         <Header />
-        <div className="flex items-center w-full h-16 bg-neutral-800 p-4 gap-8">
-          <HeadBtnsBar buttons={btns} />
-        </div>
-        <div className="flex flex-col flex-wrap p-8 gap-8 w-full">
+        <HeadBtnsBar buttons={btns} />
+        <PagesContainer>
           <div className="flex gap-3 items-center sm:text-2xl text-lg font-bold">
             <p className="text-nowrap">Uploaded Videos</p>
             <FontAwesomeIcon
@@ -109,14 +110,15 @@ const Videos = () => {
               <PaginationButtons total={videos.pages} />
             </div>
           </div>
-          <hr className="sm:w-7/12 w-10/12 opacity-30" />
-          <div className="flex flex-wrap sm:gap-4 gap-2">
+          <Separator />
+
+          <ButtonsContainer>
             <VideoDuration />
             <VideoExtension />
             <SortBy />
             <Order />
-          </div>
-          <div className="w-full flex flex-wrap gap-5">
+          </ButtonsContainer>
+          <div className="w-full flex flex-wrap gap-5 ">
             {videos.loading && <LoadingSpinner />}
             {!videos.loading && videos.error && (
               <p className="w-full text-center text-2xl underline">
@@ -134,8 +136,7 @@ const Videos = () => {
               <ListFiles files={videos.videos} />
             )}
           </div>
-          <hr className="opacity-30" />
-        </div>
+        </PagesContainer>
       </div>
     </div>
   );

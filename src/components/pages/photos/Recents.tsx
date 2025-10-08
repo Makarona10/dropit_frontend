@@ -15,6 +15,9 @@ import Order from "@/components/filteration/OrderBy";
 import SortBy from "@/components/filteration/SortBy";
 import ImageExtension from "@/components/filteration/ImgExtension";
 import { useApi } from "@/lib/useApi";
+import PagesContainer from "@/components/common/Container";
+import Separator from "@/components/common/Separator";
+import ButtonsContainer from "@/components/filteration/container/ButtonsContainer";
 
 const Photos = () => {
   const [images, setImages] = useState({
@@ -84,12 +87,10 @@ const Photos = () => {
       <SideBar title="Photos" />
       <div className="flex flex-col w-full">
         <Header />
-        <div className="flex items-center w-full h-16 bg-neutral-800 px-5 gap-8">
-          <HeadBtnsBar buttons={btns} />
-        </div>
-        <div className="flex flex-col flex-wrap p-8 gap-8 w-full">
-          <div className="w-full flex items-center ">
-            <div className="w-80 gap-3 flex items-center sm:text-2xl text-lg font-bold">
+        <HeadBtnsBar buttons={btns} />
+        <PagesContainer>
+          <div className="w-full flex items-center">
+            <div className="gap-3 flex items-center sm:text-2xl text-lg font-bold">
               <p className="">Uploaded Photos</p>
               <FontAwesomeIcon
                 width={30}
@@ -102,12 +103,13 @@ const Photos = () => {
               <PaginationButtons total={images.pages} />
             </div>
           </div>
-          <hr className="opacity-30 sm:w-7/12 w-10/12" />
-          <div className="flex flex-wrap sm:gap-4 gap-2">
+          <Separator />
+
+          <ButtonsContainer>
             <SortBy />
             <Order />
             <ImageExtension />
-          </div>
+          </ButtonsContainer>
           <div className="w-full flex flex-wrap gap-5">
             {images.loading && <LoadingSpinner />}
             {!images.loading && images.error && (
@@ -124,8 +126,7 @@ const Photos = () => {
               <ListFiles files={images.images} />
             )}
           </div>
-          <hr className="opacity-30" />
-        </div>
+        </PagesContainer>
       </div>
     </div>
   );

@@ -1,6 +1,8 @@
 "use client";
 
+import PagesContainer from "@/components/common/Container";
 import Header from "@/components/common/Header";
+import Separator from "@/components/common/Separator";
 import SideBar from "@/components/common/SideBar";
 import ListSharedComponents from "@/components/files_browsing/shared/ListSharedComponents";
 import { useApi } from "@/lib/useApi";
@@ -34,12 +36,14 @@ export default function SharedFoldersComponent() {
       <SideBar title="Cloud" />
       <div className="w-full h-full flex flex-col">
         <Header />
-        <div className="w-full h-full p-10">
+
+        <PagesContainer>
           <h1 className="text-2xl font-bold">Shared Folders</h1>
+          <Separator />
           <div className="flex flex-col gap-2 mt-6">
             <ListSharedComponents title="Folders" files={[]} />
           </div>
-        </div>
+        </PagesContainer>
       </div>
     </div>
   );

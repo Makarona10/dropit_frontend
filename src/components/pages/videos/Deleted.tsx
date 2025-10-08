@@ -10,6 +10,9 @@ import LoadingSpinner from "@/components/common/LoadingSpinner";
 import ListFiles from "@/components/files_browsing/ListFiles";
 import Order from "@/components/filteration/OrderBy";
 import { useApi } from "@/lib/useApi";
+import Separator from "@/components/common/Separator";
+import PagesContainer from "@/components/common/Container";
+import ButtonsContainer from "@/components/filteration/container/ButtonsContainer";
 
 const DeletedVideos = () => {
   const [videos, setVideos] = useState({
@@ -58,7 +61,7 @@ const DeletedVideos = () => {
       <SideBar title="Videos" />
       <div className="flex flex-col w-full">
         <Header />
-        <div className="flex flex-col flex-wrap p-8 gap-8 w-full">
+        <PagesContainer>
           <div className="w-full flex gap-3 items-center">
             <div className="sm:w-[280px] gap-3 flex items-center sm:text-2xl text-lg font-bold">
               <p>Your videos bin</p>
@@ -73,13 +76,13 @@ const DeletedVideos = () => {
               <PaginationButtons total={videos.pages} />
             </div>
           </div>
-          <hr className="opacity-30 sm:w-7/12 w-10/12" />
-          <div className="flex flex-wrap gap-2 sm:gap-4 items-center">
+          <Separator />
+          <ButtonsContainer>
             <Order />
-            <p className="font-semibold sm:text-sm text-xs text-neutral-400">
+            <p className="font-semibold sm:text-sm text-xs text-neutral-400 my-auto">
               ⓘ order due to deletion date.
             </p>
-          </div>
+          </ButtonsContainer>
           <div className="w-full flex flex-wrap gap-5">
             {videos.loading && <LoadingSpinner />}
             {!videos.loading && videos.error && (
@@ -98,8 +101,7 @@ const DeletedVideos = () => {
               <ListFiles files={videos.videos} />
             )}
           </div>
-          <hr className="opacity-30" />
-        </div>
+        </PagesContainer>
       </div>
     </div>
   );
