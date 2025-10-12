@@ -1,4 +1,5 @@
 import { permittedVideos } from "@/app/types";
+import { filterButtons } from "@/styles";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
@@ -48,7 +49,7 @@ export default function VideoExtension() {
     <div className="relative inline-block text-left">
       <button
         onClick={toggleDropdown}
-        className="text-white bg-primary-700 focus:outline-none font-medium rounded-lg sm:text-sm text-xs px-5 py-2.5 text-center inline-flex items-center"
+        className={`${filterButtons}`}
         type="button"
       >
         Extension{" "}
