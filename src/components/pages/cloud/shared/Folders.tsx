@@ -2,6 +2,7 @@
 
 import PagesContainer from "@/components/common/Container";
 import Header from "@/components/common/Header";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
 import Separator from "@/components/common/Separator";
 import SideBar from "@/components/common/SideBar";
 import ListSharedComponents from "@/components/files_browsing/shared/ListSharedComponents";
@@ -63,7 +64,6 @@ export default function SharedFoldersComponent() {
       <SideBar title="Cloud" />
       <div className="w-full h-full flex flex-col">
         <Header />
-
         <PagesContainer>
           <div className="w-full flex items-center">
             <h1 className="text-2xl font-bold">Shared Folders</h1>
@@ -75,9 +75,15 @@ export default function SharedFoldersComponent() {
           <ButtonsContainer>
             <Order />
           </ButtonsContainer>
-          <div className="flex flex-col gap-2 mt-6">
-            <ListSharedComponents title="Folders" files={folders.folders} />
-          </div>
+          {folders.loading && <LoadingSpinner />}
+          {!folders.loading && folders.error && (
+            <h1>Error while retrieving your shared folders</h1>
+          )}
+          {!folders.loading && !folders.error && (
+            <div className="flex flex-col gap-2">
+              <ListSharedComponents title="Folders" files={folders.folders} />
+            </div>
+          )}
         </PagesContainer>
       </div>
     </div>

@@ -1,6 +1,7 @@
 "use client";
 import PagesContainer from "@/components/common/Container";
 import Header from "@/components/common/Header";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
 import Separator from "@/components/common/Separator";
 import SideBar from "@/components/common/SideBar";
 import ListSharedComponents from "@/components/files_browsing/shared/ListSharedComponents";
@@ -87,10 +88,15 @@ export default function SharedVideosComponent() {
             <Order />
             <VideoExtension />
           </ButtonsContainer>
-          <div className="flex flex-wrap gap-4"></div>
-          <div className="flex flex-col gap-2">
-            <ListSharedComponents files={files.files} title="Videos" />
-          </div>
+          {files.loading && <LoadingSpinner />}
+          {!files.loading && files.error && (
+            <h1>Error happened while retrieving your shared videos</h1>
+          )}
+          {!files.loading && !files.error && (
+            <div className="flex flex-col gap-2">
+              <ListSharedComponents files={files.files} title="Videos" />
+            </div>
+          )}
         </PagesContainer>
       </div>
     </div>
