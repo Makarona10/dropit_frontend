@@ -63,6 +63,7 @@ const VideosNavBar = () => {
               className={`
               relative flex items-center w-full p-2 pl-7 rounded-xl
               hover:bg-neutral-800 hover:cursor-pointer opacity-80
+              duration-200  
               ${
                 pathName.includes(`/videos/${l.ref.toLowerCase()}`) &&
                 (days === l?.num?.toString() || (!days && !l?.num))

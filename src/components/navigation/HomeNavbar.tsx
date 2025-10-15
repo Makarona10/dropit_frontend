@@ -45,6 +45,7 @@ const HomeNavbar = () => {
             key={l.ref}
             className={`
               relative flex items-center w-full p-2 pl-7 rounded-xl
+              duration-200
               hover:bg-neutral-800 hover:cursor-pointer opacity-80
               ${isActive(l.ref) ? "bg-neutral-800 text-white opacity-100" : ""}
             `}
@@ -75,7 +76,7 @@ const HomeNavbar = () => {
             key={l.ref}
             className={`
               relative flex items-center w-full p-2 pl-7 rounded-xl
-              hover:bg-neutral-800 hover:cursor-pointer
+              hover:bg-neutral-800 hover:cursor-pointer duration-200
               ${isActive(l.ref) ? "bg-neutral-800 text-white opacity-100" : ""}
             `}
             href={`/cloud/${l.ref}`}

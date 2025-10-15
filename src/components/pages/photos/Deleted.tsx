@@ -29,12 +29,18 @@ const DeletedPhotos = () => {
   useEffect(() => {
     const fetchImages = async () => {
       try {
-        const res = await api(`/bin/deleted-files?page=${page || 1}`, "get", {
-          params: {
-            order: imgsOrder.toLowerCase(),
-            type: "image",
+        setImages({ ...images, loading: true });
+        const res = await api(
+          `/bin/deleted-files?page=${page || 1}`,
+          "get",
+          {},
+          {
+            params: {
+              order: imgsOrder.toLowerCase(),
+              type: "image",
+            },
           },
-        });
+        );
         if (res.data.statusCode === 200) {
           setImages({
             error: false,

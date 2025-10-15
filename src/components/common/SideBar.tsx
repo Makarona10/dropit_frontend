@@ -96,7 +96,7 @@ const SideBar = ({ title }: sideBarSelectios) => {
                          flex flex-col justify-center items-center w-full h-[74px]
                          text-zinc-300 greyscale
                          hover:bg-black transition-all duration-100
-                         ${pathName.split("/")[1].includes(`${l.name.toLowerCase()}/`) && "bg-black"}`}
+                         ${pathName.split("/")[1].includes(`${l.name.toLowerCase()}`) && "bg-black"}`}
               href={"/" + l.ref}
             >
               <FontAwesomeIcon

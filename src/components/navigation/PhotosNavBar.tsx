@@ -70,7 +70,7 @@ const PhotosNavBar = () => {
               key={idx}
               className={`
                             relative flex items-center w-full p-2 pl-7 rounded-xl
-                            hover:bg-neutral-800 hover:cursor-pointer opacity-80
+                            hover:bg-neutral-800 hover:cursor-pointer duration-200 opacity-80
               ${
                 pathName.includes(`/photos/${l.ref.toLowerCase()}`) &&
                 (days === l?.num?.toString() || (!days && !l?.num))

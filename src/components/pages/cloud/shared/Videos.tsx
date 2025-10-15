@@ -4,6 +4,7 @@ import Header from "@/components/common/Header";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import Separator from "@/components/common/Separator";
 import SideBar from "@/components/common/SideBar";
+import SearchSharedItem from "@/components/files_browsing/shared/FileAndFolderSearch";
 import ListSharedComponents from "@/components/files_browsing/shared/ListSharedComponents";
 import ButtonsContainer from "@/components/filteration/container/ButtonsContainer";
 import Order from "@/components/filteration/OrderBy";
@@ -23,6 +24,7 @@ export default function SharedVideosComponent() {
   const duration = search.get("duration");
   const extension = search.get("ext");
   const size = search.get("size");
+  const name = search.get("name");
   const { api } = useApi();
   const [files, setFiles] = useState({
     loading: true,
@@ -47,6 +49,7 @@ export default function SharedVideosComponent() {
               duration,
               extension,
               size,
+              name,
             },
           },
         );
@@ -88,6 +91,7 @@ export default function SharedVideosComponent() {
             <Order />
             <VideoExtension />
           </ButtonsContainer>
+          <SearchSharedItem placeholder="videos" />
           {files.loading && <LoadingSpinner />}
           {!files.loading && files.error && (
             <h1>Error happened while retrieving your shared videos</h1>

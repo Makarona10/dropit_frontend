@@ -4,6 +4,7 @@ import Header from "@/components/common/Header";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import Separator from "@/components/common/Separator";
 import SideBar from "@/components/common/SideBar";
+import SearchSharedItem from "@/components/files_browsing/shared/FileAndFolderSearch";
 import ListSharedComponents from "@/components/files_browsing/shared/ListSharedComponents";
 import ButtonsContainer from "@/components/filteration/container/ButtonsContainer";
 import ImageExtension from "@/components/filteration/ImgExtension";
@@ -23,6 +24,7 @@ export default function SharedImagesComponent() {
   const size = searchParams.get("sizeInKb");
   const sortBy = searchParams.get("sort_by");
   const order = searchParams.get("order");
+  const name = searchParams.get("name");
   const [files, setFiles] = useState({
     loading: true,
     error: false,
@@ -45,6 +47,7 @@ export default function SharedImagesComponent() {
               sizeInKb: size,
               sortBy,
               order,
+              name,
             },
           },
         );
@@ -85,6 +88,7 @@ export default function SharedImagesComponent() {
             <SortBy />
             <ImageSize />
           </ButtonsContainer>
+          <SearchSharedItem placeholder="Image" />
           {!files.loading && !files.error && (
             <div>
               <ListSharedComponents title="Images" files={files.files} />

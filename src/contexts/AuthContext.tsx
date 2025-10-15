@@ -74,6 +74,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         localStorage.setItem("accessToken", res.data.data.accessToken);
       }
 
+      getUser();
+
       return res.status;
     } catch (err) {
       return 401;
@@ -108,10 +110,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   useEffect(() => {
-    refreshUser().then(() => {
-      getUser();
-      setLoading(false);
-    });
+    refreshUser()
+      .then(() => {
+        setLoading(false);
+      })
+      .catch();
   }, []);
 
   return (

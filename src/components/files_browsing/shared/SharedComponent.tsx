@@ -1,4 +1,4 @@
-import { downloadFile } from "@/app/functions";
+import { downloadFile, formatDuration, formatFileSize } from "@/app/functions";
 import { useApi } from "@/lib/useApi";
 import {
   FaDownload,
@@ -74,7 +74,7 @@ const SharedComponent = ({
       <div className="text-primary-500">
         <Icon style={iconStyle} />
       </div>
-      <div className="ml-3 flex-1 min-w-0 ">
+      <div className="flex flex-col ml-3 flex-1 min-w-0 gap-2">
         <p
           title={name}
           className="sm:text-lg text-sm font-bold truncate
@@ -82,6 +82,10 @@ const SharedComponent = ({
         >
           {name}
         </p>
+        <div className="flex gap-5 items-center text-xs opacity-70">
+          {duration && <p>{formatDuration(duration || 0)}</p>}
+          {sizeInKb && <p>{formatFileSize(sizeInKb)}</p>}
+        </div>
       </div>
       <div className="hidden md:flex flex-col items-end">
         <div className="flex items-center">
@@ -91,17 +95,19 @@ const SharedComponent = ({
         </div>
         <p className="text-xs opacity-70">{email}</p>
       </div>
-      <div className="flex sm:flex-none justify-end">
-        <div
-          onClick={(e) => {
-            e.stopPropagation();
-            downloadFile(api, id, name);
-          }}
-          className="ml-10 sm:mr-10 p-3 transition bg-primary-500 hover:bg-primary-600 rounded-full"
-        >
-          <FaDownload className="w-3 h-3 sm:w-4 sm:h-4" />
+      {type !== "folder" && (
+        <div className="flex sm:flex-none justify-end">
+          <div
+            onClick={(e) => {
+              e.stopPropagation();
+              downloadFile(api, id, name);
+            }}
+            className="ml-10 sm:mr-10 p-3 transition bg-primary-500 hover:bg-primary-600 rounded-full"
+          >
+            <FaDownload className="w-3 h-3 sm:w-4 sm:h-4" />
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

@@ -119,7 +119,7 @@ const Photos = () => {
             )}
 
             {!images.loading && !images.error && images.images.length < 1 && (
-              <p className="w-full text-center text-2xl">No videos found</p>
+              <p className="w-full text-center text-2xl">No Images found</p>
             )}
 
             {!images.loading && !images.error && images.images.length > 0 && (

@@ -5,6 +5,7 @@ import Header from "@/components/common/Header";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import Separator from "@/components/common/Separator";
 import SideBar from "@/components/common/SideBar";
+import SearchSharedItem from "@/components/files_browsing/shared/FileAndFolderSearch";
 import ListSharedComponents from "@/components/files_browsing/shared/ListSharedComponents";
 import ButtonsContainer from "@/components/filteration/container/ButtonsContainer";
 import Order from "@/components/filteration/OrderBy";
@@ -18,6 +19,7 @@ export default function SharedFoldersComponent() {
   const searchParams = useSearchParams();
   const order = searchParams.get("order");
   const page = searchParams.get("page");
+  const name = searchParams.get("name");
   const [folders, setFolders] = useState({
     loading: true,
     error: false,
@@ -37,6 +39,7 @@ export default function SharedFoldersComponent() {
             params: {
               page: page || 1,
               order,
+              name,
             },
           },
         );
@@ -57,7 +60,7 @@ export default function SharedFoldersComponent() {
     };
 
     fetchSharedFolders();
-  }, []);
+  }, [searchParams]);
 
   return (
     <div className="flex h-full w-full">
@@ -75,6 +78,7 @@ export default function SharedFoldersComponent() {
           <ButtonsContainer>
             <Order />
           </ButtonsContainer>
+          <SearchSharedItem placeholder="Folder" />
           {folders.loading && <LoadingSpinner />}
           {!folders.loading && folders.error && (
             <h1>Error while retrieving your shared folders</h1>

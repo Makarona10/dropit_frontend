@@ -20,9 +20,11 @@ const ListSharedComponents = ({ files, title }: SharedComponentsProps) => {
         <div className="hidden md:flex flex-col items-end flex-1">
           <h1>Owner name</h1>
         </div>
-        <div className="flex flex-1 sm:flex-none flex-row-reverse ml-10 sm:mr-6 p-3">
-          <h1>Download</h1>
-        </div>
+        {title?.toLowerCase() !== "folders" && (
+          <div className="flex flex-1 sm:flex-none flex-row-reverse ml-10 sm:mr-6 p-3">
+            <h1>Download</h1>
+          </div>
+        )}
       </div>
       {files.map((f, idx) => (
         <SharedComponent key={f.id} {...f} />

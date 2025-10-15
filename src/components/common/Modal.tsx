@@ -24,7 +24,7 @@ export default function Modal({ isOpen, onClose, children }: ModalProps) {
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className="cursor-default fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+          className="cursor-default fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-3"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}

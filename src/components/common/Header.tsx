@@ -2,21 +2,22 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass, faBell } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
-import { useApi } from "@/lib/useApi";
+import Link from "next/link";
 
 type m_btn = {
   name: string;
   action: Function;
 };
+
 const Header = () => {
   const [toggle, setToggle] = useState<boolean>(false);
   const router = useRouter();
   const searchRef = useRef<HTMLInputElement>(null);
-  const { logout } = useAuth();
-  const { user } = useAuth();
+  const { logout, user } = useAuth();
+  const profileMenuRef = useRef<HTMLDivElement>(null);
 
   const menu_buttons: m_btn[] = [
     {
@@ -31,44 +32,22 @@ const Header = () => {
     },
   ];
 
-  //TODO: Fetch User info will be moved to auth context and used in the header as a hook
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        profileMenuRef.current &&
+        !profileMenuRef.current.contains(event.target as Node)
+      ) {
+        setToggle(false);
+      }
+    };
 
-  // const user: Promise<{ name: string; email: string }> = useMemo(() => {
-  //   const fetchUserInfo = async () => {
-  //     try {
-  //       const res = await api(`/user/me`, "get");
-  //       const fname = res.data.data.firstName;
-  //       const lname = res.data.data.lastName;
-  //       const email = res.data.data.email;
-  //       setInfo({
-  //         loading: false,
-  //         error: "",
-  //       });
-  //       return {
-  //         name: fname + " " + lname,
-  //         email: email,
-  //       };
-  //     } catch (error: any) {
-  //       setInfo({
-  //         loading: false,
-  //         error: error.response.data.message || "Error happened!",
-  //       });
-  //       return {
-  //         name: "",
-  //         email: "",
-  //       };
-  //     }
-  //   };
-  //
-  //   const returnValue = fetchUserInfo()
-  //     .then((res) => {
-  //       return res;
-  //     })
-  //     .catch((error) => {
-  //       return { name: "", email: "" };
-  //     });
-  //   return returnValue;
-  // }, []);
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  });
 
   return (
     <div
@@ -77,7 +56,7 @@ const Header = () => {
       bg-neutral-800 py-2 w-full"
     >
       <div className="flex items-center sm:px-6 px-2 sm:gap-4">
-        <a href="/cloud/recents" className="w-12 h-12">
+        <Link href="/cloud/recents" className="w-12 h-12">
           <Image
             alt="dropit logo"
             src={"/redlogo.png"}
@@ -85,7 +64,7 @@ const Header = () => {
             height={250}
             className="min-w-12 min-h-12"
           />
-        </a>
+        </Link>
         <form
           className="flex w-[240px] sm:w-[400px] items-center"
           onSubmit={(e) => {
@@ -140,8 +119,8 @@ const Header = () => {
               className="
                          flex flex-col relative p-2
                          w-[300px] right-[110px] sm:right-[240px] top-[10px] z-20
-                         rounded-xl bg-neutral-900 cursor-default
-                        "
+                         rounded-xl bg-neutral-900 cursor-default"
+              ref={profileMenuRef}
             >
               {user && (
                 <div className="flex h-[100px] border-b-[1px] border-zinc-600">
