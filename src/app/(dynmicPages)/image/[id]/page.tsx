@@ -117,13 +117,13 @@ const ImagePreviewer = () => {
           })}
         </div>
       </div>
-      <div className="flex justify-center items-center p-5">
+      <div className="my-auto flex justify-center items-center h-[calc(80vh)] ">
         <Image
           src={`${path.join(process.env.NEXT_PUBLIC_SERVER_URI || "", "uploads", image?.img?.userId || "", image?.img?.path || "", image?.img?.uniqueName || "")}`}
           width={3840}
           height={2160}
           alt={"Picture"}
-          className="rounded-lg border-[2px] border-white-500/20 max-w-[80%] max-h-[90%] h-auto w-auto"
+          className="rounded-lg h-full object-contain border-y border-y-neutral-300/10"
         />
       </div>
     </div>

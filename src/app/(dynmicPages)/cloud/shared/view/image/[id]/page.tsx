@@ -1,21 +1,13 @@
 "use client";
 import { IconType } from "react-icons";
-import { FaDownload } from "react-icons/fa6";
-import { RiUserSharedLine } from "react-icons/ri";
-import { FaStar } from "react-icons/fa";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import path from "path";
-import { downloadFile } from "@/app/functions";
 import { useApi } from "@/lib/useApi";
-
-type Btn = {
-  ico: IconType;
-  name: string;
-  action: Function;
-  style?: string;
-};
+import { FaUser } from "react-icons/fa6";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
+import { FaImage } from "react-icons/fa";
 
 const SharedImagePreviewer = () => {
   const { id } = useParams();
@@ -26,6 +18,11 @@ const SharedImagePreviewer = () => {
     img: {
       id: 0,
       userId: "",
+      user: {
+        firstName: "",
+        lastName: "",
+        email: "",
+      },
       name: "",
       uniqueName: "",
       resolution: "",
@@ -37,32 +34,6 @@ const SharedImagePreviewer = () => {
       isFavourite: false,
     },
   });
-  // const icons: Btn[] = [
-  //   {
-  //     ico: FaDownload,
-  //     name: "Download",
-  //     action: () => {
-  //       downloadFile(image.img.id, image.img.name);
-  //     },
-  //   },
-  //   {
-  //     ico: RiUserSharedLine,
-  //     name: "Share",
-  //     action: () => {},
-  //   },
-  //   {
-  //     ico: FaStar,
-  //     name: "Add to favourite",
-  //     action: () => {
-  //       if (image.img.isFavourite) {
-  //         removeFromFavourite();
-  //       } else {
-  //         addToFavourite();
-  //       }
-  //     },
-  //     style: "text-primary-500",
-  //   },
-  // ];
 
   const addToFavourite = async () => {
     try {
@@ -96,34 +67,46 @@ const SharedImagePreviewer = () => {
     fetchFiles();
   }, []);
 
+  if (image.loading)
+    return (
+      <div className="h-screen flex items-center">
+        <LoadingSpinner />
+      </div>
+    );
   return (
-    <div className="w-full flex flex-col gap-5 min-h-screen items-center">
-      <div className="flex items-center w-full p-3 shadow-neutral-600 shadow-sm bg-neutral-800 sm:px-28 text-xl gap-4">
-        <div className="flex gap-4 m-auto">
-          {/* {icons.map((b: Btn, idx: number) => { */}
-          {/*   const Icon = b.ico; */}
-          {/*   return ( */}
-          {/*     <div */}
-          {/*       key={idx} */}
-          {/*       className={`p-3 hover:bg-white/10 cursor-pointer rounded-full`} */}
-          {/*       title={b.name} */}
-          {/*       onClick={() => { */}
-          {/*         b.action(); */}
-          {/*       }} */}
-          {/*     > */}
-          {/*       <Icon className={`${image?.img?.isFavourite && b.style}`} /> */}
-          {/*     </div> */}
-          {/*   ); */}
-          {/* })} */}
+    <div className="w-full flex flex-col min-h-screen items-center">
+      <div className="w-full flex bg-neutral-800 p-2 sm:px-10">
+        <FaUser color="#c83c51" className="mt-1" />
+        <div className="flex flex-col ml-2">
+          <p className="sm:text-base text-sm">
+            <b>
+              {image.img.user.firstName + " " + image.img.user.lastName + " "}
+            </b>
+            shared this image with you
+          </p>
+          <p className="sm:text-xs text-xs text-gray-400">
+            {image.img.user.email}
+          </p>
         </div>
       </div>
-      <div className="flex justify-center items-center p-5">
+      <div className="flex p-2 text-white w-full bg-neutral-800/70 sm:px-10">
+        <FaImage className="mt-1 text-2xl" color="#c83c51" />
+        <div className="flex flex-col ml-2">
+          <h2 className="sm:text-base text-sm font-semibold">
+            {image.img.name || "Image"}
+          </h2>
+          <p className="text-[10px] text-gray-400">
+            {image.img.resolution} ({(image.img.sizeInKb / 1024).toFixed(2)} MB)
+          </p>
+        </div>
+      </div>
+      <div className="my-auto flex justify-center items-center h-[calc(80vh)] ">
         <Image
           src={`${path.join(process.env.NEXT_PUBLIC_SERVER_URI || "", "uploads", image?.img?.userId || "", image?.img?.path || "", image?.img?.uniqueName || "")}`}
           width={3840}
           height={2160}
-          alt={"Picture"}
-          className="rounded-lg border-[2px] border-white-500/20 max-w-[80%] max-h-[90%] h-auto w-auto"
+          alt={image.img.name}
+          className="rounded-lg h-full object-contain border-y border-y-neutral-300/10"
         />
       </div>
     </div>

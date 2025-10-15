@@ -4,6 +4,7 @@ import { faFacebook, faGoogle } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import GoogleAuth from "@/components/auth/GoogleOAuth";
 
 const inputStyle =
   "md:text-lg text-sm p-2 rounded-sm text-sm mt-1 w-full bg-neutral-200/10 outline-none border-b-2 border-transparent focus:border-b-primary-400";
@@ -18,6 +19,7 @@ const RegisterPage = () => {
     password: "",
     passwordConfirmation: "",
   });
+  const [isSignByGoogleVisible, setIsSignByGoogleVisible] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const router = useRouter();
@@ -75,6 +77,10 @@ const RegisterPage = () => {
 
   return (
     <div className="flex flex-col h-screen bg-[url('/mockup.jpg')] bg-cover bg-center">
+      <GoogleAuth
+        isOpen={isSignByGoogleVisible}
+        onClose={() => setIsSignByGoogleVisible(false)}
+      />
       <div className="md:w-[700px] w-full md:bg-neutral-900/90 bg-neutral-900/70 h-full flex flex-col md:p-20 p-5 border-r-[1px] border-white/30">
         <div className="flex flex-col">
           <div className="flex flex-col gap-2">
@@ -178,7 +184,10 @@ const RegisterPage = () => {
                 Login with an existing account
               </a>
               <div className="flex items-center justify-center gap-1">
-                <div className="w-full flex gap-4 cursor-pointer p-2 justify-center items-center bg-white rounded-sm">
+                <div
+                  onClick={() => setIsSignByGoogleVisible(true)}
+                  className="w-full flex gap-4 cursor-pointer p-2 justify-center items-center bg-white rounded-sm"
+                >
                   <p className="md:text-sm text-xs text-black/80 line-clamp-1">
                     Register with Google
                   </p>

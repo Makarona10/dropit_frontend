@@ -168,7 +168,7 @@ const Me = () => {
               transition hover:shadow-md hover:shadow-neutral-500/30
               sm:text-base text-sm"
                 >
-                  Update profile
+                  Update password
                 </button>
               </div>
             </div>

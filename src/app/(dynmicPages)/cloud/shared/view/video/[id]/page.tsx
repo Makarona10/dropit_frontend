@@ -3,8 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import { IconType } from "react-icons";
 import {
-  FaDownload,
-  FaStar,
   FaPlay,
   FaPause,
   FaVolumeHigh,
@@ -14,11 +12,10 @@ import {
   FaExpand,
   FaCompress,
 } from "react-icons/fa6";
-import { RiUserSharedLine } from "react-icons/ri";
 import { useParams } from "next/navigation";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
-import { downloadFile } from "@/app/functions";
 import { useApi } from "@/lib/useApi";
+import { FaUser, FaVideo } from "react-icons/fa";
 
 interface VideoData {
   id: number | null;
@@ -34,6 +31,11 @@ interface VideoData {
   extension: string;
   createdAt: string;
   isFavourite: boolean;
+  user: {
+    firstName: string;
+    lastName: string;
+    email: string;
+  };
 }
 
 interface Button {
@@ -84,6 +86,11 @@ const VideoPlayerPage = () => {
       extension: "",
       createdAt: "",
       isFavourite: false,
+      user: {
+        firstName: "",
+        lastName: "",
+        email: "",
+      },
     },
   });
   const [vidPath, setVidPath] = useState<string>("");
@@ -247,26 +254,6 @@ const VideoPlayerPage = () => {
     }
   };
 
-  // const addToFavourite = async () => {
-  //   try {
-  //     await api(`/favourite/add-file?fileId=${id}`, "post");
-  //     setVideo((prev) => ({
-  //       ...prev,
-  //       vid: { ...prev.vid, isFavourite: true },
-  //     }));
-  //   } catch (error) {}
-  // };
-  //
-  // const removeFromFavourite = async () => {
-  //   try {
-  //     await api(`/favourite/remove-file?fileId=${id}`, "delete");
-  //     setVideo((prev) => ({
-  //       ...prev,
-  //       vid: { ...prev.vid, isFavourite: false },
-  //     }));
-  //   } catch (error) {}
-  // };
-
   useEffect(() => {
     const fetchVideo = async () => {
       setVideo((prev) => ({ ...prev, loading: true }));
@@ -301,27 +288,41 @@ const VideoPlayerPage = () => {
   }, [id]);
 
   return (
-    <div className="w-full min-h-screen bg-gradient-to-b from-neutral-900 to-neutral-800 flex items-center justify-center p-4">
-      <div className="w-full max-w-4xl bg-neutral-800 rounded-xl shadow-lg overflow-hidden">
-        {/* Upper Bar */}
-        <div className="flex items-center p-3 w-full bg-neutral-800 shadow-sm shadow-neutral-600">
-          <div className="flex items-center justify-center w-full gap-4 text-xl">
-            {/* {buttons.map((b, idx) => ( */}
-            {/*   <button */}
-            {/*     key={idx} */}
-            {/*     className={`sm:text-xl text-lg p-3 hover:bg-white/10 cursor-pointer rounded-full ${b.style ? "text-primary-500" : "text-gray-400"}`} */}
-            {/*     title={b.name} */}
-            {/*     onClick={b.action} */}
-            {/*   > */}
-            {/*     <b.ico /> */}
-            {/*   </button> */}
-            {/* ))} */}
+    <div className="w-full h-full min-h-screen bg-gradient-to-b from-neutral-900 to-neutral-800 flex flex-col items-center ">
+      <div className="flex flex-col w-full">
+        <div className="w-full flex bg-neutral-800 p-2 sm:px-10">
+          <FaUser color="#c83c51" className="mt-1" />
+          <div className="flex flex-col justify-center ml-2">
+            <p className="sm:text-base text-sm">
+              <b>
+                {video.vid.user.firstName + " " + video.vid.user.lastName + " "}
+              </b>
+              shared this video with you
+            </p>
+            <p className="sm:text-xs text-xs text-gray-400">
+              {video.vid.user.email}
+            </p>
           </div>
         </div>
+        {/* Video Info */}
+        <div className="flex p-2 sm:px-10 text-white w-full bg-neutral-800/70">
+          <FaVideo className="mt-1 text-2xl" color="#c83c51" />
+          <div className="flex flex-col ml-2">
+            <h2 className="sm:text-base text-sm font-semibold">
+              {video.vid.name || "Video"}
+            </h2>
+            <p className="text-[10px] text-gray-400">
+              {video.vid.resolution} • {(video.vid.sizeInKb / 1024).toFixed(2)}{" "}
+              MB
+            </p>
+          </div>
+        </div>
+      </div>
+      <div className="h-full rounded-xl shadow-lg p-4">
         {/* Video Container */}
         <div
           ref={playerRef}
-          className="relative w-full aspect-video fullscreen:w-screen fullscreen:h-screen"
+          className="relative rounded-md overflow-hidden h-[calc(75vh)] fullscreen:w-screen fullscreen:h-screen"
         >
           {video.loading || !vidPath ? (
             <div className="flex items-center justify-center h-full">
@@ -332,14 +333,15 @@ const VideoPlayerPage = () => {
               Error loading video
             </div>
           ) : (
-            <div className="relative group fullscreen:w-screen fullscreen:h-screen">
+            <div className="w-full h-full relative flex justify-center group fullscreen:w-screen fullscreen:h-screen">
               <video
                 ref={vidRef}
                 loop
-                className="w-full h-full object-contain bg-black"
+                className="h-full w-auto object-contain bg-black"
                 onTimeUpdate={handleProgress}
                 onProgress={handleProgress}
                 onError={(e) => {}}
+                onDoubleClick={toggleFullscreen}
               >
                 <source src={vidPath} type="video/mp4" />
               </video>
@@ -445,13 +447,6 @@ const VideoPlayerPage = () => {
               </div>
             </div>
           )}
-        </div>
-        {/* Video Info */}
-        <div className="p-4 text-white">
-          <h2 className="text-xl font-semibold">{video.vid.name || "Video"}</h2>
-          <p className="text-sm text-gray-400">
-            {video.vid.resolution} • {(video.vid.sizeInKb / 1024).toFixed(2)} MB
-          </p>
         </div>
       </div>
     </div>

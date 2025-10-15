@@ -321,7 +321,7 @@ const VideoPlayerPage = () => {
         {/* Video Container */}
         <div
           ref={playerRef}
-          className="relative w-full aspect-video fullscreen:w-screen fullscreen:h-screen"
+          className="relative rounded-md overflow-hidden h-[calc(75vh)] fullscreen:w-screen fullscreen:h-screen"
         >
           {video.loading || !vidPath ? (
             <div className="flex items-center justify-center h-full">
@@ -332,7 +332,7 @@ const VideoPlayerPage = () => {
               Error loading video
             </div>
           ) : (
-            <div className="relative group fullscreen:w-screen fullscreen:h-screen">
+            <div className="w-full h-full relative flex justify-center group fullscreen:w-screen fullscreen:h-screen">
               <video
                 ref={vidRef}
                 loop
@@ -340,6 +340,7 @@ const VideoPlayerPage = () => {
                 onTimeUpdate={handleProgress}
                 onProgress={handleProgress}
                 onError={(e) => {}}
+                onDoubleClick={toggleFullscreen}
               >
                 <source src={vidPath} type="video/mp4" />
               </video>

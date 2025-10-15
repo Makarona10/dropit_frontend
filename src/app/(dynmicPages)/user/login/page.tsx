@@ -6,6 +6,9 @@ import { faFacebook, faGoogle } from "@fortawesome/free-brands-svg-icons";
 import Image from "next/image";
 import { useAuth } from "@/contexts/AuthContext";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
+import Link from "next/link";
+import LoadingDots from "@/components/visuals/ButtonLoading";
+import GoogleAuth from "@/components/auth/GoogleOAuth";
 
 const inputStyle =
   "md:text-lg text-sm p-2 rounded-sm text-sm w-full my-1 bg-neutral-200/10 outline-none ring-0 ring-offset-0" +
@@ -18,7 +21,9 @@ const LoginPage = () => {
     email: "",
     password: "",
   });
+  const [isSignByGoogleVisible, setIsSignByGoogleVisible] = useState(false);
   const [authReady, setAuthReady] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const router = useRouter();
@@ -40,6 +45,7 @@ const LoginPage = () => {
     }
 
     try {
+      setLoading(true);
       const response: any = await login(formData.email, formData.password);
 
       if (response?.status === 200) {
@@ -49,8 +55,11 @@ const LoginPage = () => {
       } else {
         setError(response?.data?.message || "Invalid email or password");
       }
-    } catch (err) {
-      setError("An error occurred. Please try again.");
+    } catch (error: any) {
+      setLoading(false);
+      setError(
+        error.response?.data?.message || "An error occurred. Please try again.",
+      );
     }
   };
 
@@ -59,6 +68,7 @@ const LoginPage = () => {
       if (res) {
         return router.push("/cloud/recents");
       } else {
+        setLoading(false);
         setAuthReady(true);
       }
     });
@@ -77,6 +87,10 @@ const LoginPage = () => {
   }
   return (
     <div className="flex flex-col h-screen bg-[url('/mockup.jpg')] bg-cover bg-center ">
+      <GoogleAuth
+        isOpen={isSignByGoogleVisible}
+        onClose={() => setIsSignByGoogleVisible(false)}
+      />
       <div className="md:w-[700px] w-full md:bg-neutral-900/90 bg-neutral-900/70 h-full flex flex-col md:p-20 p-5 border-r-[1px] border-white/30">
         <div className="flex items-center sm:h-20 py-3  mb-6">
           <div className="text-2xl">
@@ -128,23 +142,30 @@ const LoginPage = () => {
               </div>
               <button
                 type="submit"
-                className="w-full my-3 p-2 bg-primary-500 md:text-lg text-sm rounded-md active:bg-primary-600"
+                className="w-full my-3 h-12 bg-primary-500 md:text-lg text-sm rounded-md active:bg-primary-600 disabled:opacity-50 disabled:active:bg-primary-500"
+                disabled={loading}
               >
-                SIGN IN
+                {loading ? <LoadingDots /> : <> SIGN IN</>}
               </button>
               <div className="flex justify-center md:text-sm text-xs gap-2 opacity-70">
-                <a
+                <Link
                   href="/user/register"
                   className="cursor-pointer underline hover:no-underline"
                 >
                   Create an account
-                </a>
+                </Link>
                 <p className="cursor-pointer underline hover:no-underline">
                   Forgot password?
                 </p>
               </div>
               <div className="w-full flex items-center justify-center gap-1">
-                <div className="w-full flex gap-4 cursor-pointer p-2 justify-center items-center bg-white rounded-sm">
+                <div
+                  onClick={() => {
+                    window.location.href =
+                      "http://localhost:3001/auth/google/login";
+                  }}
+                  className="w-full flex gap-4 cursor-pointer p-2 justify-center items-center bg-white rounded-sm"
+                >
                   <p className="md:text-sm text-xs text-black/80 line-clamp-1">
                     Login with Google
                   </p>
