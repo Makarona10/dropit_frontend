@@ -35,6 +35,9 @@ export const permittedOtherExtensions = [
   "docx",
   "rar",
   "zip",
+  "mp3",
+  "exe",
+  "7z",
 ];
 
 export type _File = {

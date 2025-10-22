@@ -67,7 +67,6 @@ const SearchResult = () => {
       <SideBar />
       <div className="flex flex-col w-full">
         <Header />
-
         <div className="w-full flex items-center sm:pl-10 pt-5 pl-5">
           <div className="flex items-center gap-4 w-full">
             <div className="sm:text-2xl text-lg font-bold">
@@ -121,14 +120,12 @@ const SearchResult = () => {
                 />
               );
             })}
+          {!sResult.loading && sResult.files.length === 0 && !sResult.error && (
+            <div className="w-full sm:text-2xl text-lg font-bold text-center m-auto">
+              No results found!
+            </div>
+          )}
         </div>
-        {/* <hr className="relative mt-5 w-11/12 opacity-40 sm:left-8 left-3" /> */}
-        {/* <div className="flex items-center gap-4 sm:pt-10 pt-5 pl-10"> */}
-        {/*   <h1 className="sm:text-2xl text-lg font-bold">Folders</h1> */}
-        {/* </div> */}
-        {/* <div className="flex gap-3 p-8 flex-wrap md:z-10"> */}
-        {/*   <Folder id={7} name="Roma FC" created_at="24-5-2020" /> */}
-        {/* </div> */}
       </div>
     </div>
   );

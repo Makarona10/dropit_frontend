@@ -48,7 +48,13 @@ const CreateFolder = ({ isOpen, onClose }: ModalProps) => {
           <FaFolder />
         </div>
 
-        <div className="w-full">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            createFolderRequest();
+          }}
+          className="w-full"
+        >
           <input
             className="w-full indent-2 p-2 outline-none border-0 ring-offset-none text-neutral-950
                        rounded-lg text-xs sm:text-base"
@@ -56,7 +62,7 @@ const CreateFolder = ({ isOpen, onClose }: ModalProps) => {
             placeholder="Folder name"
             ref={inputRef}
           />
-        </div>
+        </form>
         <div
           className={`w-full ${msg.error ? "text-primary-400" : "text-green-600"}`}
         >
@@ -65,7 +71,7 @@ const CreateFolder = ({ isOpen, onClose }: ModalProps) => {
         <div className="flex flex-row-reverse items-center gap-2 sm:text-sm text-xs">
           <button
             className="p-2 bg-green-600 rounded-lg active:bg-green-700"
-            onClick={() => {
+            onClick={(e) => {
               createFolderRequest();
             }}
           >

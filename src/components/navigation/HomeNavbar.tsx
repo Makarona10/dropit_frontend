@@ -10,6 +10,7 @@ import {
   faTrash,
   faStar,
   faClock,
+  faFile,
 } from "@fortawesome/free-solid-svg-icons";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
@@ -26,6 +27,7 @@ const links: linkForming[] = [
   { name: "Deleted", img: faTrash, ref: "deleted" },
   { name: "Tags", img: faTag, ref: "tags" },
   { name: "Folders", img: faFolderOpen, ref: "shared/folders" },
+  { name: "General", img: faFile, ref: "shared/files" },
   { name: "Images", img: faImages, ref: "shared/images" },
   { name: "Videos", img: faFileVideo, ref: "shared/videos" },
 ];
@@ -71,7 +73,7 @@ const HomeNavbar = () => {
       </h5>
 
       <div className="flex flex-col w-10/12 mx-auto gap-[3px]">
-        {links.slice(4, 7).map((l) => (
+        {links.slice(4).map((l) => (
           <Link
             key={l.ref}
             className={`
