@@ -105,7 +105,6 @@ const Deleted = () => {
 
             {files.loading && <LoadingSpinner />}
           </div>
-          <hr className="opacity-30" />
         </PagesContainer>
       </div>
     </div>

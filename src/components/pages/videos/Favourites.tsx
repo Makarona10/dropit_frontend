@@ -33,6 +33,10 @@ const FavouriteVideos = () => {
   const { api } = useApi();
 
   useEffect(() => {
+    setVideos({
+      ...videos,
+      loading: true,
+    });
     const fetchVideos = async () => {
       try {
         const res = await api(

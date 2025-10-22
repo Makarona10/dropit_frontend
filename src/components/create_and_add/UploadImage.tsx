@@ -6,11 +6,12 @@ import { useParams } from "next/navigation";
 import { permittedImages } from "@/app/types";
 import { useApi } from "@/lib/useApi";
 import Modal, { ModalProps } from "../common/Modal";
+import LoadingDots from "../visuals/ButtonLoading";
 
 const UploadImage = ({ isOpen, onClose }: ModalProps) => {
   const [error, setError] = useState<string>("");
   const [fileNames, setFileNames] = useState<string[]>([]);
-  const upFileRef = useRef<HTMLDivElement>(null);
+  const [isRequestProcessing, setIsRequestProcessing] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const { folderId } = useParams();
   const { api } = useApi();
@@ -59,10 +60,16 @@ const UploadImage = ({ isOpen, onClose }: ModalProps) => {
         formData.append("files", file);
       });
 
+      setIsRequestProcessing(true);
       const response = await api(
         `/file/upload-file${parentId ? `?parentId=${parentId}` : ""}`,
         "post",
         formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        },
       );
       setError("");
       setFileNames([]);
@@ -131,12 +138,24 @@ const UploadImage = ({ isOpen, onClose }: ModalProps) => {
           </label>
         </div>
         <button
-          className={`flex items-center gap-2 mt-2 px-4 w-full p-2 bg-green-600 rounded-md sm:text-base text-xs disabled:opacity-65`}
-          disabled={selectedFiles.length < 1 || error ? true : false}
+          className={`flex items-center gap-2 mt-2 px-4 w-full p-2 bg-green-600 rounded-md sm:text-base text-xs disabled:opacity-65 disabled:cursor-not-allowed`}
           onClick={() => pushToServer(Number(folderId) || null)}
+          disabled={
+            error || isRequestProcessing || selectedFiles.length < 1
+              ? true
+              : false
+          }
         >
-          <IoMdCloudUpload className="sm:text-xl text-base" />
-          Upload selected images
+          {isRequestProcessing ? (
+            <div className="w-full h-6 flex items-center justify-center">
+              <LoadingDots />
+            </div>
+          ) : (
+            <>
+              <IoMdCloudUpload className="sm:text-xl text-base" />
+              <p>Upload selected images</p>
+            </>
+          )}
         </button>
       </div>
     </Modal>

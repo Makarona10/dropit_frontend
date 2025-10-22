@@ -13,6 +13,7 @@ import { MdCreateNewFolder } from "react-icons/md";
 import { useApi } from "@/lib/useApi";
 import PagesContainer from "@/components/common/Container";
 import Separator from "@/components/common/Separator";
+import LoadingOverlay from "@/components/common/LoadingOverlay";
 
 const RecentFolders = () => {
   const [folders, setFolders] = useState({
@@ -38,6 +39,10 @@ const RecentFolders = () => {
     },
   ];
   useEffect(() => {
+    setFolders({
+      ...folders,
+      loading: true,
+    });
     const fetchFolders = async () => {
       try {
         const res = await api(`/folder?page=${page || 1}`, "get");

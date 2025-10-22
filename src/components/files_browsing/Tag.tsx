@@ -4,6 +4,7 @@ import { MdDeleteForever } from "react-icons/md";
 import DeleteTag from "./tags_components/DeleteTag";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import LoadingOverlay from "../common/LoadingOverlay";
 
 type _Props = {
   id: number;
@@ -13,6 +14,7 @@ type _Props = {
 
 const Tag = ({ id, name, createdAt }: _Props) => {
   const [isDeleteVisible, setIsDeleteVisible] = useState<boolean>(false);
+  const [isTagContentLoading, setIsTagContentLoading] = useState(false);
   const router = useRouter();
 
   return (
@@ -21,9 +23,17 @@ const Tag = ({ id, name, createdAt }: _Props) => {
             duration-100 hover:bg-neutral-900 cursor-pointer select-none"
       title="click to view files"
       onClick={() => {
+        setIsTagContentLoading(true);
         router.push(`tags/tfiles/${id}`);
       }}
     >
+      <div className={`${!isTagContentLoading && "hidden"}`}>
+        <LoadingOverlay
+          zIndex={90}
+          message="Loading tag files..."
+          fullScreen={true}
+        />
+      </div>
       <DeleteTag
         tag_id={id}
         isOpen={isDeleteVisible}

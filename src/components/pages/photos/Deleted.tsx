@@ -27,6 +27,10 @@ const DeletedPhotos = () => {
   const { api } = useApi();
 
   useEffect(() => {
+    setImages({
+      ...images,
+      loading: true,
+    });
     const fetchImages = async () => {
       try {
         setImages({ ...images, loading: true });

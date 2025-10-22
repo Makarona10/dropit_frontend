@@ -23,9 +23,10 @@ const PaginationButtons = ({ total }: _Props) => {
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams.toString());
-    params.set("page", "1");
-
-    router.push(`?${params.toString()}`);
+    if (params.get("page")) {
+      params.set("page", "1");
+      router.push(`?${params.toString()}`);
+    }
   }, [total]);
 
   return (

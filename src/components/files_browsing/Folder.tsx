@@ -9,6 +9,7 @@ import { FaDownload } from "react-icons/fa6";
 import { useRouter } from "next/navigation";
 import DeleteFolder from "./folderComps/DeleteFolder";
 import ShareFolderModal from "./shareComponents/ShareFolderModal";
+import LoadingOverlay from "../common/LoadingOverlay";
 
 type FolderProps = {
   id: number;
@@ -20,6 +21,7 @@ const Folder = ({ id, name, created_at }: FolderProps) => {
   const [toggleOpts, setToggleOpts] = useState<boolean>(false);
   const [isDeleteVisible, setIsDeleteVisible] = useState<boolean>(false);
   const [isShareVisible, setIsShareVisible] = useState<boolean>(false);
+  const [isFolderContentLoading, setIsFolderContentLoading] = useState(false);
   const router = useRouter();
 
   const options = [
@@ -44,9 +46,17 @@ const Folder = ({ id, name, created_at }: FolderProps) => {
                     cursor-pointer select-none"
       onMouseLeave={() => setToggleOpts(false)}
       onClick={() => {
+        setIsFolderContentLoading(true);
         router.push(`/folders/folder/${id}?fn=${name}`);
       }}
     >
+      <div className={`${!isFolderContentLoading && "hidden"}`}>
+        <LoadingOverlay
+          zIndex={90}
+          message="Loading folder content"
+          fullScreen={true}
+        />
+      </div>
       <DeleteFolder
         isOpen={isDeleteVisible}
         onClose={() => setIsDeleteVisible(false)}

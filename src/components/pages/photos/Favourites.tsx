@@ -25,6 +25,10 @@ const FavouritesPhotos = () => {
   const { api } = useApi();
 
   useEffect(() => {
+    setImages({
+      ...images,
+      loading: true,
+    });
     const fetchImages = async () => {
       try {
         const res = await api(

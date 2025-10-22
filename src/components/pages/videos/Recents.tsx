@@ -47,6 +47,10 @@ const Videos = () => {
   ];
 
   useEffect(() => {
+    setVideos({
+      ...videos,
+      loading: true,
+    });
     const fetchVideos = async () => {
       try {
         const res = await api(

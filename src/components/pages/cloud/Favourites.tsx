@@ -30,6 +30,10 @@ const Favourites = () => {
   const { api } = useApi();
 
   useEffect(() => {
+    setFiles({
+      ...files,
+      loading: true,
+    });
     const getFiles = async () => {
       try {
         const res = await api(

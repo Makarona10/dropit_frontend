@@ -18,7 +18,7 @@ const CleanBin = ({ isOpen, onClose }: ModalProps) => {
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <div className="flex flex-col sm:w-[450px] bg-black p-6 rounded-xl border-[1px] border-white/30">
+      <div className="flex flex-col sm:w-[450px]">
         <h1 className="sm:text-xl text-base font-bold pb-3 border-b-[1px] border-neutral-300/30">
           Clean bin
         </h1>
