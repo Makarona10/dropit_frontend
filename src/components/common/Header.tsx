@@ -6,17 +6,22 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import Link from "next/link";
+import LoadingSpinner from "./LoadingSpinner";
 
 type m_btn = {
   name: string;
   action: Function;
 };
 
+const menuBtnStyle = `flex items-center w-full p-2 rounded-lg duration-200 bg-transparent
+      hover:bg-neutral-600 hover:text-white/90 cursor-pointer`;
+
 const Header = () => {
   const [toggle, setToggle] = useState<boolean>(false);
   const router = useRouter();
   const searchRef = useRef<HTMLInputElement>(null);
   const { logout, user } = useAuth();
+  const [loggingOut, setLoggingOut] = useState(false);
   const profileMenuRef = useRef<HTMLDivElement>(null);
 
   const menu_buttons: m_btn[] = [
@@ -150,20 +155,23 @@ const Header = () => {
                 </div>
               )}
               <div className="flex flex-col mt-2 p-1 text-[14px] text-[#ADADAE]">
-                {menu_buttons.map((b: m_btn, idx: number) => {
-                  return (
-                    <div
-                      key={idx}
-                      className="
-                                        flex items-center w-full p-2 rounded-lg
-                                        duration-200 bg-transparent hover:bg-neutral-600 hover:text-white/90
-                                        cursor-pointer"
-                      onClick={() => b.action()}
-                    >
-                      {b.name}
+                <Link className={menuBtnStyle} href={"/me"}>
+                  {menu_buttons[0].name}
+                </Link>
+                <button
+                  className={menuBtnStyle}
+                  onClick={() => {
+                    setLoggingOut(true);
+                    menu_buttons[1].action();
+                  }}
+                >
+                  {menu_buttons[1].name}
+                  {loggingOut && (
+                    <div className="ml-4">
+                      <LoadingSpinner height="4" width="4" />
                     </div>
-                  );
-                })}
+                  )}
+                </button>
               </div>
             </div>
           )}
