@@ -165,8 +165,8 @@ const Me = () => {
               <div className="sm:ml-8 h-full">
                 <button
                   className="text-secondary-100 p-2 rounded-lg bg-primary-600
-              transition hover:shadow-md hover:shadow-neutral-500/30
-              sm:text-base text-sm"
+                  transition sm:text-base text-sm
+                  hover:shadow-[0_0_10px_rgba(255,255,255,0.3)]"
                 >
                   Update password
                 </button>

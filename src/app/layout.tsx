@@ -6,6 +6,9 @@ import NextTopLoader from "nextjs-toploader";
 export const metadata: Metadata = {
   title: "Dropit",
   description: "A cloud app",
+  icons: {
+    icon: "/redlogo.png",
+  },
 };
 
 export default function RootLayout({

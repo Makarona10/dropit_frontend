@@ -57,6 +57,10 @@ const LoginPage = () => {
       }
     } catch (error: any) {
       setLoading(false);
+      if (error.response?.status === 429) {
+        setError("You tried a lot, please try again after 2 minutes.");
+        return;
+      }
       setError(
         error.response?.data?.message || "An error occurred. Please try again.",
       );
