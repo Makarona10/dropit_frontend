@@ -166,7 +166,7 @@ const LoginPage = () => {
                 <div
                   onClick={() => {
                     window.location.href =
-                      "http://localhost:3001/auth/google/login";
+                      process.env.NEXT_PUBLIC_SERVER_URI + "/auth/google/login";
                   }}
                   className="w-full flex gap-4 cursor-pointer p-2 justify-center items-center bg-white rounded-sm"
                 >
