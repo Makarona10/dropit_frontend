@@ -174,7 +174,7 @@ const FileComponent = ({
   }, []);
 
   console.log(
-    `${process.env.NEXT_PUBLIC_SERVER_URI}/uploads/${userId}/thumbnails/${id}`,
+    `${process.env.NEXT_PUBLIC_SERVER_URI}/uploads/${userId}/thumbnails/${thumbnail}`,
   );
   return (
     <div
