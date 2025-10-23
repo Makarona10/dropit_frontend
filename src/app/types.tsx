@@ -51,6 +51,7 @@ export type _File = {
   duration?: number;
   fps?: number;
   isFavourite: boolean;
+  thumbnail?: string;
 };
 
 export type _Folder = {
