@@ -119,7 +119,7 @@ const ImagePreviewer = () => {
       </div>
       <div className="my-auto flex justify-center items-center h-[calc(80vh)] ">
         <Image
-          src={`${path.join(process.env.NEXT_PUBLIC_SERVER_URI || "", "uploads", image?.img?.userId || "", image?.img?.path || "", image?.img?.uniqueName || "")}`}
+          src={`${process.env.NEXT_PUBLIC_SERVER_URI || ""}/uploads/${image?.img?.userId && image?.img?.userId + "/"}${image?.img?.path && image?.img?.path + "/"}${image?.img?.uniqueName}`}
           width={3840}
           height={2160}
           alt={"Picture"}
