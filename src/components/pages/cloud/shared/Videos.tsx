@@ -79,7 +79,7 @@ export default function SharedVideosComponent() {
         <Header />
         <PagesContainer>
           <div className="full flex items-center">
-            <h1 className="text-2xl font-bold">Shared Videos</h1>
+            <h1 className="pagesHeader">Shared Videos</h1>
             <div className="flex flex-row-reverse flex-1">
               <PaginationButtons total={files.pages || 0} />
             </div>

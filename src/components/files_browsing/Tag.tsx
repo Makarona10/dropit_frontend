@@ -19,7 +19,7 @@ const Tag = ({ id, name, createdAt }: _Props) => {
 
   return (
     <div
-      className="flex flex-col items-center w-[250px] h-[100px] bg-neutral-800 rounded-xl
+      className="flex flex-col items-center sm:w-[250px] sm:h-[100px] w-[180px] h-[80px] bg-neutral-800 rounded-xl
             duration-100 hover:bg-neutral-900 cursor-pointer select-none"
       title="click to view files"
       onClick={() => {
@@ -39,8 +39,8 @@ const Tag = ({ id, name, createdAt }: _Props) => {
         isOpen={isDeleteVisible}
         onClose={() => setIsDeleteVisible(false)}
       />
-      <div className="flex items-center w-full p-4 rounded-t-xl active:bg-neutral-950">
-        <LiaTagSolid style={{ width: "24px", height: "24px" }} />
+      <div className="flex items-center w-full sm:p-4 p-2 rounded-t-xl active:bg-neutral-950">
+        <LiaTagSolid className="sm:size-[24px] size-5" />
         <p
           className="flex items-center w-full overflow-hidden text-ellipsis whitespace-nowrap sm:text-[16px] text-sm text-neutral-300
                     font-semibold ml-2 select-none"
@@ -49,7 +49,7 @@ const Tag = ({ id, name, createdAt }: _Props) => {
         </p>
       </div>
       <div className="flex items-center w-full p-3 pl-4 mt-1 border-t-[1px] border-neutral-600">
-        <span className="flex w-full relative left-1 gap-[3px] items-center text-sm text-neutral-300/80">
+        <span className="flex w-full relative sm:left-1 gap-[3px] items-center sm:text-sm text-[9px] text-neutral-300/80">
           <p className="relative bottom-[1px]">
             Created at: {createdAt.toString()}
           </p>
@@ -61,7 +61,10 @@ const Tag = ({ id, name, createdAt }: _Props) => {
               setIsDeleteVisible(true);
             }}
           >
-            <MdDeleteForever title="delete tag" className="w-5 h-5" />
+            <MdDeleteForever
+              title="delete tag"
+              className="sm:size-[24px] size-4"
+            />
           </span>
         </span>
       </div>

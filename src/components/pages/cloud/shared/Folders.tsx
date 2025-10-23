@@ -69,7 +69,7 @@ export default function SharedFoldersComponent() {
         <Header />
         <PagesContainer>
           <div className="w-full flex items-center">
-            <h1 className="text-2xl font-bold">Shared Folders</h1>
+            <h1 className="pagesHeader">Shared Folders</h1>
             <div className="flex flex-row-reverse flex-1">
               <PaginationButtons total={folders.pages} />
             </div>

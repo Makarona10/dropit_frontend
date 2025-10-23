@@ -95,7 +95,7 @@ const Photos = () => {
         <PagesContainer>
           <div className="w-full flex items-center">
             <div className="gap-3 flex items-center sm:text-2xl text-lg font-bold">
-              <p className="">Uploaded Photos</p>
+              <p className="pagesHeader">Uploaded Photos</p>
               <FontAwesomeIcon
                 width={30}
                 height={30}
@@ -123,7 +123,7 @@ const Photos = () => {
             )}
 
             {!images.loading && !images.error && images.images.length < 1 && (
-              <p className="w-full text-center text-2xl">No Images found</p>
+              <p className="noFilesHeader">No images found</p>
             )}
 
             {!images.loading && !images.error && images.images.length > 0 && (

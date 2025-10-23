@@ -68,7 +68,7 @@ const DeletedVideos = () => {
         <PagesContainer>
           <div className="w-full flex gap-3 items-center">
             <div className="sm:w-[280px] gap-3 flex items-center sm:text-2xl text-lg font-bold">
-              <p>Your videos bin</p>
+              <p className="pagesHeader">Your videos bin</p>
               <FontAwesomeIcon
                 width={18}
                 height={18}
@@ -96,9 +96,7 @@ const DeletedVideos = () => {
             )}
 
             {!videos.loading && !videos.error && videos.videos.length < 1 && (
-              <p className="w-full text-center text-2xl font-semibold">
-                No videos found
-              </p>
+              <p className="noFilesHeader">No videos found</p>
             )}
 
             {!videos.loading && !videos.error && videos.videos.length > 0 && (

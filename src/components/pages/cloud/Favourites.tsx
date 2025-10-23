@@ -64,7 +64,7 @@ const Favourites = () => {
         <Header />
         <PagesContainer>
           <div className="flex items-center gap-4">
-            <h1 className="sm:text-2xl text-lg font-bold">Favourites</h1>
+            <h1 className="pagesHeader">Favourites</h1>
             <FaStar
               style={{ width: "23px", height: "23px", color: "#A81C1C" }}
             />

@@ -4,6 +4,33 @@
 @tailwind utilities;
 @plugin "daisyui";
 
+@layer components {
+  button {
+    @apply p-2 rounded-md sm:text-sm text-xs font-semibold;
+  }
+  .btn-primary {
+    @apply bg-blue-600 text-white hover:bg-blue-700;
+  }
+  .btn-outline {
+    @apply border border-gray-300 text-gray-900 hover:bg-gray-100;
+  }
+
+  /* Filter buttons */
+  .filterBtn {
+    @apply sm:w-32 w-20 text-white bg-primary-700 focus:outline-none font-medium rounded-lg sm:text-sm text-[10px] sm:py-2.5 py-1.5 text-center inline-flex items-center justify-center active:scale-95 duration-100;
+  }
+  .filterArrow {
+    @apply sm:w-2.5 sm:h-2.5 w-1.5 h-1.5 ms-3;
+  }
+
+  .noFilesHeader {
+    @apply w-full text-center sm:text-2xl text-base font-bold;
+  }
+  .pagesHeader {
+    @apply sm:text-2xl text-base font-bold;
+  }
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;

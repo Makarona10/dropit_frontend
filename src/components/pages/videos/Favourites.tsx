@@ -78,9 +78,7 @@ const FavouriteVideos = () => {
         <PagesContainer>
           <div className="flex items-center gap-3">
             <div className="sm:w-[300px] flex items-center gap-3">
-              <h1 className="sm:text-2xl text-lg font-bold">
-                Favourite videos
-              </h1>
+              <h1 className="pagesHeader">Favourite videos</h1>
               <FaStar
                 style={{ width: "23px", height: "23px", color: "#A81C1C" }}
               />

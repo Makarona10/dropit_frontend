@@ -107,7 +107,7 @@ const FolderContent = () => {
         <HeadBtnsBar buttons={btns} />
         <div className="flex w-full items-center gap-10 pt-10 pl-10">
           <div className="flex w-full items-center gap-4 flex-nowrap">
-            <h1 className="sm:text-2xl text-lg font-bold">{folderName}</h1>
+            <h1 className="pagesHeader">{folderName}</h1>
             <FaFolder className="text-primary-500 sm:w-[21px] sm:h-[21px] h-[16px] w-[16px]" />
           </div>
           <div className="flex w-full sm:flex-row-reverse sm:pr-16">
@@ -128,9 +128,7 @@ const FolderContent = () => {
           )}
 
           {!files.loading && !files.error && files.data.length < 1 && (
-            <div className="w-full text-2xl text-center font-semibold">
-              No files
-            </div>
+            <div className="noFilesHeader">No files</div>
           )}
 
           {!files.loading && !files.error && files.data.length > 0 && (
@@ -151,7 +149,7 @@ const FolderContent = () => {
           )}
 
           {!folders.loading && !folders.error && folders.data.length < 1 && (
-            <div className="w-full text-2xl text-center font-semibold">
+            <div className="w-full sm:text-2xl text-base text-center font-bold">
               No folders
             </div>
           )}

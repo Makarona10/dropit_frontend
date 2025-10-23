@@ -70,9 +70,7 @@ const FavouritesPhotos = () => {
         <Header />
         <PagesContainer>
           <div className="flex items-center gap-3">
-            <h1 className="sm:text-2xl text-lg font-bold text-nowrap">
-              Favourite Photos
-            </h1>
+            <h1 className="pagesHeader text-nowrap">Favourite Photos</h1>
             <FaStar
               style={{ width: "26px", height: "26px", color: "#A81C1C" }}
             />
@@ -90,7 +88,7 @@ const FavouritesPhotos = () => {
             )}
 
             {!images.loading && !images.error && images.images.length < 1 && (
-              <p className="w-full text-center text-2xl">No images found</p>
+              <p className="noFilesHeader">No images found</p>
             )}
 
             {!images.loading && !images.error && images.images.length > 0 && (

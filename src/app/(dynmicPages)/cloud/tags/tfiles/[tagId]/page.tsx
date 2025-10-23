@@ -102,7 +102,7 @@ const TagFiles = () => {
         </div>
         <div className="flex w-full items-center gap-10 pt-10 pl-10">
           <div className="flex w-full items-center gap-4 flex-nowrap">
-            <h1 className="sm:text-2xl text-lg font-bold">Tag files</h1>
+            <h1 className="pagesHeader">Tag files</h1>
             <FaTags className="text-primary-500 sm:w-[21px] sm:h-[21px] h-[16px] w-[16px]" />
           </div>
           <div className="flex w-full sm:flex-row-reverse sm:pr-16">

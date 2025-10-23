@@ -75,7 +75,7 @@ const DeletedPhotos = () => {
         <PagesContainer>
           <div className="w-full flex gap-3 items-center">
             <div className="sm:w-[280px] gap-3 flex items-center sm:text-2xl text-lg font-bold">
-              <p>Your Photos Bin</p>
+              <p className="pagesHeader">Your Photos Bin</p>
               <FontAwesomeIcon
                 width={18}
                 height={18}
@@ -105,7 +105,7 @@ const DeletedPhotos = () => {
             )}
 
             {!images.loading && !images.error && images.images.length < 1 && (
-              <p className="w-full text-center text-2xl">No images found</p>
+              <p className="noFilesHeader">No images found</p>
             )}
 
             {!images.loading && !images.error && images.images.length > 0 && (

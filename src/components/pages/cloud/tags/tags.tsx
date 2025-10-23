@@ -75,7 +75,7 @@ const Tags = () => {
         <PagesContainer>
           <div className="grid grid-cols-2 ">
             <div className="flex items-center gap-4">
-              <h1 className="sm:text-2xl text-lg font-bold">Tags</h1>
+              <h1 className="pagesHeader">Tags</h1>
               <FaTags className="text-primary-500 sm:w-[21px] sm:h-[21px] h-[16px] w-[16px]" />
             </div>
             <div className="w-full flex flex-row-reverse">
@@ -99,7 +99,9 @@ const Tags = () => {
             )}
             {!tags.loading && tags.data.length === 0 && !tags.error && (
               <div className="w-full text-center font-bold">
-                <p className="text-2xl font-semibold">No Tags created yet.</p>
+                <p className="sm:text-2xl text-sm font-semibold">
+                  No Tags created yet.
+                </p>
               </div>
             )}
             {!tags.loading &&

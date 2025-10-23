@@ -76,7 +76,7 @@ export default function SharedImagesComponent() {
         <Header />
         <PagesContainer>
           <div className="w-full flex items-center">
-            <h1 className="text-2xl font-bold">Shared Images</h1>
+            <h1 className="pagesHeader">Shared Images</h1>
             <div className="flex flex-row-reverse flex-1">
               <PaginationButtons total={files.pages || 0} />
             </div>

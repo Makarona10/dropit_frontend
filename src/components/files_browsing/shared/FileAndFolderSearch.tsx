@@ -35,7 +35,7 @@ const SearchSharedItem = ({ placeholder }: _Props) => {
       <input
         type="text"
         placeholder={"Search for a shared " + placeholder.toLowerCase()}
-        className=" bg-transparent outline-none ring-0 ring-offset-0 placeholder:text-neutral-400"
+        className="w-full bg-transparent outline-none ring-0 ring-offset-0 placeholder:text-neutral-400"
       />
     </form>
   );

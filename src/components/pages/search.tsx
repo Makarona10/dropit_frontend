@@ -69,7 +69,7 @@ const SearchResult = () => {
         <Header />
         <div className="w-full flex items-center sm:pl-10 pt-5 pl-5">
           <div className="flex items-center gap-4 w-full">
-            <div className="sm:text-2xl text-lg font-bold">
+            <div className="pagesHeader">
               Search result for{" "}
               <span className="text-primary-500">{search_string}</span>
             </div>
@@ -121,9 +121,7 @@ const SearchResult = () => {
               );
             })}
           {!sResult.loading && sResult.files.length === 0 && !sResult.error && (
-            <div className="w-full sm:text-2xl text-lg font-bold text-center m-auto">
-              No results found!
-            </div>
+            <div className="noFilesHeader m-auto">No results found!</div>
           )}
         </div>
       </div>

@@ -34,8 +34,10 @@ const DeleteFolder = ({ id, isOpen, onClose }: _Props) => {
         </div>
         <hr className="relative bottom-2 opacity-40" />
         <div className="flex items-start gap-2">
-          <FaRegTrashAlt className="text-primary-500 sm:text-xl text-xl mt-1" />
-          <p>The folder and all its content will be deleted permanently!</p>
+          <FaRegTrashAlt className="text-primary-500 sm:text-xl text-lg" />
+          <p className="sm:text-sm text-xs">
+            The folder and all its content will be deleted permanently!
+          </p>
         </div>
         <div
           className="flex flex-row-reverse w-full gap-3 text-sm mt-2"
@@ -44,7 +46,7 @@ const DeleteFolder = ({ id, isOpen, onClose }: _Props) => {
           }}
         >
           <button
-            className="bg-green-600 active:bg-green-700 p-2 rounded-md"
+            className="bg-green-600 active:bg-green-700"
             onClick={() => {
               deleteFolder();
             }}
@@ -53,7 +55,7 @@ const DeleteFolder = ({ id, isOpen, onClose }: _Props) => {
           </button>
           <button
             onClick={onClose}
-            className="bg-neutral-700 active:bg-neutral-800 p-2 rounded-md"
+            className="bg-neutral-700 active:bg-neutral-800"
           >
             Cancel
           </button>

@@ -74,7 +74,7 @@ const RecentFolders = () => {
         <HeadBtnsBar buttons={btns} />
         <PagesContainer>
           <div className="flex items-center gap-4">
-            <h1 className="sm:text-2xl text-lg font-bold">Folders</h1>
+            <h1 className="pagesHeader">Folders</h1>
             <FaFolder className=" sm:w-[21px] sm:h-[21px] h-[16px] w-[16px]" />
           </div>
           <Separator />
@@ -88,7 +88,7 @@ const RecentFolders = () => {
             {!folders.loading &&
               !folders.error &&
               folders.folders.length < 1 && (
-                <p className="text-2xl mt-5">No folders created yet</p>
+                <p className="noFilesHeader mt-5">No folders created yet</p>
               )}
             {!folders.loading &&
               !folders.error &&

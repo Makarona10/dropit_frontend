@@ -103,7 +103,7 @@ const Videos = () => {
         <HeadBtnsBar buttons={btns} />
         <PagesContainer>
           <div className="flex gap-3 items-center sm:text-2xl text-lg font-bold">
-            <p className="text-nowrap">Uploaded Videos</p>
+            <p className="pagesHeader text-nowrap">Uploaded Videos</p>
             <FontAwesomeIcon
               width={30}
               height={30}
@@ -131,9 +131,7 @@ const Videos = () => {
             )}
 
             {!videos.loading && !videos.error && videos.videos.length < 1 && (
-              <p className="w-full text-center text-2xl font-semibold">
-                No videos found
-              </p>
+              <p className="noFilesHeader">No videos found</p>
             )}
 
             {!videos.loading && !videos.error && videos.videos.length > 0 && (

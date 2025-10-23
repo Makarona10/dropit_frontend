@@ -56,11 +56,10 @@ const Header = () => {
 
   return (
     <div
-      className="flex flex-col-reverse items-start justify-start
-      sm:grid sm:grid-cols-2
-      bg-neutral-800 py-2 w-full"
+      className="flex items-center justify-start
+      bg-neutral-800 py-2 w-full px-4"
     >
-      <div className="flex items-center sm:px-6 px-2 sm:gap-4">
+      <div className="flex items-center sm:gap-4 w-full">
         <Link href="/cloud/recents" className="w-12 h-12">
           <Image
             alt="dropit logo"
@@ -71,7 +70,7 @@ const Header = () => {
           />
         </Link>
         <form
-          className="flex w-[240px] sm:w-[400px] items-center"
+          className="flex w-full flex-1 items-center"
           onSubmit={(e) => {
             e.preventDefault();
             router.push(`/search?ss=${searchRef.current?.value}`);
@@ -93,24 +92,8 @@ const Header = () => {
           />
         </form>
       </div>
-      <div className="flex justify-start sm:justify-end gap-9 relative items-center px-5 lg:px-16 sm:pb-0 pb-5 h-full w-full">
-        <FontAwesomeIcon
-          width={15}
-          height={15}
-          className=""
-          style={{
-            color: "Highlight",
-            width: "20px",
-            height: "20px",
-            cursor: "pointer",
-          }}
-          icon={faBell}
-        />
-        <div
-          className="
-                w-[28px] h-[28px] rounded-full cursor-pointer
-                "
-        >
+      <div className="flex justify-start sm:justify-end gap-9 relative items-center pl-5 lg:px-16 sm:pb-0 h-full">
+        <div className="w-[28px] h-[28px] rounded-full cursor-pointer">
           <Image
             src={"/Sample_User_Icon.png"}
             width={28}

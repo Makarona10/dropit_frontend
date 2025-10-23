@@ -74,7 +74,7 @@ const Deleted = () => {
         <HeadBtnsBar buttons={btns} />
         <PagesContainer>
           <div className="flex gap-3 items-center sm:text-2xl text-lg font-bold">
-            <p>Your personal trash bin</p>
+            <p className="pagesHeader">Your personal trash bin</p>
             <FontAwesomeIcon
               width={18}
               height={18}

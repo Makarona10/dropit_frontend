@@ -34,7 +34,10 @@ const FileDetails = ({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <div className="flex flex-col sm:w-[450px] rounded-lg p-2" ref={divRef}>
+      <div
+        className="flex flex-col sm:w-[450px] w-[250px] rounded-lg p-2"
+        ref={divRef}
+      >
         <div
           className="sm:text-xl text-lg text-white/90 font-semibold pb-3
           border-b-[1px] border-b-neutral-600/80"

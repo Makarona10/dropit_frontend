@@ -49,14 +49,10 @@ export default function TypeFilter() {
 
   return (
     <div className="relative inline-block text-left">
-      <button
-        onClick={toggleDropdown}
-        className="text-white bg-primary-700 focus:outline-none font-medium rounded-lg sm:text-sm text-xs px-5 py-2.5 text-center inline-flex items-center active:scale-95 duration-100"
-        type="button"
-      >
+      <button onClick={toggleDropdown} className="filterBtn" type="button">
         Files type
         <svg
-          className="w-2.5 h-2.5 ms-3"
+          className="filterArrow"
           aria-hidden="true"
           xmlns="http://www.w3.org/2000/svg"
           fill="none"

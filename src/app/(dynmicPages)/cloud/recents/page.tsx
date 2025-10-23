@@ -88,7 +88,7 @@ const RecentsPage = () => {
         <HeadBtnsBar buttons={btns} />
         <PagesContainer>
           <div className="flex items-center gap-4 ">
-            <h1 className="sm:text-2xl text-lg font-bold">Recents</h1>
+            <h1 className="pagesHeader">Recents</h1>
             <MdWatchLater className="sm:h-[21px] sm:w-[21px] h-[16px] w-[16px]" />
           </div>
           <Separator />
@@ -116,7 +116,7 @@ const RecentsPage = () => {
             )}
 
             {!files.error && !files.loading && files.data.length === 0 && (
-              <div className="w-full text-center p-3 text-2xl text-neutral-200 font-semibold">
+              <div className="noFilesHeader">
                 <p>No files uploaded yet.</p>
               </div>
             )}
