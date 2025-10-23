@@ -11,7 +11,7 @@ const GoogleAuth = ({ isOpen, onClose }: ModalProps) => {
   const sendRequest = async () => {
     try {
       window.location.href =
-        process.env.PUBLIC_NEXT_SERVER_URI + "/auth/google/login";
+        process.env.NEXT_PUBLIC_SERVER_URI + "/auth/google/login";
     } catch (error) {
       console.error(error);
     }

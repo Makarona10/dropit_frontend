@@ -48,8 +48,7 @@ const RegisterPage = () => {
       return;
     }
 
-    const url = `${process.env.PUBLIC_NEXT_SERVER_URI}/auth/register`;
-    console.log(url);
+    const url = `${process.env.NEXT_PUBLIC_SERVER_URI}/auth/register`;
     try {
       const response = await fetch(url, {
         method: "POST",
