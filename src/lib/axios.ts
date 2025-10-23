@@ -18,7 +18,7 @@ const processQueue = (error: any, token: string | null = null) => {
 };
 
 const api = axios.create({
-  baseURL,
+  'https://dropitbackend-production.up.railway.app',
   withCredentials: true,
   headers: { "Content-Type": "application/json" },
   timeout: 25000,
