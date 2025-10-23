@@ -173,6 +173,9 @@ const FileComponent = ({
     };
   }, []);
 
+  console.log(
+    `${process.env.NEXT_PUBLIC_SERVER_URI}/uploads/${userId}/thumbnails/${id}`,
+  );
   return (
     <div
       className="flex relative flex-col items-center bg-neutral-800 w-[110px] h-[110px] sm:w-[200px] sm:h-[200px] rounded-[10px] p-0 cursor-pointer"
