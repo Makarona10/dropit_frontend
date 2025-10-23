@@ -48,22 +48,21 @@ const RegisterPage = () => {
       return;
     }
 
+    const url = `${process.env.PUBLIC_NEXT_SERVER_URI}/auth/register`;
+    console.log(url);
     try {
-      const response = await fetch(
-        `${process.env.PUBLIC_NEXT_SERVER_URI}/auth/register`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            firstName: formData.firstName,
-            lastName: formData.lastName,
-            email: formData.email,
-            password: formData.password,
-          }),
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+        body: JSON.stringify({
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
 
       const data = await response.json();
 
