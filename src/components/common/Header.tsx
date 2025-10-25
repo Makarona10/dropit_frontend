@@ -14,7 +14,7 @@ type m_btn = {
 };
 
 const menuBtnStyle = `flex items-center w-full p-2 rounded-lg duration-200 bg-transparent
-      hover:bg-neutral-600 hover:text-white/90 cursor-pointer`;
+      hover:bg-neutral-600 hover:text-white/90 cursor-pointer sm:text-sm text-xs`;
 
 const Header = () => {
   const [toggle, setToggle] = useState<boolean>(false);
@@ -105,15 +105,15 @@ const Header = () => {
           {toggle && (
             <div
               className="
-                         flex flex-col relative p-2
-                         w-[300px] right-[110px] sm:right-[240px] top-[10px] z-20
+                         flex flex-col absolute p-2
+                         sm:w-[300px] w-[calc(100vw-40px)] right-0 top-[60px] z-20
                          rounded-xl bg-neutral-900 cursor-default"
               ref={profileMenuRef}
             >
               {user && (
-                <div className="flex h-[100px] border-b-[1px] border-zinc-600">
+                <div className="flex sm:h-[100px] h-[80px] border-b-[1px] border-zinc-600">
                   <div className="w-[100px] flex justify-center items-center">
-                    <div className="relative w-16 h-16 rounded-full bg-neutral-300 text-4xl text-primary-500">
+                    <div className="relative sm:w-16 sm:h-16 w-12 h-12 rounded-full bg-neutral-300 sm:text-4xl text-lg text-primary-500">
                       <p className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-bold">
                         {user?.firstName[0]?.toUpperCase() || ".."}
                       </p>
@@ -137,11 +137,11 @@ const Header = () => {
                   </div>
                 </div>
               )}
-              <div className="flex flex-col mt-2 p-1 text-[14px] text-[#ADADAE]">
+              <div className="flex flex-col mt-2 p-1 text-[#ADADAE]">
                 <Link className={menuBtnStyle} href={"/me"}>
                   {menu_buttons[0].name}
                 </Link>
-                <button
+                <div
                   className={menuBtnStyle}
                   onClick={() => {
                     setLoggingOut(true);
@@ -154,7 +154,7 @@ const Header = () => {
                       <LoadingSpinner height="4" width="4" />
                     </div>
                   )}
-                </button>
+                </div>
               </div>
             </div>
           )}

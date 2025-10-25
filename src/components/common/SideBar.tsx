@@ -128,13 +128,13 @@ const SideBar = ({ title }: sideBarSelectios) => {
       </div>
 
       {/*Small screen */}
-      <div className="fixed z-50 bottom-0 sm:hidden grid grid-cols-6 bg-neutral-800 border-t-[1px] border-neutral-400/70 text-sm text-neutral-100 w-screen h-[74px]">
+      <div className="fixed z-50 bottom-0 sm:hidden grid grid-cols-6 bg-neutral-800 border-t-[1px] border-neutral-400/70 text-sm text-neutral-100 w-screen h-[46px]">
         <button
           className="h-full hover:bg-black"
           onClick={() => setToggleBar(true)}
         >
           <FaBars
-            className="w-[24px] h-[24px] mx-auto cursor-pointer text-neutral-400"
+            className="sm:w-[24px] sm:h-[24px] w-[19px] h-[19px] mx-auto cursor-pointer text-neutral-400"
             onClick={() => setToggleBar(true)}
           />
         </button>
@@ -143,21 +143,18 @@ const SideBar = ({ title }: sideBarSelectios) => {
             <Link
               key={idx}
               className={`
-                         flex flex-col justify-center items-center w-full h-full p-1 text-zinc-300 greyscale
+                         flex flex-col justify-center items-center w-full h-full text-zinc-300 greyscale
                          hover:bg-black transition-all duration-100
                          ${pathName.split("/")[1].includes(`${l.name.toLowerCase()}`) && "bg-black"}`}
               href={"/" + l.ref}
             >
               <FontAwesomeIcon
-                className={`w-[24px] h-[24px] greyscale ${pathName.split("/")[1].includes(`${l.name.toLowerCase()}/`) ? "bg-black" : "bg-transparent"}`}
+                className={`sm:w-[24px] sm:h-[24px] w-[19px] h-[19px] greyscale ${pathName.split("/")[1].includes(`${l.name.toLowerCase()}/`) ? "bg-black" : "bg-transparent"}`}
                 icon={l.img}
                 style={{
                   color: `${pathName.split("/")[1].includes(`${l.name.toLowerCase()}`) ? "#c83c51" : "grey"}`,
                 }}
               />
-              <p className="text-[11px] font-[500]">
-                {l.name.charAt(0).toUpperCase() + l.name.slice(1)}
-              </p>
             </Link>
           );
         })}

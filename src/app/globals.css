@@ -6,8 +6,9 @@
 
 @layer components {
   button {
-    @apply p-2 rounded-md sm:text-sm text-xs font-semibold;
+    @apply p-2 rounded-md sm:text-sm text-xs font-semibold disabled:opacity-60 disabled:cursor-not-allowed;
   }
+
   .btn-primary {
     @apply bg-blue-600 text-white hover:bg-blue-700;
   }

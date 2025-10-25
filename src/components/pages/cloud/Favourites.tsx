@@ -84,7 +84,7 @@ const Favourites = () => {
             )}
 
             {!files.error && !files.loading && files.files.length < 1 && (
-              <div className="text-2xl w-full text-center">
+              <div className="noFilesHeader w-full text-center">
                 No favourite files.
               </div>
             )}
@@ -95,7 +95,11 @@ const Favourites = () => {
               </div>
             )}
 
-            {files.loading && <LoadingSpinner />}
+            {files.loading && (
+              <div className="w-full flex justify-center">
+                <LoadingSpinner />
+              </div>
+            )}
           </div>
         </PagesContainer>
       </div>

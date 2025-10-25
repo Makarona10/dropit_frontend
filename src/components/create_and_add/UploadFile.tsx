@@ -11,6 +11,7 @@ import {
 import { useApi } from "@/lib/useApi";
 import Modal, { ModalProps } from "../common/Modal";
 import LoadingDots from "../visuals/ButtonLoading";
+import LoadingBar from "../visuals/LoadingBar";
 
 const permittedExtensions = permittedVideos
   .concat(permittedOtherExtensions)
@@ -173,6 +174,11 @@ const UploadFile = ({ isOpen, onClose }: ModalProps) => {
           </>
         )}
       </button>
+      {isRequestProcessing && (
+        <div className="mt-2">
+          <LoadingBar title="Uploading your files..." />
+        </div>
+      )}
     </Modal>
   );
 };

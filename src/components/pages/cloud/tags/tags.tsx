@@ -99,9 +99,7 @@ const Tags = () => {
             )}
             {!tags.loading && tags.data.length === 0 && !tags.error && (
               <div className="w-full text-center font-bold">
-                <p className="sm:text-2xl text-sm font-semibold">
-                  No Tags created yet.
-                </p>
+                <p className="noFilesHeader">No Tags created yet.</p>
               </div>
             )}
             {!tags.loading &&

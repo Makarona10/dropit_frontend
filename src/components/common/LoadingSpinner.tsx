@@ -1,16 +1,13 @@
 interface LoadingSpinnerProps {
-  height?: string;
-  width?: string;
+  size?: number;
 }
 
-const LoadingSpinner = ({
-  height = "12",
-  width = "12",
-}: LoadingSpinnerProps) => {
+const LoadingSpinner = ({ size = 50 }: LoadingSpinnerProps) => {
   return (
-    <div className="flex items-center justify-center w-full h-full">
+    <div className="flex items-center justify-center">
       <div
-        className={`animate-spin rounded-full h-${height} w-${width} border-4 border-t-transparent border-primary-500`}
+        className={`animate-spin rounded-full border-4 border-t-transparent border-primary-500`}
+        style={{ width: size, height: size }}
       ></div>
     </div>
   );

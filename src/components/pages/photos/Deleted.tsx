@@ -96,7 +96,7 @@ const DeletedPhotos = () => {
               </p>
             </ButtonsContainer>
           </div>
-          <div className="w-full flex flex-wrap gap-5">
+          <div className="w-full flex flex-wrap justify-center gap-5">
             {images.loading && <LoadingSpinner />}
             {!images.loading && images.error && (
               <p className="w-full text-center text-2xl underline">

@@ -1,3 +1,4 @@
+import LoadingSpinner from "@/components/common/LoadingSpinner";
 import Modal, { ModalProps } from "@/components/common/Modal";
 import { useApi } from "@/lib/useApi";
 import { useRef, useState } from "react";
@@ -11,10 +12,12 @@ interface FileProps extends ModalProps {
 const DeleteFile = ({ fileId, deleted, isOpen, onClose }: FileProps) => {
   const divRef = useRef<HTMLDivElement>(null);
   const [error, setError] = useState<string>("");
+  const [isRequestProcessing, setIsRequestProcessing] = useState(false);
   const { api } = useApi();
 
   const deleteRequest = async () => {
     try {
+      setIsRequestProcessing(true);
       await api(`/bin/move-file-to-bin/${fileId}`, "post");
       window.location.reload();
     } catch (error: any) {
@@ -52,7 +55,7 @@ const DeleteFile = ({ fileId, deleted, isOpen, onClose }: FileProps) => {
         )}
         <div className="flex flex-row-reverse gap-2 sm:text-sm text-xs mt-5">
           <button
-            className="bg-green-600 active:bg-green-700 p-2 rounded-md"
+            className="inline-flex gap-2 bg-green-600 active:bg-green-700 p-2 rounded-md"
             onClick={() => {
               if (deleted) {
                 deletePermanentlyRequest();
@@ -60,8 +63,10 @@ const DeleteFile = ({ fileId, deleted, isOpen, onClose }: FileProps) => {
                 deleteRequest();
               }
             }}
+            disabled={isRequestProcessing}
           >
             Confirm
+            {isRequestProcessing && <LoadingSpinner size={20} />}
           </button>
           <button
             className="bg-neutral-700 active:bg-neutral-800 p-2 rounded-md"

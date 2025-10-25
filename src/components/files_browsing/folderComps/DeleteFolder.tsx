@@ -1,5 +1,8 @@
+import LoadingSpinner from "@/components/common/LoadingSpinner";
 import Modal, { ModalProps } from "@/components/common/Modal";
+import LoadingDots from "@/components/visuals/ButtonLoading";
 import { useApi } from "@/lib/useApi";
+import { useState } from "react";
 import { FaRegTrashAlt } from "react-icons/fa";
 
 interface _Props extends ModalProps {
@@ -7,10 +10,12 @@ interface _Props extends ModalProps {
 }
 
 const DeleteFolder = ({ id, isOpen, onClose }: _Props) => {
+  const [isRequestProcessing, setIsRequestProcessing] = useState(false);
   const { api } = useApi();
 
   const deleteFolder = async () => {
     try {
+      setIsRequestProcessing(true);
       const res = await api(`/folder/delete/${id}`, "delete");
       if (res.data.statusCode === 200) {
         // setMsg({ error: false, msg: "Folder Created successfully" });
@@ -19,10 +24,7 @@ const DeleteFolder = ({ id, isOpen, onClose }: _Props) => {
         }, 1000);
       }
     } catch (error: any) {
-      // setMsg({
-      //   error: true,
-      //   msg: error?.response?.data?.message || "Unexpected error happened",
-      // });
+      setIsRequestProcessing(false);
     }
   };
 
@@ -46,11 +48,13 @@ const DeleteFolder = ({ id, isOpen, onClose }: _Props) => {
           }}
         >
           <button
-            className="bg-green-600 active:bg-green-700"
+            className="h-full inline-flex gap-2 bg-green-600 active:bg-green-700 disabled:bg-green-700"
             onClick={() => {
               deleteFolder();
             }}
+            disabled={isRequestProcessing}
           >
+            {isRequestProcessing && <LoadingSpinner size={20} />}
             Confirm
           </button>
           <button

@@ -1,58 +1,32 @@
+import LoadingSpinner from "@/components/common/LoadingSpinner";
+import Modal, { ModalProps } from "@/components/common/Modal";
 import { useApi } from "@/lib/useApi";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { MdOutlineRestorePage } from "react-icons/md";
 
-type FileProps = {
-  id: string;
+interface FileProps extends ModalProps {
   fileId: number;
-};
+}
 
-const RestoreFile = ({ id, fileId }: FileProps) => {
-  const divRef = useRef<HTMLDivElement>(null);
+const RestoreFile = ({ fileId, isOpen, onClose }: FileProps) => {
   const [error, setError] = useState<string>("");
+  const [isRequestProcessing, setIsRequestProcessing] = useState(false);
   const { api } = useApi();
-
-  const handleOutsideClick = (event: any) => {
-    if (divRef.current && !divRef.current.contains(event.target)) {
-      const element = document.getElementById(id);
-      if (element) {
-        element.style.visibility = "hidden";
-        element.style.opacity = "0";
-      }
-    }
-  };
 
   const restoreFileRequest = async () => {
     try {
+      setIsRequestProcessing(true);
       await api(`/bin/restore-file/${fileId}`, "post");
       window.location.reload();
     } catch (error: any) {
+      setIsRequestProcessing(false);
       setError(error?.response?.data?.message);
     }
   };
 
-  useEffect(() => {
-    window.addEventListener("mousedown", handleOutsideClick);
-
-    return () => {
-      window.removeEventListener("mousedown", handleOutsideClick);
-    };
-  }, []);
-
   return (
-    <div
-      className="fixed m-auto h-screen inset-0 select-text cursor-default
-      flex items-center justify-center bg-black bg-opacity-50 z-50   
-      transition duration-300 invisible"
-      id={id}
-      onClick={(e) => e.stopPropagation()}
-    >
-      <div className="fixed inset-0 bg-white/10 p-6 shadow-lg overflow-auto"></div>
-      <div
-        className="flex flex-col sm:w-[450px] bg-black p-6 rounded-lg border-[1px] border-white/30"
-        style={{ zIndex: 2 }}
-        ref={divRef}
-      >
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <div className="flex flex-col sm:w-[450px] rounded-lg">
         <h1 className="sm:text-xl text-base font-bold pb-3 border-b-[1px] border-neutral-300/30">
           Restore file
         </h1>
@@ -69,28 +43,24 @@ const RestoreFile = ({ id, fileId }: FileProps) => {
         )}
         <div className="flex flex-row-reverse gap-2 sm:text-sm text-xs mt-5">
           <button
-            className="bg-green-600 active:bg-green-700 p-2 rounded-md"
+            className="inline-flex gap-2 bg-green-600 active:bg-green-700 p-2 rounded-md"
             onClick={() => {
               restoreFileRequest();
             }}
+            disabled={isRequestProcessing}
           >
             Confirm
+            {isRequestProcessing && <LoadingSpinner size={20} />}
           </button>
           <button
             className="bg-primary-600 active:bg-primary-700 p-2 rounded-md"
-            onClick={() => {
-              const element = document.getElementById(id);
-              if (element) {
-                element.style.visibility = "hidden";
-                element.style.opacity = "0";
-              }
-            }}
+            onClick={onClose}
           >
             Close{" "}
           </button>
         </div>
       </div>
-    </div>
+    </Modal>
   );
 };
 

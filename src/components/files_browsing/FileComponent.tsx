@@ -14,7 +14,6 @@ import { FaDownload } from "react-icons/fa6";
 import { IoIosInformationCircleOutline } from "react-icons/io";
 import { RiUserSharedLine } from "react-icons/ri";
 import FileDetails from "./FileDetails";
-import ChangeDirectoryOverlay from "./FileModify/ChangeDirectory";
 import { downloadFile } from "@/app/functions";
 import DeleteFile from "./FileModify/DeleteFile";
 import {
@@ -85,6 +84,8 @@ const FileComponent = ({
   const [isDetailsVisible, setIsDetailsVisible] = useState<boolean>(false);
   const [isDeleteFileVisible, setIsDeleteFileVisible] =
     useState<boolean>(false);
+  const [isRestoreFileVisible, setIsRestoreFileVisible] =
+    useState<boolean>(false);
   const [LocalFavourite, setLocalFavourite] = useState(favourite);
   const { api } = useApi();
 
@@ -105,18 +106,6 @@ const FileComponent = ({
         setTogFOpts(false);
       },
     },
-    // {
-    //   name: "Change directory",
-    //   ico: LuFolderPen,
-    //   action: () => {
-    //     setTogFOpts(false);
-    //     const element = document.getElementById(`${id.toString()}_cd`);
-    //     if (element) {
-    //       element.style.opacity = "100";
-    //       element.style.visibility = "visible";
-    //     }
-    //   },
-    // },
     {
       name: deleted ? "Delete permanently" : "Delete",
       ico: FaRegTrashAlt,
@@ -139,6 +128,7 @@ const FileComponent = ({
       name: "Restore file",
       ico: MdOutlineSettingsBackupRestore,
       action: () => {
+        setIsRestoreFileVisible(true);
         setTogFOpts(false);
       },
     },
@@ -202,8 +192,11 @@ const FileComponent = ({
         onClose={() => setIsDetailsVisible(false)}
       />
 
-      <RestoreFile id={id.toString() + "_rf"} fileId={id} />
-      <ChangeDirectoryOverlay id={`${id.toString()}_cd`} />
+      <RestoreFile
+        fileId={id}
+        isOpen={isRestoreFileVisible}
+        onClose={() => setIsRestoreFileVisible(false)}
+      />
       <DeleteFile
         fileId={id}
         deleted={deleted}

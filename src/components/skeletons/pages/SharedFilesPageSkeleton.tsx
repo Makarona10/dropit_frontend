@@ -12,7 +12,7 @@ const SharedFilesSkeletonPage = () => {
       </div>
       <div className="w-full h-full flex flex-col">
         <HeaderSkeleton />
-        <div className="w-full h-full flex flex-col gap-10 p-10 mt-10">
+        <div className="w-full h-full flex flex-col sm:gap-10 gap-3 sm:p-10 p-5 mt-10">
           {Array.from({ length: 10 }, (_, index) => (
             <SharedFileSkeleton key={index} />
           ))}

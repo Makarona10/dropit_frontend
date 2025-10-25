@@ -103,7 +103,11 @@ const Deleted = () => {
               </div>
             )}
 
-            {files.loading && <LoadingSpinner />}
+            {files.loading && (
+              <div className="w-full flex justify-center items-center">
+                <LoadingSpinner />
+              </div>
+            )}
           </div>
         </PagesContainer>
       </div>

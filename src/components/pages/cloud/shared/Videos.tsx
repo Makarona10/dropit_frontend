@@ -12,6 +12,7 @@ import SortBy from "@/components/filteration/SortBy";
 import VideoDuration from "@/components/filteration/VideoDuration";
 import VideoExtension from "@/components/filteration/VidExtension";
 import PaginationButtons from "@/components/pagination_btns/PaginationComp";
+import SharedFileSkeleton from "@/components/skeletons/SharedFileSkeleton";
 import { useApi } from "@/lib/useApi";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";

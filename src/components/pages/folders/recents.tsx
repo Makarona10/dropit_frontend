@@ -13,7 +13,6 @@ import { MdCreateNewFolder } from "react-icons/md";
 import { useApi } from "@/lib/useApi";
 import PagesContainer from "@/components/common/Container";
 import Separator from "@/components/common/Separator";
-import LoadingOverlay from "@/components/common/LoadingOverlay";
 
 const RecentFolders = () => {
   const [folders, setFolders] = useState({

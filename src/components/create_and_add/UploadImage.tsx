@@ -7,6 +7,7 @@ import { permittedImages } from "@/app/types";
 import { useApi } from "@/lib/useApi";
 import Modal, { ModalProps } from "../common/Modal";
 import LoadingDots from "../visuals/ButtonLoading";
+import LoadingBar from "../visuals/LoadingBar";
 
 const UploadImage = ({ isOpen, onClose }: ModalProps) => {
   const [error, setError] = useState<string>("");
@@ -158,6 +159,11 @@ const UploadImage = ({ isOpen, onClose }: ModalProps) => {
           )}
         </button>
       </div>
+      {isRequestProcessing && (
+        <div className="mt-2">
+          <LoadingBar title="Uploading the images..." />
+        </div>
+      )}
     </Modal>
   );
 };

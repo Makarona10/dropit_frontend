@@ -79,7 +79,7 @@ const FavouritesPhotos = () => {
             </div>
           </div>
           <Separator />
-          <div className="flex flex-wrap gap-5 w-full">
+          <div className="flex flex-wrap gap-5 justify-center w-full">
             {images.loading && <LoadingSpinner />}
             {!images.loading && images.error && (
               <p className="w-full text-center text-2xl underline">

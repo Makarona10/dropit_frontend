@@ -102,7 +102,7 @@ const RecentsPage = () => {
             )}
 
             {files.loading && (
-              <div className="flex w-full h-full">
+              <div className="flex justify-center items-center w-full h-full">
                 <LoadingSpinner />
               </div>
             )}
@@ -143,7 +143,7 @@ const RecentsPage = () => {
               })}
 
             {folders.loading && (
-              <div className="flex w-full h-full">
+              <div className="flex w-full h-full justify-center items-center">
                 <LoadingSpinner />
               </div>
             )}
@@ -160,7 +160,7 @@ const RecentsPage = () => {
             {!folders.error &&
               !folders.loading &&
               folders.data.length === 0 && (
-                <div className="w-full text-center text-2xl text-neutral-200 font-semibold">
+                <div className="w-full text-neutral-200 noFilesHeader">
                   <p>No folders yet.</p>
                 </div>
               )}

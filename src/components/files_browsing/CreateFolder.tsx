@@ -4,6 +4,8 @@ import { useParams } from "next/navigation";
 import { useRef, useEffect, useState } from "react";
 import { FaFolder } from "react-icons/fa";
 import Modal, { ModalProps } from "../common/Modal";
+import LoadingSpinner from "../common/LoadingSpinner";
+import LoadingBar from "../visuals/LoadingBar";
 
 const CreateFolder = ({ isOpen, onClose }: ModalProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -13,6 +15,7 @@ const CreateFolder = ({ isOpen, onClose }: ModalProps) => {
     error: false,
     msg: "",
   });
+  const [waitingResponse, setWaitingResponse] = useState(false);
   const { api } = useApi();
 
   const createFolderRequest = async () => {
@@ -22,17 +25,20 @@ const CreateFolder = ({ isOpen, onClose }: ModalProps) => {
     }
 
     try {
+      setWaitingResponse(true);
       const res = await api(`/folder/create`, "post", {
         name: inputRef.current?.value,
         parentId: folderId,
       });
       if (res.data.statusCode === 201) {
+        setWaitingResponse(false);
         setMsg({ error: false, msg: "Folder Created successfully" });
         setTimeout(() => {
           window.location.reload();
         }, 600);
       }
     } catch (error: any) {
+      setWaitingResponse(false);
       setMsg({
         error: true,
         msg: error?.response?.data?.message || "Unexpected error happened",
@@ -63,11 +69,17 @@ const CreateFolder = ({ isOpen, onClose }: ModalProps) => {
             ref={inputRef}
           />
         </form>
-        <div
-          className={`w-full ${msg.error ? "text-primary-400" : "text-green-600"}`}
+        {waitingResponse && (
+          <div className="flex items-center gap-2">
+            <LoadingSpinner size={18} />
+            <p className="sm:text-xs text-[11px]">Creating a new folder</p>
+          </div>
+        )}
+        <p
+          className={`w-full ${msg.error ? "text-primary-400" : "text-green-600"} sm:text-sm text-xs`}
         >
           {msg.msg}
-        </div>
+        </p>
         <div className="flex flex-row-reverse items-center gap-2 sm:text-sm text-xs">
           <button
             className="p-2 bg-green-600 rounded-lg active:bg-green-700"

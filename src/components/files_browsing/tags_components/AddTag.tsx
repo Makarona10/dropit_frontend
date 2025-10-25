@@ -1,4 +1,5 @@
 "use client";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
 import Modal, { ModalProps } from "@/components/common/Modal";
 import { useApi } from "@/lib/useApi";
 import { useState } from "react";
@@ -7,6 +8,7 @@ import { FaTags } from "react-icons/fa6";
 const AddTag = ({ isOpen, onClose }: ModalProps) => {
   const [name, setName] = useState<string>("");
   const [error, setError] = useState<string>("");
+  const [isRequestProcessing, setIsRequestProcessing] = useState(false);
   const { api } = useApi();
 
   const addTagSubmit = async () => {
@@ -17,12 +19,13 @@ const AddTag = ({ isOpen, onClose }: ModalProps) => {
 
     setError("");
     try {
+      setIsRequestProcessing(true);
       const res = await api(`/tag/create`, "post", { name });
-
       if (res.data.statusCode === 201) {
         window.location.reload();
       }
     } catch (error: any) {
+      setIsRequestProcessing(false);
       setError("Please enter a valid name");
     }
   };
@@ -45,6 +48,12 @@ const AddTag = ({ isOpen, onClose }: ModalProps) => {
               setName(e.target.value);
             }}
           />
+          {isRequestProcessing && (
+            <div className="flex items-center gap-2 mt-2">
+              <LoadingSpinner size={18} />
+              <p className="sm:text-xs text-[11px]">Creating a new tag...</p>
+            </div>
+          )}
           <p className="text-primary-300 text-sm mt-2">{error ? error : ""}</p>
         </div>
         <div className="flex flex-row-reverse items-center gap-2 sm:text-sm text-xs">

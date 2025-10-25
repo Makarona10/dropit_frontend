@@ -94,7 +94,7 @@ const FavouriteVideos = () => {
             <SortBy />
             <Order />
           </ButtonsContainer>
-          <div className="flex flex-wrap gap-5 w-full">
+          <div className="flex flex-wrap justify-center gap-5 w-full">
             {videos.loading && <LoadingSpinner />}
             {!videos.loading && videos.error && (
               <p className="w-full text-center text-2xl underline">
@@ -103,7 +103,7 @@ const FavouriteVideos = () => {
             )}
 
             {!videos.loading && !videos.error && videos.videos.length < 1 && (
-              <p className="w-full text-center text-2xl font-semibold">
+              <p className="w-full text-center noFilesHeader">
                 No videos found
               </p>
             )}

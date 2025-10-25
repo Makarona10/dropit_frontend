@@ -149,9 +149,7 @@ const FolderContent = () => {
           )}
 
           {!folders.loading && !folders.error && folders.data.length < 1 && (
-            <div className="w-full sm:text-2xl text-base text-center font-bold">
-              No folders
-            </div>
+            <div className="w-full noFilesHeader">No folders</div>
           )}
 
           {!folders.loading && !folders.error && folders.data.length > 0 && (

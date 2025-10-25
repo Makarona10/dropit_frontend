@@ -122,7 +122,7 @@ const Videos = () => {
             <SortBy />
             <Order />
           </ButtonsContainer>
-          <div className="w-full flex flex-wrap gap-5 ">
+          <div className="w-full flex justify-center flex-wrap gap-5 ">
             {videos.loading && <LoadingSpinner />}
             {!videos.loading && videos.error && (
               <p className="w-full text-center text-2xl underline">
