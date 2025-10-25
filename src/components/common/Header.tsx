@@ -151,7 +151,7 @@ const Header = () => {
                   {menu_buttons[1].name}
                   {loggingOut && (
                     <div className="ml-4">
-                      <LoadingSpinner height="4" width="4" />
+                      <LoadingSpinner size={15} />
                     </div>
                   )}
                 </div>
