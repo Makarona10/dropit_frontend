@@ -24,8 +24,8 @@ type Props = {
 
 const ListFiles = ({ files }: Props) => {
   return (
-    <div className="flex flex-col flex-wrap gap-8 w-full">
-      <div className="w-full flex flex-wrap gap-5">
+    <div className="w-full flex justify-center sm:block">
+      <div className="flex flex-wrap gap-5">
         {files.map((f: FileType) => {
           const creationDate = new Date(f.createdAt);
           const size = formatFileSize(f.sizeInKb);
