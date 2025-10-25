@@ -32,7 +32,7 @@ const AddTag = ({ isOpen, onClose }: ModalProps) => {
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <div className="flex flex-col sm:w-[450px] gap-4">
+      <div className="flex flex-col sm:w-[450px] w-[calc(100vw-60px)] gap-4">
         <div className="flex items-center gap-3 sm:text-lg text-sm font-bold">
           <h1>Write a name for your tag</h1>
           <FaTags />

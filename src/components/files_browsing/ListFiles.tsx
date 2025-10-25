@@ -24,7 +24,7 @@ type Props = {
 
 const ListFiles = ({ files }: Props) => {
   return (
-    <div className="w-full flex justify-center sm:block">
+    <div className="w-full">
       <div className="flex flex-wrap gap-5">
         {files.map((f: FileType) => {
           const creationDate = new Date(f.createdAt);
