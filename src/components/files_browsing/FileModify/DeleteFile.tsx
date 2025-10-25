@@ -10,7 +10,6 @@ interface FileProps extends ModalProps {
 }
 
 const DeleteFile = ({ fileId, deleted, isOpen, onClose }: FileProps) => {
-  const divRef = useRef<HTMLDivElement>(null);
   const [error, setError] = useState<string>("");
   const [isRequestProcessing, setIsRequestProcessing] = useState(false);
   const { api } = useApi();
@@ -36,13 +35,13 @@ const DeleteFile = ({ fileId, deleted, isOpen, onClose }: FileProps) => {
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <div className="flex flex-col sm:w-[450px] rounded-lg" ref={divRef}>
+      <div className="flex flex-col sm:w-[450px] w-[calc(100vw-60px)] rounded-lg">
         <h1 className="sm:text-xl text-base font-bold pb-3 border-b-[1px] border-neutral-300/30">
           Delete the file
         </h1>
         <div className="flex items-center gap-2">
           <FaRegTrashAlt className="text-md text-primary-500" />
-          <p className="sm:text-base text-sm font-medium py-4">
+          <p className="sm:text-base text-xs font-medium py-4">
             {deleted
               ? "Warning: File will be deleted forever!"
               : "File will be transferred to your bin"}
@@ -55,7 +54,7 @@ const DeleteFile = ({ fileId, deleted, isOpen, onClose }: FileProps) => {
         )}
         <div className="flex flex-row-reverse gap-2 sm:text-sm text-xs mt-5">
           <button
-            className="inline-flex gap-2 bg-green-600 active:bg-green-700 p-2 rounded-md"
+            className="inline-flex items-center gap-2 bg-green-600 active:bg-green-700 p-2 rounded-md"
             onClick={() => {
               if (deleted) {
                 deletePermanentlyRequest();

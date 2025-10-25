@@ -105,7 +105,7 @@ const UploadFile = ({ isOpen, onClose }: ModalProps) => {
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <div className="flex relative pb-2 sm:w-96 w-full">
+      <div className="flex relative pb-2 sm:w-96 w-[calc(100vw-60px)]">
         <h1 className="sm:text-lg font-bold text-sm">Upload files</h1>
         <div className="absolute right-0 top-1 group inline-block">
           <div

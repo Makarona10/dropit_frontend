@@ -48,7 +48,7 @@ const CreateFolder = ({ isOpen, onClose }: ModalProps) => {
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <div className="flex flex-col sm:w-[450px] w-[200px] gap-2">
+      <div className="flex flex-col sm:w-[450px] w-[calc(100vw-60px)] gap-2">
         <div className="flex items-center gap-3 sm:text-lg text-sm font-bold mb-4">
           <h1>Create a new folder</h1>
           <FaFolder />

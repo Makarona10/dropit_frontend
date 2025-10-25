@@ -5,7 +5,7 @@ import Modal from "@/components/common/Modal";
 import { ModalProps } from "@/components/common/Modal";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 
-const delBtnsStyle = "inline-flex gap-2 p-2 rounded-lg text-sm";
+const delBtnsStyle = "inline-flex items-center gap-2 p-2 rounded-lg text-sm";
 
 interface _Props extends ModalProps {
   tag_id: number;

@@ -81,10 +81,10 @@ export default function ShareFileModal({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <div className="w-96 flex flex-col gap-2 text-xs sm:text-sm">
+      <div className="sm:w-96 w-[calc(100vw-60px)] flex flex-col gap-2 text-xs sm:text-sm">
         <div className="flex flex-col gap-1">
-          <h1 className="text-xl font-bold">Share File</h1>
-          <p className="text-neutral-400 text-sm">
+          <h1 className="sm:text-xl text-sm font-bold">Share File</h1>
+          <p className="text-neutral-400 smtext-sm text-[11px]">
             Share this file with others
           </p>
         </div>
@@ -103,12 +103,12 @@ export default function ShareFileModal({
             type="text"
             placeholder="Share with... (Email)"
             className={`w-full p-2 border border-neutral-600
-          bg-neutral-800 text-sm outline-none rounded-md
+          bg-neutral-800 sm:text-sm text-[11px] outline-none rounded-md
           placeholder:text-neutral-500`}
           />
           <button
             type="submit"
-            className="p-2 bg-green-600 rounded-md font-semibold active:bg-green-700"
+            className="bg-green-600 rounded-md font-semibold active:bg-green-700"
           >
             search
           </button>
@@ -127,10 +127,12 @@ export default function ShareFileModal({
                 rounded-md p-2 cursor-pointer bg-transparent hover:bg-neutral-700`}
                 onClick={() => setSelectedUser(user)}
               >
-                <p className="font-semibold text-sm">
+                <p className="font-semibold sm:text-sm text-[11px]">
                   {user.firstName} {user.lastName}
                 </p>
-                <p className="text-xs opacity-70">{user.email}</p>
+                <p className="sm:text-xs text-[10px] opacity-70">
+                  {user.email}
+                </p>
               </div>
             ))}
           </div>
@@ -142,16 +144,18 @@ export default function ShareFileModal({
               className="flex flex-1 flex-col justify-center 
                 rounded-md p-2 bg-transparent "
             >
-              <p className="font-semibold text-sm">
+              <p className="font-semibold sm:text-sm text-[11px]">
                 {selectedUser?.firstName} {selectedUser?.lastName}
               </p>
-              <p className="text-xs opacity-70">{selectedUser?.email}</p>
+              <p className="sm:text-xs text-[10px] opacity-70">
+                {selectedUser?.email}
+              </p>
             </div>
             <button
               onClick={() => {
                 setSelectedUser(null);
               }}
-              className=" p-2 text-primary-400 underline font-semibold hover:text-primary-600"
+              className="p-2 sm:text-xs text-[11px] text-primary-400 underline font-semibold hover:text-primary-600"
             >
               cancel
             </button>

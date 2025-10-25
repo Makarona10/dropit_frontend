@@ -35,7 +35,7 @@ const FileDetails = ({
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <div
-        className="flex flex-col sm:w-[450px] w-[250px] rounded-lg p-2"
+        className="flex flex-col sm:w-[450px] w-[calc(100vw-60px)] rounded-lg p-2"
         ref={divRef}
       >
         <div

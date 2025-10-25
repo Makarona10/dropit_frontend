@@ -30,7 +30,7 @@ const DeleteFolder = ({ id, isOpen, onClose }: _Props) => {
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <div className="flex flex-col sm:w-[450px] rounded-lg gap-6">
+      <div className="flex flex-col sm:w-[450px] w-[calc(100vw-60px)] rounded-lg gap-6">
         <div className="flex items-center gap-2 sm:text-xl text-base font-semibold">
           <p>Deletion confirmation</p>
         </div>
@@ -54,8 +54,8 @@ const DeleteFolder = ({ id, isOpen, onClose }: _Props) => {
             }}
             disabled={isRequestProcessing}
           >
-            {isRequestProcessing && <LoadingSpinner size={20} />}
             Confirm
+            {isRequestProcessing && <LoadingSpinner size={20} />}
           </button>
           <button
             onClick={onClose}

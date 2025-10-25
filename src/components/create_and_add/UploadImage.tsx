@@ -88,7 +88,7 @@ const UploadImage = ({ isOpen, onClose }: ModalProps) => {
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <div className="flex flex-col sm:w-[450px]">
+      <div className="flex flex-col sm:w-[450px] w-[calc(100vw-60px)]">
         <div className="flex relative pb-2 w-full border-b-[1px] border-white/30">
           <h1 className="sm:text-lg font-bold text-sm">Upload images</h1>
           <div className="absolute right-0 top-1 group inline-block">

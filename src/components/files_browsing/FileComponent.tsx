@@ -163,9 +163,6 @@ const FileComponent = ({
     };
   }, []);
 
-  console.log(
-    `${process.env.NEXT_PUBLIC_SERVER_URI}/uploads/${userId}/thumbnails/${thumbnail}`,
-  );
   return (
     <div
       className="flex relative flex-col items-center bg-neutral-800 w-[110px] h-[110px] sm:w-[200px] sm:h-[200px] rounded-[10px] p-0 cursor-pointer"
@@ -262,7 +259,7 @@ const FileComponent = ({
         ref={fileMenuRef}
         onClick={(e) => e.stopPropagation()}
       >
-        <ul className="flex flex-col text-[12px] font-semibold w-full gap-1 bg-neutral-800 text-neutral-100/50 rounded-lg border-[1px] border-neutral-400/20">
+        <ul className="flex flex-col sm:text-[12px] text-[11px] font-semibold w-full gap-1 bg-neutral-800 text-neutral-100/50 rounded-lg border-[1px] border-neutral-400/20">
           {opts.concat(deleted ? deletedOpts : []).map((o: option) => {
             const Icon = o.ico;
             return (
@@ -274,7 +271,7 @@ const FileComponent = ({
                 }}
               >
                 <p>{o.name}</p>
-                <Icon className="absolute right-2 w-4 h-4" />
+                <Icon className="absolute right-2 sm:w-4 sm:h-4 w-3 h-3" />
               </li>
             );
           })}
